@@ -17,7 +17,7 @@ const authService = createApi({
     }),
     register: builder.mutation({
       query: (data) => ({
-        url: "/api/customer/register",
+        url: "/customer/register",
         method: "POST",
         body: data,
       }),
