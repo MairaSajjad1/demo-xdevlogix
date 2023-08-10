@@ -1,11 +1,7 @@
-import Link from "next/link";
+import Login from "@/views/login";
 
 const page = () => {
-  return (
-    <div>
-      <Link href={"/dashboard"}>Pa</Link>
-    </div>
-  );
+  return <Login />;
 };
 
 export default page;
