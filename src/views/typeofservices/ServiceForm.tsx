@@ -37,7 +37,7 @@ interface ServiceFormProps {
 }
 
 const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
-  const { businessId } = useSelector((state: RootState) => state.authReducer);
+  // const { businessId } = useSelector((state: RootState) => state.authReducer);
   //   const { refetch } = useGetTypeOfServiceQuery({ businessId, perPage: -1 });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,32 +47,32 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
       description: data?.description || "",
       charge_type: data?.charge_type || "fixed",
       charge: Number(data?.charge) || 0,
-      business_id: data?.business_id || Number(businessId!),
+      business_id: data?.business_id || Number(5!),
     },
   });
 
-  const [create, response] = useCreateTypeOfServiceMutation();
+  // const [create, response] = useCreateTypeOfServiceMutation();
 
-  const {
-    isLoading: addLoading,
-    isError: addError,
-    isSuccess: addSuccess,
-  } = response;
+  // const {
+  //   isLoading: addLoading,
+  //   isError: addError,
+  //   isSuccess: addSuccess,
+  // } = response;
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    data ? toast.error("Update Api is not ready Yet") : create(values);
+    // data ? toast.error("Update Api is not ready Yet") : create(values);
   }
 
-  useEffect(() => {
-    if (addError) {
-      toast.error("Something Wrong.");
-    }
-    if (addSuccess) {
-      refetch();
-      toast.success("Service Added Successfully.");
-      setOpen();
-    }
-  }, [addError, addSuccess]);
+  // useEffect(() => {
+  //   if (addError) {
+  //     toast.error("Something Wrong.");
+  //   }
+  //   if (addSuccess) {
+  //     // refetch();
+  //     toast.success("Service Added Successfully.");
+  //     setOpen();
+  //   }
+  // }, [addError, addSuccess]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -131,8 +131,8 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button disabled={addLoading} className="w-full" type="submit">
-          {addLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+        <Button disabled={false} className="w-full" type="submit">
+          {false && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           {data ? "Update" : "Add"}
         </Button>
       </form>

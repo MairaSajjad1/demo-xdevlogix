@@ -67,7 +67,7 @@ const Login: FC = () => {
     if (isError) {
       toast.error("Invalid credentials");
     }
-  }, [isSuccess, isError, data]);
+  }, [isSuccess, isError, data, dispatch, router]);
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
