@@ -1,9 +1,8 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import * as z from "zod";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -17,7 +16,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
+import { useLoginMutation } from "@/store/services/authService";
 import toast from "react-hot-toast";
+
+import cookieCutter from "cookie-cutter";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/store/slices/auth";
 
 const loginFormSchema = z.object({
   mobile_no: z.string().min(1, { message: "Phone No is required." }),
@@ -26,6 +31,9 @@ const loginFormSchema = z.object({
 
 const Login: FC = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const [login, { isLoading, isSuccess, isError, data }] = useLoginMutation();
+
   const form = useForm({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -36,7 +44,30 @@ const Login: FC = () => {
 
   const onSubmit = async (values: any) => {
     // login(values);
+    await login(values);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      const { data: successData } = data;
+      const [userData] = successData;
+      const { token, business_id, customer_id } = userData;
+      cookieCutter.set("token", token);
+      cookieCutter.set("business_id", business_id);
+      cookieCutter.set("customer_id", customer_id);
+      dispatch(
+        setUser({
+          token,
+          buisnessId: business_id,
+          customerId: customer_id,
+        })
+      );
+      router.push("/dashboard/home");
+    }
+    if (isError) {
+      toast.error("Invalid credentials");
+    }
+  }, [isSuccess, isError, data]);
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -95,8 +126,8 @@ const Login: FC = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={false} className="w-full" type="submit">
-              {false && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            <Button disabled={isLoading} className="w-full" type="submit">
+              {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
               Login
             </Button>
           </form>

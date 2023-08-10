@@ -1,3 +1,4 @@
+"use client";
 import { GoOrganization as Organication } from "react-icons/go";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
