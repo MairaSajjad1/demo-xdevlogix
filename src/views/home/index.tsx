@@ -3,7 +3,10 @@ import { GoOrganization as Organication } from "react-icons/go";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { useSession } from "next-auth/react";
+
 const Home: React.FC = () => {
+  const { data: session } = useSession();
   const reportList = [
     {
       tag: "Orders",
