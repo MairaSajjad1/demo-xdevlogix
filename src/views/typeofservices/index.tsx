@@ -30,12 +30,14 @@ export interface TypeOfService {
 
 const TypeOfService: FC = () => {
   const { data: session } = useSession();
-
   const {
     data: typeOfServicesList,
     isLoading: typeOfServiceLoading,
     isFetching: typeOfServiceFetching,
-  } = useGetTypeOfServiceQuery({ buisnessId: 5, perPage: -1 });
+  } = useGetTypeOfServiceQuery({
+    buisnessId: session?.user?.business_id,
+    perPage: -1,
+  });
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);

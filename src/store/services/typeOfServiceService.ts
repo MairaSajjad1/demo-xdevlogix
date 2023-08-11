@@ -1,7 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "@/store";
 
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+
+const addTokenToRequest = async (headers: any, { getState }: any) => {
+  const session = await getSession();
+  if (session?.user?.token) {
+    headers.set("authorization", `Bearer ${session.user.token}`);
+  }
+  return headers;
+};
 const typeOfServiceService = createApi({
   reducerPath: "typeOfServiceService",
   tagTypes: ["typeOfService"],
@@ -10,17 +18,18 @@ const typeOfServiceService = createApi({
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://demo.onlineorder.dev-logix.com/api",
 
-    prepareHeaders: (headers, { getState }) => {
-      const state = getState() as RootState;
-      const authorization = state.authReducer?.token;
-
-      headers.set(
-        "authorization",
-        false
-          ? `Bearer ${authorization}`
-          : "Bearer 768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
-      );
+    prepareHeaders: async (headers, { getState }) => {
+      // const state = getState() as RootState;
+      // const authorization = state.authReducer?.token;
+      // addTokenToRequest();
+      // headers.set(
+      //   "authorization",
+      //   false
+      //     ? `Bearer ${authorization}`
+      //     : "Bearer 768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
+      // );
       headers.set("Accept", "application/json");
+      await addTokenToRequest(headers, { getState });
       return headers;
     },
   }),
@@ -36,9 +45,9 @@ const typeOfServiceService = createApi({
     }),
 
     getTypeOfService: builder.query({
-      query: ({ buinessId, perPage }) => {
+      query: ({ buisnessId, perPage }) => {
         return {
-          url: `/test/type?business_id=${buinessId}&per_page=${perPage}`,
+          url: `/test/type/service?business_id=${buisnessId}&per_page=${perPage}`,
           method: "GET",
         };
       },

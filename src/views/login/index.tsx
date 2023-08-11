@@ -45,10 +45,11 @@ const Login: FC = () => {
       ...values,
       redirect: false,
     });
+
     if (response?.error) {
       toast.error("Invalid Credentials");
     } else {
-      router.push("/dashboard/home");
+      router.replace("/dashboard/home");
     }
     setIsLoading(false);
   };
