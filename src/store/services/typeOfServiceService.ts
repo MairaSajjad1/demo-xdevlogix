@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "@/store";
 
+import { useSession } from "next-auth/react";
 const typeOfServiceService = createApi({
   reducerPath: "typeOfServiceService",
   tagTypes: ["typeOfService"],
@@ -11,13 +12,13 @@ const typeOfServiceService = createApi({
 
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
-      //   const authorization = state.authReducer?.userToken;
+      const authorization = state.authReducer?.token;
 
       headers.set(
         "authorization",
         false
-          ? `Bearer ${"authorization"}`
-          : "724|7C0T4B7au6MvTxvQuwtUyULGO3dkEW2VvIRA8nMm6D"
+          ? `Bearer ${authorization}`
+          : "768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
       );
       headers.set("Accept", "application/json");
       return headers;
@@ -37,7 +38,7 @@ const typeOfServiceService = createApi({
     getTypeOfService: builder.query({
       query: ({ buinessId, perPage }) => {
         return {
-          url: `/types-of-service?business_id=${buinessId}&per_page=${perPage}`,
+          url: `/test/service?business_id=${5}&per_page=${perPage}`,
           method: "GET",
         };
       },

@@ -15,6 +15,7 @@ import ServiceForm from "./ServiceForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useGetTypeOfServiceQuery } from "@/store/services/typeOfServiceService";
 import { RootState } from "@/store";
+import { useSession } from "next-auth/react";
 
 export interface TypeOfService {
   id: number;
@@ -28,6 +29,8 @@ export interface TypeOfService {
 }
 
 const TypeOfService: FC = () => {
+  const s = useSession();
+  console.log({ s });
   const { buisnessId } = useSelector((state: RootState) => state.authReducer);
   const {
     data: typeOfServicesList,
@@ -35,7 +38,6 @@ const TypeOfService: FC = () => {
     isFetching: typeOfServiceFetching,
   } = useGetTypeOfServiceQuery({ buisnessId, perPage: -1 });
 
-  console.log(typeOfServicesList);
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
@@ -146,7 +148,6 @@ const TypeOfService: FC = () => {
   };
 
   const handleDelete = (data: TypeOfService | null) => {
-    console.log(data);
     toggleDeleteModal();
   };
 
