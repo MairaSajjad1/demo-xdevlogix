@@ -4,9 +4,20 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { useSession } from "next-auth/react";
+import { useGetOrdersQuery } from "@/store/services/reportService";
 
 const Home: React.FC = () => {
   const { data: session } = useSession();
+
+  const {
+    data: ordersList,
+    isLoading: ordersLoading,
+    isFetching: ordersFetching,
+  } = useGetOrdersQuery({
+    buisnessId: session?.user?.business_id,
+    customerId: session?.user?.customer_id,
+    perPage: -1,
+  });
   const reportList = [
     {
       tag: "Orders",

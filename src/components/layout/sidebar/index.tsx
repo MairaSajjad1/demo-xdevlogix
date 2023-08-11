@@ -62,7 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           lbl: "Types of services",
           icon: <ServiceIcon />,
-          slug: "/services/listservice",
+          slug: "/services/type-of-services",
         },
       ],
     },
