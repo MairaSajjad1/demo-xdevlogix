@@ -29,8 +29,6 @@ export interface TypeOfService {
 }
 
 const TypeOfService: FC = () => {
-  const s = useSession();
-  console.log({ s });
   const { buisnessId } = useSelector((state: RootState) => state.authReducer);
   const {
     data: typeOfServicesList,
