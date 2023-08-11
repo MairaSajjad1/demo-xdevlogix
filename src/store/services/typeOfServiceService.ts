@@ -18,7 +18,7 @@ const typeOfServiceService = createApi({
         "authorization",
         false
           ? `Bearer ${authorization}`
-          : "768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
+          : "Bearer 768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
       );
       headers.set("Accept", "application/json");
       return headers;
@@ -38,7 +38,7 @@ const typeOfServiceService = createApi({
     getTypeOfService: builder.query({
       query: ({ buinessId, perPage }) => {
         return {
-          url: `/test/type?business_id=${5}&per_page=${perPage}`,
+          url: `/test/type?business_id=${buinessId}&per_page=${perPage}`,
           method: "GET",
         };
       },
