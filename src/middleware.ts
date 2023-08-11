@@ -17,7 +17,6 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // console.log({ session });
   // if (!req.cookies.has("token")) {
   //   return NextResponse.redirect(new URL("/", req.url));
   // } else if (path === "/" && req.cookies.has("token")) {

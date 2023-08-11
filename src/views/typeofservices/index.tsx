@@ -30,8 +30,6 @@ export interface TypeOfService {
 
 const TypeOfService: FC = () => {
   const { data: session } = useSession();
-  // @ts-ignore
-  console.log(session);
 
   const {
     data: typeOfServicesList,
