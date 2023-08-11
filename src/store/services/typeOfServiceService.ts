@@ -38,7 +38,7 @@ const typeOfServiceService = createApi({
     getTypeOfService: builder.query({
       query: ({ buinessId, perPage }) => {
         return {
-          url: `/test/service?business_id=${5}&per_page=${perPage}`,
+          url: `/test/type?business_id=${5}&per_page=${perPage}`,
           method: "GET",
         };
       },

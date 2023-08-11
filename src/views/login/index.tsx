@@ -16,14 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
-import { useLoginMutation } from "@/store/services/authService";
 import toast from "react-hot-toast";
 
-import cookieCutter from "cookie-cutter";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/store/slices/auth";
-
 import { signIn } from "next-auth/react";
 
 const loginFormSchema = z.object({
@@ -33,7 +28,6 @@ const loginFormSchema = z.object({
 
 const Login: FC = () => {
   const router = useRouter();
-  const dispatch = useDispatch();
   // const [login, { isLoading, isSuccess, isError, data }] = useLoginMutation();
   const [isLoading, setIsLoading] = useState(false);
 
