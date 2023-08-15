@@ -151,6 +151,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
             alt="logo"
             width={60}
             height={60}
+            priority
           />
         </div>
         {navBarItems.map((item, index) => {

@@ -85,6 +85,7 @@ const Login: FC = () => {
             alt="logo"
             width={80}
             height={80}
+            priority
           />
         </div>
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-black">
