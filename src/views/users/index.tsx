@@ -2,60 +2,47 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
-import { GoPlusCircle as PlusCircle } from "react-icons/go";
 import Table from "@/components/table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
-import ServiceForm from "./ServiceForm";
 import DeleteModal from "@/components/modal/delete-modal";
-import {
-  useDeleteTypeOfServiceMutation,
-  useGetTypeOfServiceQuery,
-} from "@/store/services/typeOfServiceService";
 import { useSession } from "next-auth/react";
+import { useGetUsersQuery } from "@/store/services/userService";
 
-export interface TypeOfService {
+export interface User {
   id: number;
   name: string;
-  description: string;
-  charge_type: string;
-  charge: string;
   business_id: number;
+  mobile_no: string;
+  email: string;
+  email_verified_at: any;
+  user_type: string;
+  role_id: number;
   created_at: string;
   updated_at: string;
 }
 
-const TypeOfService: FC = () => {
+const Users: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: typeOfServicesList,
-    isLoading: typeOfServiceLoading,
-    isFetching: typeOfServiceFetching,
-  } = useGetTypeOfServiceQuery({
+    data: usersList,
+    isLoading: userLoading,
+    isFetching: userFetching,
+  } = useGetUsersQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
 
-  // DELETE
-  const [deleteTypeOfService, response] = useDeleteTypeOfServiceMutation();
-  const {
-    isLoading: deleteLoading,
-    isError: deleteError,
-    isSuccess: deleteSuccess,
-  } = response;
-
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedTypeOfService, setSelectedTypeOfService] =
-    useState<TypeOfService | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  const columns: ColumnDef<TypeOfService | null>[] = useMemo(
+  const columns: ColumnDef<User | null>[] = useMemo(
     () => [
       // {
       //   id: "select",
@@ -86,9 +73,9 @@ const TypeOfService: FC = () => {
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div className="w-40">{row.getValue("name")}</div>
+              <div>{row.getValue("name")}</div>
             ) : (
-              <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
+              <Skeleton className="w-32 h-4 bg-[#F5f5f5]" />
             )}
           </>
         ),
@@ -96,14 +83,14 @@ const TypeOfService: FC = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "description",
+        accessorKey: "email",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Description" />
+          <DataTableColumnHeader column={column} title="Email" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("description")}</div>
+              <div>{row.getValue("email")}</div>
             ) : (
               <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
             )}
@@ -113,14 +100,31 @@ const TypeOfService: FC = () => {
         enableHiding: true,
       },
       {
-        accessorKey: "charge",
+        accessorKey: "mobile_no",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Charges" />
+          <DataTableColumnHeader column={column} title="Mobile" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div className="w-[80px]">{row.getValue("charge")}</div>
+              <div>{row.getValue("mobile_no")}</div>
+            ) : (
+              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+            )}
+          </>
+        ),
+        enableSorting: true,
+        enableHiding: true,
+      },
+      {
+        accessorKey: "user_type",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Type" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("user_type")}</div>
             ) : (
               <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
             )}
@@ -153,83 +157,54 @@ const TypeOfService: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: TypeOfService | null) => {
-    setSelectedTypeOfService(data);
+  const handleEdit = (data: User | null) => {
+    setSelectedUser(data);
     toggleModal();
   };
 
-  const handleDelete = (data: TypeOfService | null) => {
-    setSelectedTypeOfService(data);
+  const handleDelete = (data: User | null) => {
+    setSelectedUser(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    deleteTypeOfService({ id: selectedTypeOfService?.id });
+    toast.error("Delete Api Is Not Implemented");
   };
 
   useEffect(() => {
-    if (deleteError) {
-      toast.error("Something Wrong.");
-    }
-    if (deleteSuccess) {
-      toast.success("Service Deleted Successfully.");
-      toggleDeleteModal();
-    }
-  }, [deleteError, deleteSuccess]);
-
-  useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedTypeOfService(null);
+      setSelectedUser(null);
     }
   }, [open, openDelete]);
-
   return (
     <>
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">
-              Type of Services
-            </h1>
-            <p className="font-medium text-sm">
-              A List of all type of services
-            </p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Users</h1>
+            <p className="font-medium text-sm">A List of all Users</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
+          {/* <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Service
-          </Button>
+            Add User
+          </Button> */}
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={
-            typeOfServiceLoading || typeOfServiceFetching
-              ? loadingData
-              : typeOfServicesList || []
-          }
+          data={userLoading || userFetching ? loadingData : usersList || []}
           filterKey="name"
         />
       </div>
-      <Modal
-        title={
-          selectedTypeOfService ? "Update Service" : "Add New Service Type"
-        }
-        open={open}
-        setOpen={toggleModal}
-        body={
-          <ServiceForm setOpen={toggleModal} data={selectedTypeOfService} />
-        }
-      />
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
-        loading={deleteLoading}
+        loading={false}
         confirmDelete={confirmDelete}
       />
     </>
   );
 };
 
-export default TypeOfService;
+export default Users;
