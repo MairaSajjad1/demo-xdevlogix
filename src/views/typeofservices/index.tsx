@@ -45,7 +45,6 @@ const TypeOfService: FC = () => {
 
   // DELETE
   const [deleteTypeOfService, response] = useDeleteTypeOfServiceMutation();
-
   const {
     isLoading: deleteLoading,
     isError: deleteError,
@@ -170,7 +169,6 @@ const TypeOfService: FC = () => {
     deleteTypeOfService({ id: selectedTypeOfService?.id });
   };
 
-  console.log("Re Render");
   useEffect(() => {
     if (deleteError) {
       toast.error("Something Wrong.");
