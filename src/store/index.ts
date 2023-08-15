@@ -3,6 +3,7 @@ import authReducer from "./slices/auth";
 import authService from "./services/authService";
 import typeOfServiceService from "./services/typeOfServiceService";
 import reportService from "./services/reportService";
+import userService from "./services/userService";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [authService.reducerPath]: authService.reducer,
     [typeOfServiceService.reducerPath]: typeOfServiceService.reducer,
     [reportService.reducerPath]: reportService.reducer,
+    [userService.reducerPath]: userService.reducer,
     authReducer: authReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
@@ -18,7 +20,8 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       authService.middleware,
       typeOfServiceService.middleware,
-      reportService.middleware
+      reportService.middleware,
+      userService.middleware
     ),
 });
 

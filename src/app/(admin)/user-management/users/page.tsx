@@ -1,7 +1,7 @@
-import React from "react";
+import Users from "@/views/users";
 
 const page = () => {
-  return <div>page</div>;
+  return <Users />;
 };
 
 export default page;

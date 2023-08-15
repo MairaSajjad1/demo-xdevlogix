@@ -14,13 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { Textarea } from "@/components/ui/textarea";
-import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { TypeOfService } from "./index";
-import { RootState } from "@/store";
 import {
   useCreateTypeOfServiceMutation,
-  useGetTypeOfServiceQuery,
   useUpdateTypeOfServiceMutation,
 } from "@/store/services/typeOfServiceService";
 import { useSession } from "next-auth/react";
