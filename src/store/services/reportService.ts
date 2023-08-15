@@ -1,13 +1,14 @@
-import { addTokenToRequest } from "@/lib/utils";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "@/store";
+import { addTokenToRequest } from "@/lib/utils";
 
-const typeOfServiceService = createApi({
-  reducerPath: "typeOfServiceService",
-  tagTypes: ["typeOfService"],
+const reportService = createApi({
+  reducerPath: "reportService",
+  tagTypes: ["report"],
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://demo.onlineorder.dev-logix.com/api",
+      "https://demo.onlineorder.dev-logix.com",
 
     prepareHeaders: async (headers, { getState }) => {
       // const state = getState() as RootState;
@@ -27,26 +28,18 @@ const typeOfServiceService = createApi({
   refetchOnMountOrArgChange: true,
 
   endpoints: (builder) => ({
-    createTypeOfService: builder.mutation({
-      query: (data) => ({
-        url: "/types-of-service/create",
-        method: "POST",
-        body: data,
-      }),
-    }),
-
-    getTypeOfService: builder.query({
-      query: ({ buisnessId, perPage }) => {
+    getOrders: builder.query({
+      query: ({ buisnessId, customerId, perPage }) => {
         return {
-          url: `/test/type/service?business_id=${buisnessId}&per_page=${perPage}`,
+          url: `/order/report?business_id=${buisnessId}&customer_id=${customerId}&per_page=${perPage}`,
           method: "GET",
         };
       },
-      providesTags: ["typeOfService"],
+      providesTags: ["report"],
     }),
   }),
 });
 
-export const { useCreateTypeOfServiceMutation, useGetTypeOfServiceQuery } =
-  typeOfServiceService;
-export default typeOfServiceService;
+export const { useGetOrdersQuery } = reportService;
+
+export default reportService;

@@ -27,6 +27,7 @@ import {
   BarcodeIcon,
   PurchaseIcon,
 } from "@/assets/icons";
+import { signOut } from "next-auth/react";
 
 interface SidebarProps {
   openSidebar: boolean;
@@ -61,7 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           lbl: "Types of services",
           icon: <ServiceIcon />,
-          slug: "/services/listservice",
+          slug: "/services/type-of-services",
         },
       ],
     },
@@ -118,7 +119,8 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
   ];
 
   const handleLogOut = () => {
-    router.push("/");
+    signOut();
+    // router.push("/");
   };
 
   return (
