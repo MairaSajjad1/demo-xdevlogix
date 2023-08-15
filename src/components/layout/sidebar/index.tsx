@@ -38,84 +38,92 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
   const router = useRouter();
 
   const navBarItems = [
-    { lbl: "Home", icon: <HomeIcon />, slug: "/dashboard/home" },
+    { label: "Home", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
-      lbl: "User Management",
+      label: "User Management",
       icon: <UserManagementIcon />,
       childrens: [
         {
-          lbl: "Users",
+          label: "Users",
           icon: <UserCircle />,
           slug: "/user-management/users",
         },
         {
-          lbl: "Role",
+          label: "Role",
           icon: <HomeIcon />,
-          slug: "/Usermanagement/usermanagement",
+          slug: "/user-management/usermanagement",
         },
       ],
     },
     {
-      lbl: "Services",
+      label: "Services",
       icon: <ServicesIcon />,
       childrens: [
         {
-          lbl: "Types of services",
+          label: "Types of services",
           icon: <ServiceIcon />,
           slug: "/services/type-of-services",
         },
       ],
     },
     {
-      lbl: "Product",
+      label: "Product",
       icon: <ProductsIcons />,
       childrens: [
-        { lbl: "Product List", icon: <ListIcon />, slug: "/product/products" },
-        { lbl: "Brand", icon: <BrandIcon />, slug: "/product/brand" },
-        { lbl: "Bar Codes", icon: <BarcodeIcon />, slug: "/product/barcode" },
         {
-          lbl: "Variation",
+          label: "Product List",
+          icon: <ListIcon />,
+          slug: "/product/products",
+        },
+        { label: "Brand", icon: <BrandIcon />, slug: "/product/brand" },
+        { label: "Bar Codes", icon: <BarcodeIcon />, slug: "/product/barcode" },
+        {
+          label: "Variation",
           icon: <VariationIcon />,
           slug: "/product/variation",
         },
-        { lbl: "Purchase", icon: <PurchaseIcon />, slug: "/product/purchase" },
         {
-          lbl: "Purchase-Time",
+          label: "Purchase",
+          icon: <PurchaseIcon />,
+          slug: "/product/purchase",
+        },
+        {
+          label: "Purchase-Time",
           icon: <PurchaseTimeIcon />,
           slug: "/product/purchasetime",
         },
-        { lbl: "Units", icon: <UnitIcon />, slug: "/product/units" },
+        { label: "Units", icon: <UnitIcon />, slug: "/product/units" },
       ],
     },
     {
-      lbl: "Orders",
+      label: "Orders",
       icon: <OrderIcon />,
       childrens: [
-        { lbl: "Orders List", icon: <ListIcon />, slug: "/orders/orders" },
-        { lbl: "Rider", icon: <RiderIcon />, slug: "/orders/rider" },
-        { lbl: "Suppliers", icon: <UnitIcon />, slug: "/orders/supplier" },
+        { label: "Orders List", icon: <ListIcon />, slug: "/orders/orders" },
+        { label: "Rider", icon: <RiderIcon />, slug: "/orders/rider" },
+        { label: "Suppliers", icon: <UnitIcon />, slug: "/orders/supplier" },
       ],
     },
     {
-      lbl: "Settings",
+      label: "Settings",
       icon: <Settings />,
       childrens: [
-        { lbl: "Location", icon: <HomeIcon />, slug: "/settings/location" },
+        { label: "Location", icon: <HomeIcon />, slug: "/settings/location" },
         {
-          lbl: "Categories",
+          label: "Categories",
           icon: <ProductsIcons />,
           slug: "/settings/category",
         },
         {
-          lbl: "Tax Rates",
+          label: "Tax Rates",
           icon: <ProductsIcons />,
           slug: "/settings/taxrate",
         },
-        { lbl: "Business", icon: <ListIcon />, slug: "/settings/business" },
+        { label: "Business", icon: <ListIcon />, slug: "/settings/business" },
       ],
     },
 
-    { lbl: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
+    { label: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
   ];
 
   const handleLogOut = () => {
@@ -146,12 +154,12 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
           />
         </div>
         {navBarItems.map((item, index) => {
-          const { icon, lbl, slug, childrens } = item;
+          const { icon, label, slug, childrens } = item;
           return (
             <MenuItem
               key={index}
               icon={icon}
-              lbl={lbl}
+              label={label}
               slug={slug}
               childrens={childrens}
             />

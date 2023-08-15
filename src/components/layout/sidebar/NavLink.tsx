@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 
 interface NavLinkProps {
   icon: JSX.Element;
-  lbl: string;
+  label: string;
   href: string;
 }
 
-const NavLink: FC<NavLinkProps> = ({ icon, lbl, href }) => {
+const NavLink: FC<NavLinkProps> = ({ icon, label, href }) => {
   const pathname = usePathname();
 
   // Extracting the last word of href
@@ -26,7 +26,7 @@ const NavLink: FC<NavLinkProps> = ({ icon, lbl, href }) => {
         }`}
       >
         <div className="icon flex items-start justify-center">{icon}</div>
-        <div>{lbl}</div>
+        <div>{label}</div>
       </div>
     </Link>
   );

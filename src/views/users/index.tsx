@@ -37,9 +37,6 @@ const Users: FC = () => {
     perPage: -1,
   });
 
-  console.log({ usersList });
-
-  // DELETE
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
@@ -200,12 +197,6 @@ const Users: FC = () => {
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={selectedUser ? "Update User" : "Add New User"}
-        open={open}
-        setOpen={toggleModal}
-        body={<UserForm setOpen={toggleModal} data={selectedUser} />}
-      /> */}
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}

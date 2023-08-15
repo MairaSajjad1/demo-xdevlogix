@@ -4,18 +4,17 @@ import NavLink from "./NavLink";
 
 interface MenuItem {
   icon: JSX.Element;
-  lbl: string;
+  label: string;
   slug?: string;
 }
 interface MenuItemProps extends MenuItem {
   childrens?: MenuItemProps[];
 }
-const MenuItem: FC<MenuItemProps> = ({ icon, lbl, slug, childrens }) => {
+const MenuItem: FC<MenuItemProps> = ({ icon, label, slug, childrens }) => {
   const pathname = usePathname();
   const [isParentOpened, setIsParentOpened] = useState<boolean>(
-    pathname.includes(lbl.toLowerCase())
+    pathname.includes(label.toLowerCase())
   );
-
   return (
     <>
       {childrens ? (
@@ -28,12 +27,12 @@ const MenuItem: FC<MenuItemProps> = ({ icon, lbl, slug, childrens }) => {
           >
             <div
               className={`cursor-pointer w-full flex items-center duration-300 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133] ${
-                pathname.includes(lbl.toLowerCase()) &&
+                pathname.includes(label.split(" ").join("-").toLowerCase()) &&
                 "text-[#4540e1] bg-[#4540e133] text-base font-medium"
               }`}
             >
               {icon}
-              <div>{lbl}</div>
+              <div>{label}</div>
             </div>
           </div>
           {isParentOpened && (
@@ -42,7 +41,7 @@ const MenuItem: FC<MenuItemProps> = ({ icon, lbl, slug, childrens }) => {
                 <NavLink
                   key={index}
                   icon={item.icon}
-                  lbl={item.lbl}
+                  label={item.label}
                   href={item.slug!}
                 />
               ))}
@@ -50,7 +49,7 @@ const MenuItem: FC<MenuItemProps> = ({ icon, lbl, slug, childrens }) => {
           )}
         </div>
       ) : (
-        <NavLink icon={icon} lbl={lbl} href={slug!} />
+        <NavLink icon={icon} label={label} href={slug!} />
       )}
     </>
   );
