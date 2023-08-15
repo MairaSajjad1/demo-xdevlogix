@@ -32,9 +32,8 @@ const typeOfServiceService = createApi({
         url: `/test/type/service?business_id=${buisnessId}&per_page=${perPage}`,
         method: "GET",
       }),
-      transformResponse: ({ data }: { data: TypeOfService[] }) => {
-        return data?.sort((a, b) => b.id - a.id);
-      },
+      transformResponse: ({ data }: { data: TypeOfService[] }) =>
+        data?.sort((a, b) => b.id - a.id),
       providesTags: ["typeOfService"],
     }),
     updateTypeOfService: builder.mutation({
