@@ -38,7 +38,6 @@ const TypeOfService: FC = () => {
     data: typeOfServicesList,
     isLoading: typeOfServiceLoading,
     isFetching: typeOfServiceFetching,
-    refetch,
   } = useGetTypeOfServiceQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -149,7 +148,6 @@ const TypeOfService: FC = () => {
 
   const loadingData = Array.from({ length: 10 }, () => null);
 
-  console.log({ openDelete });
   const toggleModal = useCallback(() => {
     setOpen((open) => !open);
   }, [open]);
@@ -177,11 +175,17 @@ const TypeOfService: FC = () => {
       toast.error("Something Wrong.");
     }
     if (deleteSuccess) {
-      refetch();
-      toast.success("Service Added Successfully.");
+      toast.success("Service Deleted Successfully.");
       toggleDeleteModal();
     }
   }, [deleteError, deleteSuccess]);
+
+  useEffect(() => {
+    if (!open || !openDelete) {
+      setSelectedTypeOfService(null);
+    }
+  }, [open, openDelete]);
+
   return (
     <>
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
@@ -206,7 +210,7 @@ const TypeOfService: FC = () => {
           data={
             typeOfServiceLoading || typeOfServiceFetching
               ? loadingData
-              : typeOfServicesList?.data || []
+              : typeOfServicesList || []
           }
           filterKey="name"
         />

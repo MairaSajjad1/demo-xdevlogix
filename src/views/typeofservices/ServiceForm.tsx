@@ -40,10 +40,6 @@ interface ServiceFormProps {
 
 const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
-  const { refetch } = useGetTypeOfServiceQuery({
-    buisnessId: session?.user?.business_id!,
-    perPage: -1,
-  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,7 +78,6 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      refetch();
       toast.success("Service Added Successfully.");
       setOpen();
     }
@@ -93,7 +88,6 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (updateSuccess) {
-      refetch();
       toast.success("Service Update Successfully.");
       setOpen();
     }

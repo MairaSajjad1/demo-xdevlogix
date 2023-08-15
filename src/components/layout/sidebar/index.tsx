@@ -40,13 +40,13 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
   const navBarItems = [
     { lbl: "Home", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
-      lbl: "UserManagement",
+      lbl: "User Management",
       icon: <UserManagementIcon />,
       childrens: [
         {
           lbl: "Users",
           icon: <UserCircle />,
-          slug: "/Usermanagement/users",
+          slug: "/user-management/users",
         },
         {
           lbl: "Role",

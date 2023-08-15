@@ -1,4 +1,5 @@
 import { addTokenToRequest } from "@/lib/utils";
+import { TypeOfService } from "@/views/typeofservices";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const typeOfServiceService = createApi({
@@ -15,7 +16,7 @@ const typeOfServiceService = createApi({
       return headers;
     },
   }),
-  refetchOnMountOrArgChange: true,
+  // refetchOnMountOrArgChange: true,
 
   endpoints: (builder) => ({
     createTypeOfService: builder.mutation({
@@ -24,13 +25,15 @@ const typeOfServiceService = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["typeOfService"],
     }),
     getTypeOfService: builder.query({
-      query: ({ buisnessId, perPage }) => {
-        return {
-          url: `/test/type/service?business_id=${buisnessId}&per_page=${perPage}`,
-          method: "GET",
-        };
+      query: ({ buisnessId, perPage }) => ({
+        url: `/test/type/service?business_id=${buisnessId}&per_page=${perPage}`,
+        method: "GET",
+      }),
+      transformResponse: ({ data }: { data: TypeOfService[] }) => {
+        return data?.sort((a, b) => b.id - a.id);
       },
       providesTags: ["typeOfService"],
     }),
