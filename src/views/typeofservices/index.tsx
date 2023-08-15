@@ -1,5 +1,5 @@
 "use client";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,7 +13,10 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import ServiceForm from "./ServiceForm";
 import DeleteModal from "@/components/modal/delete-modal";
-import { useGetTypeOfServiceQuery } from "@/store/services/typeOfServiceService";
+import {
+  useDeleteTypeOfServiceMutation,
+  useGetTypeOfServiceQuery,
+} from "@/store/services/typeOfServiceService";
 import { RootState } from "@/store";
 import { useSession } from "next-auth/react";
 
@@ -30,14 +33,25 @@ export interface TypeOfService {
 
 const TypeOfService: FC = () => {
   const { data: session } = useSession();
+  // GET
   const {
     data: typeOfServicesList,
     isLoading: typeOfServiceLoading,
     isFetching: typeOfServiceFetching,
+    refetch,
   } = useGetTypeOfServiceQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+
+  // DELETE
+  const [deleteTypeOfService, response] = useDeleteTypeOfServiceMutation();
+
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -135,6 +149,7 @@ const TypeOfService: FC = () => {
 
   const loadingData = Array.from({ length: 10 }, () => null);
 
+  console.log({ openDelete });
   const toggleModal = useCallback(() => {
     setOpen((open) => !open);
   }, [open]);
@@ -149,14 +164,24 @@ const TypeOfService: FC = () => {
   };
 
   const handleDelete = (data: TypeOfService | null) => {
+    setSelectedTypeOfService(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    toast.error("Delete Api Is Not Implemented yet.");
-    toggleDeleteModal();
+    deleteTypeOfService({ id: selectedTypeOfService?.id });
   };
 
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      refetch();
+      toast.success("Service Added Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
   return (
     <>
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
@@ -199,7 +224,7 @@ const TypeOfService: FC = () => {
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
-        loading={false}
+        loading={deleteLoading}
         confirmDelete={confirmDelete}
       />
     </>

@@ -10,15 +10,6 @@ const typeOfServiceService = createApi({
       "https://demo.onlineorder.dev-logix.com/api",
 
     prepareHeaders: async (headers, { getState }) => {
-      // const state = getState() as RootState;
-      // const authorization = state.authReducer?.token;
-      // addTokenToRequest();
-      // headers.set(
-      //   "authorization",
-      //   false
-      //     ? `Bearer ${authorization}`
-      //     : "Bearer 768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
-      // );
       headers.set("Accept", "application/json");
       await addTokenToRequest(headers, { getState });
       return headers;
@@ -28,13 +19,12 @@ const typeOfServiceService = createApi({
 
   endpoints: (builder) => ({
     createTypeOfService: builder.mutation({
-      query: (data) => ({
+      query: ({ data }) => ({
         url: "/types-of-service/create",
         method: "POST",
         body: data,
       }),
     }),
-
     getTypeOfService: builder.query({
       query: ({ buisnessId, perPage }) => {
         return {
@@ -44,9 +34,28 @@ const typeOfServiceService = createApi({
       },
       providesTags: ["typeOfService"],
     }),
+    updateTypeOfService: builder.mutation({
+      query: ({ data }) => ({
+        url: `/types-of-service/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["typeOfService"],
+    }),
+    deleteTypeOfService: builder.mutation({
+      query: ({ id }) => ({
+        url: `/types-of-service/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["typeOfService"],
+    }),
   }),
 });
 
-export const { useCreateTypeOfServiceMutation, useGetTypeOfServiceQuery } =
-  typeOfServiceService;
+export const {
+  useCreateTypeOfServiceMutation,
+  useGetTypeOfServiceQuery,
+  useUpdateTypeOfServiceMutation,
+  useDeleteTypeOfServiceMutation,
+} = typeOfServiceService;
 export default typeOfServiceService;
