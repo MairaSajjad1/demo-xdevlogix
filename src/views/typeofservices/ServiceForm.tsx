@@ -14,14 +14,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { Textarea } from "@/components/ui/textarea";
-// import {
-//   useCreateTypeOfServiceMutation,
-//   useGetTypeOfServiceQuery,
-// } from "@/store/services/typeOfServiceService";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { TypeOfService } from "./index";
 import { RootState } from "@/store";
+import {
+  useCreateTypeOfServiceMutation,
+  useGetTypeOfServiceQuery,
+  useUpdateTypeOfServiceMutation,
+} from "@/store/services/typeOfServiceService";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -37,8 +39,7 @@ interface ServiceFormProps {
 }
 
 const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
-  // const { businessId } = useSelector((state: RootState) => state.authReducer);
-  //   const { refetch } = useGetTypeOfServiceQuery({ businessId, perPage: -1 });
+  const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,32 +48,50 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
       description: data?.description || "",
       charge_type: data?.charge_type || "fixed",
       charge: Number(data?.charge) || 0,
-      business_id: data?.business_id || Number(5!),
+      business_id: data?.business_id || Number(session?.user?.business_id),
     },
   });
 
-  // const [create, response] = useCreateTypeOfServiceMutation();
-
-  // const {
-  //   isLoading: addLoading,
-  //   isError: addError,
-  //   isSuccess: addSuccess,
-  // } = response;
-
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // data ? toast.error("Update Api is not ready Yet") : create(values);
+    data
+      ? update({ data: { ...values, id: data.id } })
+      : create({ data: values });
   }
 
-  // useEffect(() => {
-  //   if (addError) {
-  //     toast.error("Something Wrong.");
-  //   }
-  //   if (addSuccess) {
-  //     // refetch();
-  //     toast.success("Service Added Successfully.");
-  //     setOpen();
-  //   }
-  // }, [addError, addSuccess]);
+  const [create, createResponse] = useCreateTypeOfServiceMutation();
+  const [update, updateResponse] = useUpdateTypeOfServiceMutation();
+
+  const {
+    isLoading: createLoading,
+    isError: createError,
+    isSuccess: createSuccess,
+  } = createResponse;
+
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
+
+  useEffect(() => {
+    if (createError) {
+      toast.error("Something Wrong.");
+    }
+    if (createSuccess) {
+      toast.success("Service Added Successfully.");
+      setOpen();
+    }
+  }, [createError, createSuccess, updateError, updateSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Service Update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -131,8 +150,14 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button disabled={false} className="w-full" type="submit">
-          {false && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+        <Button
+          disabled={createLoading || updateLoading}
+          className="w-full"
+          type="submit"
+        >
+          {(createLoading || updateLoading) && (
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {data ? "Update" : "Add"}
         </Button>
       </form>
