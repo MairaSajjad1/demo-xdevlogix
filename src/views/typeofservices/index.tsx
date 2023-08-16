@@ -86,7 +86,7 @@ const TypeOfService: FC = () => {
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div className="w-40">{row.getValue("name")}</div>
+              <div>{row.getValue("name")}</div>
             ) : (
               <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
@@ -120,7 +120,7 @@ const TypeOfService: FC = () => {
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div className="w-[80px]">{row.getValue("charge")}</div>
+              <div>{row.getValue("charge")}</div>
             ) : (
               <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
             )}

@@ -112,12 +112,12 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Categories",
           icon: <ProductsIcons />,
-          slug: "/settings/category",
+          slug: "/settings/categories",
         },
         {
           label: "Tax Rates",
           icon: <ProductsIcons />,
-          slug: "/settings/taxrate",
+          slug: "/settings/taxrates",
         },
         { label: "Business", icon: <ListIcon />, slug: "/settings/business" },
       ],
