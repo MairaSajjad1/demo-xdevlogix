@@ -108,7 +108,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
       label: "Settings",
       icon: <Settings />,
       childrens: [
-        { label: "Location", icon: <HomeIcon />, slug: "/settings/location" },
+        { label: "Location", icon: <HomeIcon />, slug: "/settings/locations" },
         {
           label: "Categories",
           icon: <ProductsIcons />,
@@ -119,7 +119,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
           icon: <ProductsIcons />,
           slug: "/settings/taxrates",
         },
-        { label: "Business", icon: <ListIcon />, slug: "/settings/business" },
+        { label: "Business", icon: <ListIcon />, slug: "/settings/buisnesses" },
       ],
     },
 

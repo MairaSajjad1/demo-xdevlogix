@@ -37,8 +37,6 @@ const Categories: FC = () => {
     perPage: -1,
   });
 
-  console.log({ categoriesList });
-
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
