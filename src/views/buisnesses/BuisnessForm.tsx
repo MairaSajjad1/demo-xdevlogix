@@ -20,11 +20,10 @@ import { useCreateLocationMutation } from "@/store/services/locationService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  landmark: z.string().min(1, { message: "Landmark is required." }),
+  address: z.string().min(1, { message: "Landmark is required." }),
   city: z.string().min(1, { message: "City is required." }),
   state: z.string().min(1, { message: "State is required." }),
   country: z.string().min(1, { message: "Country is required." }),
-  business_id: z.coerce.number(),
 });
 
 interface BuisnessFormProps {
@@ -39,11 +38,10 @@ const BuisnessForm: FC<BuisnessFormProps> = ({ setOpen, data }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
-      landmark: data?.landmark || "",
+      address: data?.address || "",
       city: data?.city || "",
       state: data?.state || "",
       country: data?.country || "",
-      business_id: data?.business_id || Number(session?.user?.business_id),
     },
   });
 
@@ -89,10 +87,10 @@ const BuisnessForm: FC<BuisnessFormProps> = ({ setOpen, data }) => {
         />
         <FormField
           control={form.control}
-          name="landmark"
+          name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Landmark</FormLabel>
+              <FormLabel>Address</FormLabel>
               <FormControl>
                 <Input placeholder="Gulberg" {...field} />
               </FormControl>
