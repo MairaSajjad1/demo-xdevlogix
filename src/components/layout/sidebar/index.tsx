@@ -99,16 +99,16 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
       label: "Orders",
       icon: <OrderIcon />,
       childrens: [
-        { label: "Orders List", icon: <ListIcon />, slug: "/orders/orders" },
+        { label: "Orders List", icon: <ListIcon />, slug: "/orders/" },
         { label: "Rider", icon: <RiderIcon />, slug: "/orders/rider" },
-        { label: "Suppliers", icon: <UnitIcon />, slug: "/orders/supplier" },
+        { label: "Suppliers", icon: <UnitIcon />, slug: "/orders/suppliers" },
       ],
     },
     {
       label: "Settings",
       icon: <Settings />,
       childrens: [
-        { label: "Location", icon: <HomeIcon />, slug: "/settings/location" },
+        { label: "Location", icon: <HomeIcon />, slug: "/settings/locations" },
         {
           label: "Categories",
           icon: <ProductsIcons />,
@@ -119,7 +119,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
           icon: <ProductsIcons />,
           slug: "/settings/taxrates",
         },
-        { label: "Business", icon: <ListIcon />, slug: "/settings/business" },
+        { label: "Business", icon: <ListIcon />, slug: "/settings/buisnesses" },
       ],
     },
 

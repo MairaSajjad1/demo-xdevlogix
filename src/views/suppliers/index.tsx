@@ -12,27 +12,26 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import CategoryForm from "./CategoryForm";
-import { useGetCategoriesQuery } from "@/store/services/categoryService";
+import { useGetTaxratesQuery } from "@/store/services/taxrateService";
+import SupplierForm from "./SupplierForm";
+import { useGetSuppliersQuery } from "@/store/services/supplierService";
 
-export interface Category {
+export interface Supplier {
   id: number;
   name: string;
   business_id: number;
-  parent_id: any;
-  created_by: number;
-  created_at: string;
-  updated_at: string;
+  mobile_no: string;
+  user_type: string;
 }
 
-const Categories: FC = () => {
+const Suppliers: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: categoriesList,
-    isLoading: categoriesLoading,
-    isFetching: categoriesFetching,
-  } = useGetCategoriesQuery({
+    data: supplierList,
+    isLoading: supplierLoading,
+    isFetching: supplierFetching,
+  } = useGetSuppliersQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -40,10 +39,11 @@ const Categories: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedTypeOfService, setSelectedTypeOfService] =
-    useState<Category | null>(null);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
+    null
+  );
 
-  const columns: ColumnDef<Category | null>[] = useMemo(
+  const columns: ColumnDef<Supplier | null>[] = useMemo(
     () => [
       {
         accessorKey: "name",
@@ -61,6 +61,23 @@ const Categories: FC = () => {
         ),
         enableSorting: true,
         enableHiding: false,
+      },
+      {
+        accessorKey: "mobile_no",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Mobile" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("mobile_no")}</div>
+            ) : (
+              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
+            )}
+          </>
+        ),
+        enableSorting: true,
+        enableHiding: true,
       },
       {
         id: "actions",
@@ -86,24 +103,24 @@ const Categories: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Category | null) => {
-    setSelectedTypeOfService(data);
+  const handleEdit = (data: Supplier | null) => {
+    setSelectedSupplier(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Category | null) => {
-    setSelectedTypeOfService(data);
+  const handleDelete = (data: Supplier | null) => {
+    setSelectedSupplier(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    toast.error("Delete APi is not implemented Yet");
+    toast.error("Delete API is not implemented yet.");
     toggleDeleteModal();
   };
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedTypeOfService(null);
+      setSelectedSupplier(null);
     }
   }, [open, openDelete]);
 
@@ -112,12 +129,12 @@ const Categories: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Categories</h1>
-            <p className="font-medium text-sm">A List of all Categories</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Suppliers</h1>
+            <p className="font-medium text-sm">A List of all Suppliers</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Category
+            Add Supplier
           </Button>
         </div>
         <Separator />
@@ -125,22 +142,18 @@ const Categories: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            categoriesLoading || categoriesFetching
+            supplierLoading || supplierFetching
               ? loadingData
-              : categoriesList || []
+              : supplierList || []
           }
           filterKey="name"
         />
       </div>
       <Modal
-        title={
-          selectedTypeOfService ? "Update Service" : "Add New Service Type"
-        }
+        title={selectedSupplier ? "Update Service" : "Add New Service Type"}
         open={open}
         setOpen={toggleModal}
-        body={
-          <CategoryForm setOpen={toggleModal} data={selectedTypeOfService} />
-        }
+        body={<SupplierForm setOpen={toggleModal} data={selectedSupplier} />}
       />
       <DeleteModal
         open={openDelete}
@@ -152,4 +165,4 @@ const Categories: FC = () => {
   );
 };
 
-export default Categories;
+export default Suppliers;

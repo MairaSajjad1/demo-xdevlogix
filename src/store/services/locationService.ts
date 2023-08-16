@@ -1,5 +1,5 @@
 import { addTokenToRequest } from "@/lib/utils";
-import { Location } from "@/views/location";
+import { Location } from "@/views/locations";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const locationService = createApi({

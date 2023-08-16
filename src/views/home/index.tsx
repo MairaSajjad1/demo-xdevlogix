@@ -6,6 +6,106 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "next-auth/react";
 import { useGetOrdersQuery } from "@/store/services/reportService";
 
+export interface Order {
+  id: number;
+  business_id: number;
+  location_id: number;
+  order_no: string;
+  customer_id: number;
+  order_status: string;
+  payment_status: string;
+  order_type: string;
+  total_before_tax: number;
+  final_total: number;
+  tax_rate_id: number;
+  tax_amount: number;
+  rider_id: any;
+  invoice_id: any;
+  source: string;
+  address: string;
+  discount_type: string;
+  discount: number;
+  created_at: string;
+  updated_at: string;
+  type_of_service_id: any;
+  order_created_time: string;
+  order_delivered_time: any;
+  customer: Customer;
+  order_lines: OrderLine[];
+  payment_lines: PaymentLine[];
+}
+
+export interface Customer {
+  id: number;
+  name: string;
+  business_id: number;
+  mobile_no: string;
+  email: string;
+  email_verified_at: any;
+  user_type: string;
+  role_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrderLine {
+  id: number;
+  order_id: number;
+  business_id: number;
+  product_id: number;
+  product_variation_id: number;
+  qty: number;
+  unit_price_before_discount: string;
+  unit_price_exc_tax: string;
+  line_discount_type: string;
+  line_discount_amount: number;
+  discount_id: any;
+  unit_price_inc_tax: string;
+  item_tax: string;
+  tax_id: any;
+  created_at: string;
+  updated_at: string;
+  product: Product;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  business_id: number;
+  unit_id: number;
+  category_id: number;
+  sub_category_id: any;
+  sku: string;
+  type: string;
+  vendor_id: any;
+  brand_id: any;
+  manage_stock_status: number;
+  alerty_quantity: number;
+  not_for_selling: number;
+  tax_type: string;
+  weight: any;
+  barcode_id: any;
+  tax_id: any;
+  created_at: string;
+  updated_at: string;
+  product_time_id: any;
+}
+
+export interface PaymentLine {
+  id: number;
+  order_id: number;
+  purchase_id: any;
+  business_id: number;
+  method: string;
+  amount: string;
+  type: string;
+  reference_number: any;
+  payment_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
 const Home: React.FC = () => {
   const { data: session } = useSession();
 
@@ -15,9 +115,11 @@ const Home: React.FC = () => {
     isFetching: ordersFetching,
   } = useGetOrdersQuery({
     buisnessId: session?.user?.business_id,
-    customerId: session?.user?.customer_id,
+    // customerId: session?.user?.customer_id,
+    customerId: 31,
     perPage: -1,
   });
+
   const reportList = [
     {
       tag: "Orders",

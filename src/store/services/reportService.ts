@@ -11,22 +11,11 @@ const reportService = createApi({
       "https://demo.onlineorder.dev-logix.com",
 
     prepareHeaders: async (headers, { getState }) => {
-      // const state = getState() as RootState;
-      // const authorization = state.authReducer?.token;
-      // addTokenToRequest();
-      // headers.set(
-      //   "authorization",
-      //   false
-      //     ? `Bearer ${authorization}`
-      //     : "Bearer 768|FvQtWbVh08CMfWC0ANphrlZVan5RAdL8pOU7phK6"
-      // );
       headers.set("Accept", "application/json");
       await addTokenToRequest(headers, { getState });
       return headers;
     },
   }),
-  refetchOnMountOrArgChange: true,
-
   endpoints: (builder) => ({
     getOrders: builder.query({
       query: ({ buisnessId, customerId, perPage }) => {
