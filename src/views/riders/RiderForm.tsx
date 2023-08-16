@@ -14,24 +14,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
-import { Supplier } from "./index";
+import { Rider } from "./index";
 import { useCreateSupplierMutation } from "@/store/services/supplierService";
 import { useSession } from "next-auth/react";
+import { useCreateRiderMutation } from "@/store/services/riderService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
+  email: z.string().min(1, { message: "Email is required." }),
   mobile_no: z
     .string({ required_error: "Mobile is required." })
     .length(12, { message: "Mobile must be 12 digit long." }),
   business_id: z.coerce.number(),
 });
 
-interface SupplierFormProps {
+interface RiderFormProps {
   setOpen: () => void;
-  data?: Supplier | null;
+  data?: Rider | null;
 }
 
-const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
+const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,7 +51,7 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
       : create({ data: values });
   }
 
-  const [create, createResponse] = useCreateSupplierMutation();
+  const [create, createResponse] = useCreateRiderMutation();
 
   const {
     isLoading: createLoading,
@@ -83,6 +85,21 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
+        {!data && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="saad@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <FormField
           control={form.control}
           name="mobile_no"
@@ -105,4 +122,4 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
   );
 };
 
-export default SupplierForm;
+export default RiderForm;
