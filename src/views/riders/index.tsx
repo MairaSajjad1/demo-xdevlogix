@@ -12,10 +12,10 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import SupplierForm from "./SupplierForm";
-import { useGetSuppliersQuery } from "@/store/services/supplierService";
+import RiderForm from "./RiderForm";
+import { useGetRidersQuery } from "@/store/services/riderService";
 
-export interface Supplier {
+export interface Rider {
   id: number;
   name: string;
   business_id: number;
@@ -23,14 +23,14 @@ export interface Supplier {
   user_type: string;
 }
 
-const Suppliers: FC = () => {
+const Riders: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: supplierList,
-    isLoading: supplierLoading,
-    isFetching: supplierFetching,
-  } = useGetSuppliersQuery({
+    data: riderList,
+    isLoading: riderLoading,
+    isFetching: riderFetching,
+  } = useGetRidersQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -38,11 +38,9 @@ const Suppliers: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(
-    null
-  );
+  const [selectedSupplier, setSelectedSupplier] = useState<Rider | null>(null);
 
-  const columns: ColumnDef<Supplier | null>[] = useMemo(
+  const columns: ColumnDef<Rider | null>[] = useMemo(
     () => [
       {
         accessorKey: "name",
@@ -102,12 +100,12 @@ const Suppliers: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Supplier | null) => {
+  const handleEdit = (data: Rider | null) => {
     setSelectedSupplier(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Supplier | null) => {
+  const handleDelete = (data: Rider | null) => {
     setSelectedSupplier(data);
     toggleDeleteModal();
   };
@@ -128,31 +126,27 @@ const Suppliers: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Suppliers</h1>
-            <p className="font-medium text-sm">A List of all Suppliers</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Riders</h1>
+            <p className="font-medium text-sm">A List of all Riders</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Supplier
+            Add Rider
           </Button>
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={
-            supplierLoading || supplierFetching
-              ? loadingData
-              : supplierList || []
-          }
+          data={riderLoading || riderFetching ? loadingData : riderList || []}
           filterKey="name"
         />
       </div>
       <Modal
-        title={selectedSupplier ? "Update Service" : "Add New Service Type"}
+        title={selectedSupplier ? "Update Rider" : "Add New Rider"}
         open={open}
         setOpen={toggleModal}
-        body={<SupplierForm setOpen={toggleModal} data={selectedSupplier} />}
+        body={<RiderForm setOpen={toggleModal} data={selectedSupplier} />}
       />
       <DeleteModal
         open={openDelete}
@@ -164,4 +158,4 @@ const Suppliers: FC = () => {
   );
 };
 
-export default Suppliers;
+export default Riders;
