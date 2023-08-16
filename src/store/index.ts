@@ -5,6 +5,8 @@ import typeOfServiceService from "./services/typeOfServiceService";
 import reportService from "./services/reportService";
 import userService from "./services/userService";
 import locationService from "./services/locationService";
+import categoryService from "./services/categoryService";
+import taxrateService from "./services/taxrateService";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     [reportService.reducerPath]: reportService.reducer,
     [userService.reducerPath]: userService.reducer,
     [locationService.reducerPath]: locationService.reducer,
+    [categoryService.reducerPath]: categoryService.reducer,
+    [taxrateService.reducerPath]: taxrateService.reducer,
     authReducer: authReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
@@ -24,7 +28,9 @@ export const store = configureStore({
       typeOfServiceService.middleware,
       reportService.middleware,
       userService.middleware,
-      locationService.middleware
+      locationService.middleware,
+      categoryService.middleware,
+      taxrateService.middleware
     ),
 });
 
