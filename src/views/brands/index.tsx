@@ -10,12 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
-import BrandForm from "./BarcodeForm";
+import BrandForm from "./BrandForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetBarcodesQuery } from "@/store/services/barCodeService";
+import { useGetBrandsQuery } from "@/store/services/brandService";
 
-export interface Barcode {
+export interface Brand {
   id: number;
   name: string;
   business_id: number;
@@ -24,14 +24,14 @@ export interface Barcode {
   updated_at: string;
 }
 
-const Barcodes: FC = () => {
+const Brands: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: barcodeList,
-    isLoading: barcodeLoading,
-    isFetching: barcodeFetching,
-  } = useGetBarcodesQuery({
+    data: brandsList,
+    isLoading: brandsLoading,
+    isFetching: barndsFetching,
+  } = useGetBrandsQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -39,9 +39,9 @@ const Barcodes: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedBarcode, setSelectedBarcode] = useState<Barcode | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
 
-  const columns: ColumnDef<Barcode | null>[] = useMemo(
+  const columns: ColumnDef<Brand | null>[] = useMemo(
     () => [
       {
         accessorKey: "name",
@@ -84,13 +84,13 @@ const Barcodes: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Barcode | null) => {
-    setSelectedBarcode(data);
+  const handleEdit = (data: Brand | null) => {
+    setSelectedBrand(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Barcode | null) => {
-    setSelectedBarcode(data);
+  const handleDelete = (data: Brand | null) => {
+    setSelectedBrand(data);
     toggleDeleteModal();
   };
 
@@ -101,7 +101,7 @@ const Barcodes: FC = () => {
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedBarcode(null);
+      setSelectedBrand(null);
     }
   }, [open, openDelete]);
 
@@ -110,12 +110,12 @@ const Barcodes: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Bar Codes</h1>
-            <p className="font-medium text-sm">A List of all the bar codes.</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Brands</h1>
+            <p className="font-medium text-sm">A List of all the brands.</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Bar Code
+            Add Brand
           </Button>
         </div>
         <Separator />
@@ -123,16 +123,16 @@ const Barcodes: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            barcodeLoading || barcodeFetching ? loadingData : barcodeList || []
+            brandsLoading || barndsFetching ? loadingData : brandsList || []
           }
           filterKey="name"
         />
       </div>
       <Modal
-        title={selectedBarcode ? "Update Bar Code" : "Add New Bar Code"}
+        title={selectedBrand ? "Update Bar Code" : "Add New Bar Code"}
         open={open}
         setOpen={toggleModal}
-        body={<BrandForm setOpen={toggleModal} data={selectedBarcode} />}
+        body={<BrandForm setOpen={toggleModal} data={selectedBrand} />}
       />
       <DeleteModal
         open={openDelete}
@@ -144,4 +144,4 @@ const Barcodes: FC = () => {
   );
 };
 
-export default Barcodes;
+export default Brands;
