@@ -10,52 +10,50 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
+import UnitForm from "./UnitForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetLocationsQuery } from "@/store/services/locationService";
+import { useGetUnitsQuery } from "@/store/services/unitService";
 
-export interface Order {
+export interface Unit {
   id: number;
-  name: string;
-  landmark: string;
-  location_id: string;
+  actual_name: string;
+  short_name: string;
   business_id: number;
-  city: string;
-  state: string;
-  country: string;
+  allow_decimal: number;
+  created_by: number;
   created_at: string;
   updated_at: string;
 }
 
-const OrdersList: FC = () => {
+const Units: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: locationList,
-    isLoading: locationLoading,
-    isFetching: locationFetching,
-  } = useGetLocationsQuery({
+    data: unitList,
+    isLoading: unitLoading,
+    isFetching: unitFetching,
+  } = useGetUnitsQuery({
     buisnessId: session?.user?.business_id,
+    perPage: -1,
   });
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null
-  );
+  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
 
-  const columns: ColumnDef<Location | null>[] = useMemo(
+  const columns: ColumnDef<Unit | null>[] = useMemo(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "actual_name",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("name")}</div>
+              <div>{row.getValue("actual_name")}</div>
             ) : (
               <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
@@ -65,14 +63,14 @@ const OrdersList: FC = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "landmark",
+        accessorKey: "short_name",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Landmark" />
+          <DataTableColumnHeader column={column} title="Short Name" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("landmark")}</div>
+              <div>{row.getValue("short_name")}</div>
             ) : (
               <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
             )}
@@ -82,48 +80,14 @@ const OrdersList: FC = () => {
         enableHiding: true,
       },
       {
-        accessorKey: "city",
+        accessorKey: "allow_decimal",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="City" />
+          <DataTableColumnHeader column={column} title="Decimal Allowed " />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("city")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "state",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="State" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("state")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "country",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Country" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("country")}</div>
+              <div>{row.getValue("allow_decimal")}</div>
             ) : (
               <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
             )}
@@ -156,13 +120,13 @@ const OrdersList: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Location | null) => {
-    setSelectedLocation(data);
+  const handleEdit = (data: Unit | null) => {
+    setSelectedUnit(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Location | null) => {
-    setSelectedLocation(data);
+  const handleDelete = (data: Unit | null) => {
+    setSelectedUnit(data);
     toggleDeleteModal();
   };
 
@@ -173,7 +137,7 @@ const OrdersList: FC = () => {
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedLocation(null);
+      setSelectedUnit(null);
     }
   }, [open, openDelete]);
 
@@ -182,32 +146,28 @@ const OrdersList: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Orders</h1>
-            <p className="font-medium text-sm">A List of all the Orders</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Units</h1>
+            <p className="font-medium text-sm">A List of all the units</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Order
+            Add Unit
           </Button>
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={
-            locationLoading || locationFetching
-              ? loadingData
-              : locationList || []
-          }
+          data={unitLoading || unitFetching ? loadingData : unitList || []}
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={selectedLocation ? "Update Order" : "Add New Order"}
+      <Modal
+        title={selectedUnit ? "Update Unit" : "Add New Unit"}
         open={open}
         setOpen={toggleModal}
-        body={<OrderForm setOpen={toggleModal} data={selectedLocation} />}
-      /> */}
+        body={<UnitForm setOpen={toggleModal} data={selectedUnit} />}
+      />
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
@@ -218,4 +178,4 @@ const OrdersList: FC = () => {
   );
 };
 
-export default OrdersList;
+export default Units;

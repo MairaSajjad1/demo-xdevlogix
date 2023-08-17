@@ -1,5 +1,7 @@
+import OrdersList from "@/views/orders-list";
+
 const page = () => {
-  return <div>page</div>;
+  return <OrdersList />;
 };
 
 export default page;

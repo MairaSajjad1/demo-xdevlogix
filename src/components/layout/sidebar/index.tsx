@@ -73,26 +73,30 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Product List",
           icon: <ListIcon />,
-          slug: "/product/products",
+          slug: "/products/products",
         },
-        { label: "Brand", icon: <BrandIcon />, slug: "/product/brand" },
-        { label: "Bar Codes", icon: <BarcodeIcon />, slug: "/product/barcode" },
+        { label: "Brand", icon: <BrandIcon />, slug: "/products/brand" },
+        {
+          label: "Bar Codes",
+          icon: <BarcodeIcon />,
+          slug: "/products/barcode",
+        },
         {
           label: "Variation",
           icon: <VariationIcon />,
-          slug: "/product/variation",
+          slug: "/products/variation",
         },
         {
           label: "Purchase",
           icon: <PurchaseIcon />,
-          slug: "/product/purchase",
+          slug: "/products/purchase",
         },
         {
           label: "Purchase-Time",
           icon: <PurchaseTimeIcon />,
-          slug: "/product/purchasetime",
+          slug: "/products/purchasetime",
         },
-        { label: "Units", icon: <UnitIcon />, slug: "/product/units" },
+        { label: "Units", icon: <UnitIcon />, slug: "/products/units" },
       ],
     },
     {
