@@ -17,9 +17,9 @@ const roleService = createApi({
     },
   }),
   endpoints: (builder) => ({
-    createCategory: builder.mutation({
+    createRole: builder.mutation({
       query: ({ data }) => ({
-        url: "/categories/create",
+        url: "/role/create",
         method: "POST",
         body: data,
       }),
@@ -37,5 +37,5 @@ const roleService = createApi({
   }),
 });
 
-export const { useCreateCategoryMutation, useGetRolesQuery } = roleService;
+export const { useCreateRoleMutation, useGetRolesQuery } = roleService;
 export default roleService;

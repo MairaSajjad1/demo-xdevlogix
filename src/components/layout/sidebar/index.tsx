@@ -99,7 +99,11 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
       label: "Orders",
       icon: <OrderIcon />,
       childrens: [
-        { label: "Orders List", icon: <ListIcon />, slug: "/orders/" },
+        {
+          label: "Orders List",
+          icon: <ListIcon />,
+          slug: "/orders/orders-list",
+        },
         { label: "Rider", icon: <RiderIcon />, slug: "/orders/riders" },
         { label: "Suppliers", icon: <UnitIcon />, slug: "/orders/suppliers" },
       ],

@@ -13,6 +13,7 @@ import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetRolesQuery } from "@/store/services/roleService";
+import RoleForm from "./RoleForm";
 
 export interface Role {
   id: number;
@@ -124,16 +125,12 @@ const Roles: FC = () => {
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={
-          selectedRole ? "Update Role" : "Add New Role"
-        }
+      <Modal
+        title={selectedRole ? "Update Role" : "Add New Role"}
         open={open}
         setOpen={toggleModal}
-        body={
-          <CategoryForm setOpen={toggleModal} data={selectedRole} />
-        }
-      /> */}
+        body={<RoleForm setOpen={toggleModal} data={selectedRole} />}
+      />
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
