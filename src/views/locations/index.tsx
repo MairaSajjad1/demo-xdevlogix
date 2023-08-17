@@ -32,9 +32,9 @@ const Locations: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: locationList,
-    isLoading: locationLoading,
-    isFetching: locationFetching,
+    data: locationsList,
+    isLoading: locationsLoading,
+    isFetching: locationsFetching,
   } = useGetLocationsQuery({
     buisnessId: session?.user?.business_id,
   });
@@ -196,9 +196,9 @@ const Locations: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            locationLoading || locationFetching
+            locationsLoading || locationsFetching
               ? loadingData
-              : locationList || []
+              : locationsList || []
           }
           filterKey="name"
         />

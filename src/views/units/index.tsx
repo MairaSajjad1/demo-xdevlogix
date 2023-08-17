@@ -30,9 +30,9 @@ const Units: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: unitList,
-    isLoading: unitLoading,
-    isFetching: unitFetching,
+    data: unitsList,
+    isLoading: unitsLoading,
+    isFetching: unitsFetching,
   } = useGetUnitsQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -158,7 +158,7 @@ const Units: FC = () => {
         <Table
           // @ts-expect-error
           columns={columns}
-          data={unitLoading || unitFetching ? loadingData : unitList || []}
+          data={unitsLoading || unitsFetching ? loadingData : unitsList || []}
           filterKey="name"
         />
       </div>

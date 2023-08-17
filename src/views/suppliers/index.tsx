@@ -27,9 +27,9 @@ const Suppliers: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: supplierList,
-    isLoading: supplierLoading,
-    isFetching: supplierFetching,
+    data: suppliersList,
+    isLoading: suppliersLoading,
+    isFetching: suppliersFetching,
   } = useGetSuppliersQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -141,9 +141,9 @@ const Suppliers: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            supplierLoading || supplierFetching
+            suppliersLoading || suppliersFetching
               ? loadingData
-              : supplierList || []
+              : suppliersList || []
           }
           filterKey="name"
         />

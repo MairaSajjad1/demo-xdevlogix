@@ -27,9 +27,9 @@ const Riders: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: riderList,
-    isLoading: riderLoading,
-    isFetching: riderFetching,
+    data: ridersList,
+    isLoading: ridersLoading,
+    isFetching: ridersFetching,
   } = useGetRidersQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -138,7 +138,9 @@ const Riders: FC = () => {
         <Table
           // @ts-expect-error
           columns={columns}
-          data={riderLoading || riderFetching ? loadingData : riderList || []}
+          data={
+            ridersLoading || ridersFetching ? loadingData : ridersList || []
+          }
           filterKey="name"
         />
       </div>

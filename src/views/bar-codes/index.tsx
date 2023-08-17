@@ -28,9 +28,9 @@ const Barcodes: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: barcodeList,
-    isLoading: barcodeLoading,
-    isFetching: barcodeFetching,
+    data: barcodesList,
+    isLoading: barcodesLoading,
+    isFetching: barcodesFetching,
   } = useGetBarcodesQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -123,7 +123,9 @@ const Barcodes: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            barcodeLoading || barcodeFetching ? loadingData : barcodeList || []
+            barcodesLoading || barcodesFetching
+              ? loadingData
+              : barcodesList || []
           }
           filterKey="name"
         />

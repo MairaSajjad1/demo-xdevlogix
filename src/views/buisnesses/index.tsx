@@ -31,9 +31,9 @@ export interface Buisness {
 const Buisnesses: FC = () => {
   // GET
   const {
-    data: buisnessList,
-    isLoading: buisnessLoading,
-    isFetching: buisnessFetching,
+    data: buisnessesList,
+    isLoading: buisnessesLoading,
+    isFetching: buisnessesFetching,
     // @ts-ignore
   } = useGetBuisnessesQuery();
 
@@ -194,9 +194,9 @@ const Buisnesses: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            buisnessLoading || buisnessFetching
+            buisnessesLoading || buisnessesFetching
               ? loadingData
-              : buisnessList || []
+              : buisnessesList || []
           }
           filterKey="name"
         />
