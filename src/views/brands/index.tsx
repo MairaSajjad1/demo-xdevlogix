@@ -10,30 +10,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
-import UnitForm from "./UnitForm";
+import BrandForm from "./BrandForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetUnitsQuery } from "@/store/services/unitService";
+import { useGetBrandsQuery } from "@/store/services/brandService";
 
-export interface Unit {
+export interface Brand {
   id: number;
-  actual_name: string;
-  short_name: string;
+  name: string;
   business_id: number;
-  allow_decimal: number;
   created_by: number;
   created_at: string;
   updated_at: string;
 }
 
-const Units: FC = () => {
+const Brands: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: unitsList,
-    isLoading: unitsLoading,
-    isFetching: unitsFetching,
-  } = useGetUnitsQuery({
+    data: brandsList,
+    isLoading: brandsLoading,
+    isFetching: barndsFetching,
+  } = useGetBrandsQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -41,19 +39,19 @@ const Units: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
 
-  const columns: ColumnDef<Unit | null>[] = useMemo(
+  const columns: ColumnDef<Brand | null>[] = useMemo(
     () => [
       {
-        accessorKey: "actual_name",
+        accessorKey: "name",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("actual_name")}</div>
+              <div>{row.getValue("name")}</div>
             ) : (
               <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
@@ -61,40 +59,6 @@ const Units: FC = () => {
         ),
         enableSorting: true,
         enableHiding: false,
-      },
-      {
-        accessorKey: "short_name",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Short Name" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("short_name")}</div>
-            ) : (
-              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
-        enableSorting: false,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "allow_decimal",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Decimal Allowed " />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("allow_decimal")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
       },
       {
         id: "actions",
@@ -120,13 +84,13 @@ const Units: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Unit | null) => {
-    setSelectedUnit(data);
+  const handleEdit = (data: Brand | null) => {
+    setSelectedBrand(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Unit | null) => {
-    setSelectedUnit(data);
+  const handleDelete = (data: Brand | null) => {
+    setSelectedBrand(data);
     toggleDeleteModal();
   };
 
@@ -137,7 +101,7 @@ const Units: FC = () => {
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedUnit(null);
+      setSelectedBrand(null);
     }
   }, [open, openDelete]);
 
@@ -146,27 +110,29 @@ const Units: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Units</h1>
-            <p className="font-medium text-sm">A List of all the units</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Brands</h1>
+            <p className="font-medium text-sm">A List of all the brands.</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Unit
+            Add Brand
           </Button>
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={unitsLoading || unitsFetching ? loadingData : unitsList || []}
+          data={
+            brandsLoading || barndsFetching ? loadingData : brandsList || []
+          }
           filterKey="name"
         />
       </div>
       <Modal
-        title={selectedUnit ? "Update Unit" : "Add New Unit"}
+        title={selectedBrand ? "Update Bar Code" : "Add New Bar Code"}
         open={open}
         setOpen={toggleModal}
-        body={<UnitForm setOpen={toggleModal} data={selectedUnit} />}
+        body={<BrandForm setOpen={toggleModal} data={selectedBrand} />}
       />
       <DeleteModal
         open={openDelete}
@@ -178,4 +144,4 @@ const Units: FC = () => {
   );
 };
 
-export default Units;
+export default Brands;

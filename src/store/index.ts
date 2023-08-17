@@ -12,6 +12,8 @@ import supplierService from "./services/supplierService";
 import riderService from "./services/riderService";
 import roleService from "./services/roleService";
 import unitService from "./services/unitService";
+import barCodeService from "./services/barCodeService";
+import brandService from "./services/brandService";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +30,8 @@ export const store = configureStore({
     [riderService.reducerPath]: riderService.reducer,
     [roleService.reducerPath]: roleService.reducer,
     [unitService.reducerPath]: unitService.reducer,
+    [barCodeService.reducerPath]: barCodeService.reducer,
+    [brandService.reducerPath]: brandService.reducer,
     authReducer: authReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
@@ -45,7 +49,9 @@ export const store = configureStore({
       supplierService.middleware,
       riderService.middleware,
       roleService.middleware,
-      unitService.middleware
+      unitService.middleware,
+      barCodeService.middleware,
+      brandService.middleware
     ),
 });
 

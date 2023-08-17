@@ -10,43 +10,38 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
-import LocationForm from "./LocationForm";
+import BrandForm from "./BarcodeForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetLocationsQuery } from "@/store/services/locationService";
+import { useGetBarcodesQuery } from "@/store/services/barCodeService";
 
-export interface Location {
+export interface Barcode {
   id: number;
   name: string;
-  landmark: string;
-  location_id: string;
   business_id: number;
-  city: string;
-  state: string;
-  country: string;
+  created_by: number;
   created_at: string;
   updated_at: string;
 }
 
-const Locations: FC = () => {
+const Barcodes: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: locationsList,
-    isLoading: locationsLoading,
-    isFetching: locationsFetching,
-  } = useGetLocationsQuery({
+    data: barcodesList,
+    isLoading: barcodesLoading,
+    isFetching: barcodesFetching,
+  } = useGetBarcodesQuery({
     buisnessId: session?.user?.business_id,
+    perPage: -1,
   });
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null
-  );
+  const [selectedBarcode, setSelectedBarcode] = useState<Barcode | null>(null);
 
-  const columns: ColumnDef<Location | null>[] = useMemo(
+  const columns: ColumnDef<Barcode | null>[] = useMemo(
     () => [
       {
         accessorKey: "name",
@@ -64,74 +59,6 @@ const Locations: FC = () => {
         ),
         enableSorting: true,
         enableHiding: false,
-      },
-      {
-        accessorKey: "landmark",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Landmark" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("landmark")}</div>
-            ) : (
-              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
-        enableSorting: false,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "city",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="City" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("city")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "state",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="State" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("state")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "country",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Country" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("country")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
-        enableSorting: true,
-        enableHiding: true,
       },
       {
         id: "actions",
@@ -157,13 +84,13 @@ const Locations: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Location | null) => {
-    setSelectedLocation(data);
+  const handleEdit = (data: Barcode | null) => {
+    setSelectedBarcode(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Location | null) => {
-    setSelectedLocation(data);
+  const handleDelete = (data: Barcode | null) => {
+    setSelectedBarcode(data);
     toggleDeleteModal();
   };
 
@@ -174,7 +101,7 @@ const Locations: FC = () => {
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedLocation(null);
+      setSelectedBarcode(null);
     }
   }, [open, openDelete]);
 
@@ -183,12 +110,12 @@ const Locations: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Locations</h1>
-            <p className="font-medium text-sm">A List of all the locations</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Bar Codes</h1>
+            <p className="font-medium text-sm">A List of all the bar codes.</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Location
+            Add Bar Code
           </Button>
         </div>
         <Separator />
@@ -196,18 +123,18 @@ const Locations: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            locationsLoading || locationsFetching
+            barcodesLoading || barcodesFetching
               ? loadingData
-              : locationsList || []
+              : barcodesList || []
           }
           filterKey="name"
         />
       </div>
       <Modal
-        title={selectedLocation ? "Update Location" : "Add New Location"}
+        title={selectedBarcode ? "Update Bar Code" : "Add New Bar Code"}
         open={open}
         setOpen={toggleModal}
-        body={<LocationForm setOpen={toggleModal} data={selectedLocation} />}
+        body={<BrandForm setOpen={toggleModal} data={selectedBarcode} />}
       />
       <DeleteModal
         open={openDelete}
@@ -219,4 +146,4 @@ const Locations: FC = () => {
   );
 };
 
-export default Locations;
+export default Barcodes;
