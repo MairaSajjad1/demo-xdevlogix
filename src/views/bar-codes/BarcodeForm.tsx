@@ -15,28 +15,28 @@ import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
-import { Category } from "./index";
-import { useCreateCategoryMutation } from "@/store/services/categoryService";
+import { Barcode } from "./index";
+import { useCreateBarcodeMutation } from "@/store/services/barCodeService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  parent_id: z.coerce.number(),
+  created_by: z.coerce.number(),
   business_id: z.coerce.number(),
 });
 
-interface CategoryFormProps {
+interface BarcodeFormProps {
   setOpen: () => void;
-  data?: Category | null;
+  data?: Barcode | null;
 }
 
-const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
+const BarcodeForm: FC<BarcodeFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
-      parent_id: data?.parent_id || Number(session?.user?.customer_id),
+      created_by: data?.created_by || Number(session?.user?.customer_id),
       business_id: data?.business_id || Number(session?.user?.business_id),
     },
   });
@@ -47,7 +47,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
       : create({ data: values });
   }
 
-  const [create, createResponse] = useCreateCategoryMutation();
+  const [create, createResponse] = useCreateBarcodeMutation();
 
   const {
     isLoading: createLoading,
@@ -60,7 +60,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Category Added Successfully.");
+      toast.success("Bar code Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
@@ -75,7 +75,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Pizza" {...field} />
+                <Input placeholder="Bar Code One" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,4 +90,4 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
   );
 };
 
-export default CategoryForm;
+export default BarcodeForm;

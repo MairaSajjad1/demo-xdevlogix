@@ -79,7 +79,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Bar Codes",
           icon: <BarcodeIcon />,
-          slug: "/products/barcode",
+          slug: "/products/bar-codes",
         },
         {
           label: "Variation",
