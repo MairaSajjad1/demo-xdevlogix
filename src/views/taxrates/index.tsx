@@ -147,7 +147,7 @@ const Taxrates: FC = () => {
         />
       </div>
       <Modal
-        title={selectedTaxrate ? "Update Service" : "Add New Service Type"}
+        title={selectedTaxrate ? "Update Tax Rate" : "Add New Tax Rate"}
         open={open}
         setOpen={toggleModal}
         body={<TaxrateForm setOpen={toggleModal} data={selectedTaxrate} />}

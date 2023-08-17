@@ -149,7 +149,7 @@ const Suppliers: FC = () => {
         />
       </div>
       <Modal
-        title={selectedSupplier ? "Update Service" : "Add New Service Type"}
+        title={selectedSupplier ? "Update Supplier" : "Add New Supplier"}
         open={open}
         setOpen={toggleModal}
         body={<SupplierForm setOpen={toggleModal} data={selectedSupplier} />}

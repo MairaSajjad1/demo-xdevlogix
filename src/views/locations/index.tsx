@@ -204,7 +204,7 @@ const Locations: FC = () => {
         />
       </div>
       <Modal
-        title={selectedLocation ? "Update Service" : "Add New Service Type"}
+        title={selectedLocation ? "Update Location" : "Add New Location"}
         open={open}
         setOpen={toggleModal}
         body={<LocationForm setOpen={toggleModal} data={selectedLocation} />}

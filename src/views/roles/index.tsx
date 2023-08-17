@@ -12,27 +12,24 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import CategoryForm from "./CategoryForm";
-import { useGetCategoriesQuery } from "@/store/services/categoryService";
+import { useGetRolesQuery } from "@/store/services/roleService";
 
-export interface Category {
+export interface Role {
   id: number;
   name: string;
-  business_id: number;
-  parent_id: any;
-  created_by: number;
+  bussines_id: number;
   created_at: string;
   updated_at: string;
 }
 
-const Categories: FC = () => {
+const Roles: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: categoriesList,
-    isLoading: categoriesLoading,
-    isFetching: categoriesFetching,
-  } = useGetCategoriesQuery({
+    data: rolesList,
+    isLoading: rolesLoading,
+    isFetching: rolesFetching,
+  } = useGetRolesQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -40,11 +37,9 @@ const Categories: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  );
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
 
-  const columns: ColumnDef<Category | null>[] = useMemo(
+  const columns: ColumnDef<Role | null>[] = useMemo(
     () => [
       {
         accessorKey: "name",
@@ -87,13 +82,13 @@ const Categories: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Category | null) => {
-    setSelectedCategory(data);
+  const handleEdit = (data: Role | null) => {
+    setSelectedRole(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Category | null) => {
-    setSelectedCategory(data);
+  const handleDelete = (data: Role | null) => {
+    setSelectedRole(data);
     toggleDeleteModal();
   };
 
@@ -104,7 +99,7 @@ const Categories: FC = () => {
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedCategory(null);
+      setSelectedRole(null);
     }
   }, [open, openDelete]);
 
@@ -113,32 +108,32 @@ const Categories: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Categories</h1>
-            <p className="font-medium text-sm">A List of all Categories</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Roles</h1>
+            <p className="font-medium text-sm">A List of all Roles</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Category
+            Add Role
           </Button>
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={
-            categoriesLoading || categoriesFetching
-              ? loadingData
-              : categoriesList || []
-          }
+          data={rolesLoading || rolesFetching ? loadingData : rolesList || []}
           filterKey="name"
         />
       </div>
-      <Modal
-        title={selectedCategory ? "Update Category" : "Add New Category"}
+      {/* <Modal
+        title={
+          selectedRole ? "Update Role" : "Add New Role"
+        }
         open={open}
         setOpen={toggleModal}
-        body={<CategoryForm setOpen={toggleModal} data={selectedCategory} />}
-      />
+        body={
+          <CategoryForm setOpen={toggleModal} data={selectedRole} />
+        }
+      /> */}
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
@@ -149,4 +144,4 @@ const Categories: FC = () => {
   );
 };
 
-export default Categories;
+export default Roles;

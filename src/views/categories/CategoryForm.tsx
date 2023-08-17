@@ -65,7 +65,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Service Added Successfully.");
+      toast.success("Category Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
