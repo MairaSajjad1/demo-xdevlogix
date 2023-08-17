@@ -51,7 +51,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Role",
           icon: <HomeIcon />,
-          slug: "/user-management/usermanagement",
+          slug: "/user-management/roles",
         },
       ],
     },

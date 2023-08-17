@@ -10,6 +10,7 @@ import taxrateService from "./services/taxrateService";
 import buisnessService from "./services/buisnessService";
 import supplierService from "./services/supplierService";
 import riderService from "./services/riderService";
+import roleService from "./services/roleService";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [buisnessService.reducerPath]: buisnessService.reducer,
     [supplierService.reducerPath]: supplierService.reducer,
     [riderService.reducerPath]: riderService.reducer,
+    [roleService.reducerPath]: roleService.reducer,
     authReducer: authReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
@@ -39,7 +41,8 @@ export const store = configureStore({
       taxrateService.middleware,
       buisnessService.middleware,
       supplierService.middleware,
-      riderService.middleware
+      riderService.middleware,
+      roleService.middleware
     ),
 });
 
