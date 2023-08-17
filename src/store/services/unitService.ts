@@ -1,10 +1,10 @@
 import { addTokenToRequest } from "@/lib/utils";
-import { Category } from "@/views/categories";
+import { Unit } from "@/views/units";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const roleService = createApi({
-  reducerPath: "roleService",
-  tagTypes: ["role"],
+const unitService = createApi({
+  reducerPath: "unitService",
+  tagTypes: ["unit"],
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
@@ -17,25 +17,25 @@ const roleService = createApi({
     },
   }),
   endpoints: (builder) => ({
-    createRole: builder.mutation({
+    createUnit: builder.mutation({
       query: ({ data }) => ({
-        url: "/role/create",
+        url: "/units/create",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["role"],
+      invalidatesTags: ["unit"],
     }),
-    getRoles: builder.query({
+    getUnits: builder.query({
       query: ({ buisnessId, perPage }) => ({
-        url: `/role?business_id=${buisnessId}&per_page=${perPage}`,
+        url: `/units?business_id=${buisnessId}&per_page=${perPage}`,
         method: "GET",
       }),
-      transformResponse: ({ data }: { data: Category[] }) =>
+      transformResponse: ({ data }: { data: Unit[] }) =>
         data?.sort((a, b) => b.id - a.id),
-      providesTags: ["role"],
+      providesTags: ["unit"],
     }),
   }),
 });
 
-export const { useCreateRoleMutation, useGetRolesQuery } = roleService;
-export default roleService;
+export const { useCreateUnitMutation, useGetUnitsQuery } = unitService;
+export default unitService;

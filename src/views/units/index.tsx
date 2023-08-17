@@ -10,27 +10,30 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
+import UnitForm from "./UnitForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetRolesQuery } from "@/store/services/roleService";
-import RoleForm from "./RoleForm";
+import { useGetUnitsQuery } from "@/store/services/unitService";
 
-export interface Role {
+export interface Unit {
   id: number;
-  name: string;
-  bussines_id: number;
+  actual_name: string;
+  short_name: string;
+  business_id: number;
+  allow_decimal: number;
+  created_by: number;
   created_at: string;
   updated_at: string;
 }
 
-const Roles: FC = () => {
+const Units: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: rolesList,
-    isLoading: rolesLoading,
-    isFetching: rolesFetching,
-  } = useGetRolesQuery({
+    data: unitList,
+    isLoading: unitLoading,
+    isFetching: unitFetching,
+  } = useGetUnitsQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
@@ -38,19 +41,19 @@ const Roles: FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
 
-  const columns: ColumnDef<Role | null>[] = useMemo(
+  const columns: ColumnDef<Unit | null>[] = useMemo(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "actual_name",
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("name")}</div>
+              <div>{row.getValue("actual_name")}</div>
             ) : (
               <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
@@ -58,6 +61,40 @@ const Roles: FC = () => {
         ),
         enableSorting: true,
         enableHiding: false,
+      },
+      {
+        accessorKey: "short_name",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Short Name" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("short_name")}</div>
+            ) : (
+              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
+            )}
+          </>
+        ),
+        enableSorting: false,
+        enableHiding: true,
+      },
+      {
+        accessorKey: "allow_decimal",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Decimal Allowed " />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("allow_decimal")}</div>
+            ) : (
+              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+            )}
+          </>
+        ),
+        enableSorting: true,
+        enableHiding: true,
       },
       {
         id: "actions",
@@ -83,24 +120,24 @@ const Roles: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Role | null) => {
-    setSelectedRole(data);
+  const handleEdit = (data: Unit | null) => {
+    setSelectedUnit(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Role | null) => {
-    setSelectedRole(data);
+  const handleDelete = (data: Unit | null) => {
+    setSelectedUnit(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    toast.error("Delete APi is not implemented Yet");
+    toast.error("Delete API is not implemented yet.");
     toggleDeleteModal();
   };
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedRole(null);
+      setSelectedUnit(null);
     }
   }, [open, openDelete]);
 
@@ -109,27 +146,27 @@ const Roles: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Roles</h1>
-            <p className="font-medium text-sm">A List of all Roles</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Units</h1>
+            <p className="font-medium text-sm">A List of all the units</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Role
+            Add Unit
           </Button>
         </div>
         <Separator />
         <Table
           // @ts-expect-error
           columns={columns}
-          data={rolesLoading || rolesFetching ? loadingData : rolesList || []}
+          data={unitLoading || unitFetching ? loadingData : unitList || []}
           filterKey="name"
         />
       </div>
       <Modal
-        title={selectedRole ? "Update Role" : "Add New Role"}
+        title={selectedUnit ? "Update Unit" : "Add New Unit"}
         open={open}
         setOpen={toggleModal}
-        body={<RoleForm setOpen={toggleModal} data={selectedRole} />}
+        body={<UnitForm setOpen={toggleModal} data={selectedUnit} />}
       />
       <DeleteModal
         open={openDelete}
@@ -141,4 +178,4 @@ const Roles: FC = () => {
   );
 };
 
-export default Roles;
+export default Units;
