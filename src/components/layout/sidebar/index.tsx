@@ -84,17 +84,17 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Variation",
           icon: <VariationIcon />,
-          slug: "/products/variation",
+          slug: "/products/variations",
         },
         {
           label: "Purchase",
           icon: <PurchaseIcon />,
-          slug: "/products/purchase",
+          slug: "/products/purchases",
         },
         {
-          label: "Purchase-Time",
+          label: "Product Time",
           icon: <PurchaseTimeIcon />,
-          slug: "/products/purchasetime",
+          slug: "/products/product-time",
         },
         { label: "Units", icon: <UnitIcon />, slug: "/products/units" },
       ],
