@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
-import { Rider } from "./index";
+import { Purchase } from "./index";
 import { useSession } from "next-auth/react";
 import { useCreateRiderMutation } from "@/store/services/riderService";
 
@@ -27,19 +27,17 @@ const formSchema = z.object({
   business_id: z.coerce.number(),
 });
 
-interface RiderFormProps {
+interface PurchaseFormProps {
   setOpen: () => void;
-  data?: Rider | null;
+  data?: Purchase | null;
 }
 
-const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
+const PurchaseForm: FC<PurchaseFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: data?.name || "",
-      mobile_no: data?.mobile_no || "",
       business_id: data?.business_id || Number(session?.user?.business_id),
     },
   });
@@ -63,7 +61,7 @@ const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Tax Rate Added Successfully.");
+      toast.success("Purchase Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
@@ -121,4 +119,4 @@ const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
   );
 };
 
-export default RiderForm;
+export default PurchaseForm;
