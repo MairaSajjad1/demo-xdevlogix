@@ -105,10 +105,9 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
         <div>
           <div>Variation Templates</div>
           {fields.map((field, index) => (
-            <div className="flex items-center gap-4 w-full">
+            <div key={field.id} className="flex items-center gap-4 w-full">
               <div className="flex-1">
                 <FormField
-                  key={field.id}
                   control={form.control}
                   name={`variation_templates.${index}.tem_name`}
                   render={({ field }) => (
