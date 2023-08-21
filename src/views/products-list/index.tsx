@@ -13,39 +13,141 @@ import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
+import { Variation, VariationTemplate } from "../variations";
+import { useGetProductsQuery } from "@/store/services/productService";
+import Image from "next/image";
 
-export interface Order {
+export interface ProductImage {
   id: number;
-  name: string;
-  landmark: string;
-  location_id: string;
   business_id: number;
-  city: string;
-  state: string;
-  country: string;
+  product_id: number;
+  slug: string;
   created_at: string;
   updated_at: string;
+  image_url: string;
+}
+
+export interface ProductVariation {
+  id: number;
+  product_id: number;
+  variation_id: number;
+  business_id: number;
+  variation_template_id: string;
+  last_updated_by: any;
+  created_at: string;
+  updated_at: string;
+  variations: Omit<Variation, "variation_template">;
+  variation_template: VariationTemplate;
+  product_price: ProductPrice;
+}
+
+export interface ProductPrice {
+  id: number;
+  product_variation_id: number;
+  tax_type: string;
+  price_exclusive_tax: string;
+  price_inclusive_tax: string;
+  profit_margin: string;
+  selling_price: string;
+  selling_price_inc_tax: string;
+  business_id: number;
+  tax_id: any;
+  last_updated_by: any;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductStock {
+  id: number;
+  business_id: number;
+  location_id: number;
+  product_id: number;
+  product_variation_id: number;
+  last_updated_by: any;
+  quantity_available: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  business_id: number;
+  unit_id: number;
+  category_id: number;
+  sub_category_id: any;
+  sku: string;
+  type: string;
+  vendor_id: any;
+  brand_id: any;
+  manage_stock_status: number;
+  alerty_quantity: number;
+  not_for_selling: number;
+  tax_type: string;
+  weight: any;
+  barcode_id: any;
+  tax_id: any;
+  created_at: string;
+  updated_at: string;
+  product_time_id: any;
+  product_images: ProductImage[];
+  product_time: any[];
+  product_variations: ProductVariation[];
+  product_stock: ProductStock[];
 }
 
 const ProductsList: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: ordersList,
-    isLoading: ordersLoading,
-    isFetching: ordersFetching,
-  } = useGetLocationsQuery({
+    data: productsList,
+    isLoading: productsLoading,
+    isFetching: productsFetching,
+  } = useGetProductsQuery({
     buisnessId: session?.user?.business_id,
+    perPage: -1,
   });
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
   const [selectedProductList, setSelectedProductList] =
-    useState<Location | null>(null);
+    useState<Product | null>(null);
 
-  const columns: ColumnDef<Location | null>[] = useMemo(
+  const columns: ColumnDef<Product | null>[] = useMemo(
     () => [
+      {
+        accessorKey: "product_images",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Image" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>
+                {/* <Image
+                  src={
+                    (row.getValue("product_images") as ProductImage[])?.[0]
+                      .image_url
+                  }
+                  alt={
+                    (row.getValue("product_images") as ProductImage[])?.[0]
+                      ?.id as unknown as string
+                  }
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                /> */}
+              </div>
+            ) : (
+              <Skeleton className="w-10 h-10 rounded-full bg-[#F5f5f5]" />
+            )}
+          </>
+        ),
+        enableSorting: false,
+        enableHiding: true,
+      },
       {
         accessorKey: "name",
         header: ({ column }) => (
@@ -155,12 +257,12 @@ const ProductsList: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Location | null) => {
+  const handleEdit = (data: Product | null) => {
     setSelectedProductList(data);
     toggleModal();
   };
 
-  const handleDelete = (data: Location | null) => {
+  const handleDelete = (data: Product | null) => {
     setSelectedProductList(data);
     toggleDeleteModal();
   };
@@ -181,12 +283,12 @@ const ProductsList: FC = () => {
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Purchases</h1>
-            <p className="font-medium text-sm">A List of all the Purchases.</p>
+            <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
+            <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
           <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
-            Add Order
+            Add Product
           </Button>
         </div>
         <Separator />
@@ -194,7 +296,9 @@ const ProductsList: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            ordersLoading || ordersFetching ? loadingData : ordersList || []
+            productsLoading || productsFetching
+              ? loadingData
+              : productsList || []
           }
           filterKey="name"
         />

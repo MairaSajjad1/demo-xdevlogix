@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -16,10 +16,15 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { Variation } from "./index";
 import { useSession } from "next-auth/react";
-import { useCreateRiderMutation } from "@/store/services/riderService";
+import { useCreateVariationMutation } from "@/store/services/variationService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
+  variation_templates: z.array(
+    z.object({
+      tem_name: z.string(),
+    })
+  ),
   business_id: z.coerce.number(),
   created_by: z.coerce.number(),
 });
@@ -31,15 +36,30 @@ interface VariationFormProps {
 
 const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
+      variation_templates: data?.variation_template || [{ tem_name: "" }],
       business_id: data?.business_id || Number(session?.user?.business_id),
       created_by: data?.created_by || Number(session?.user?.customer_id),
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "variation_templates",
+  });
+
+  const handleAppend = () => {
+    append({
+      tem_name: "",
+    });
+  };
+
+  const handleRemove = (index: number) => {
+    remove(index);
+  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
@@ -47,7 +67,7 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
       : create({ data: values });
   }
 
-  const [create, createResponse] = useCreateRiderMutation();
+  const [create, createResponse] = useCreateVariationMutation();
 
   const {
     isLoading: createLoading,
@@ -75,12 +95,50 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Ali" {...field} />
+                <Input placeholder="Pizza Variation" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <div>
+          <div>Variation Templates</div>
+          {fields.map((field, index) => (
+            <div className="flex items-center gap-4 w-full">
+              <div className="flex-1">
+                <FormField
+                  key={field.id}
+                  control={form.control}
+                  name={`variation_templates.${index}.tem_name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel></FormLabel>
+                      <FormControl>
+                        <Input placeholder="Large" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {index > 0 && (
+                <Button
+                  className="mt-2"
+                  variant={"destructive"}
+                  onClick={() => handleRemove(index)}
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="flex items-center justify-center">
+          <Button type="button" onClick={handleAppend}>
+            Append{" "}
+          </Button>
+        </div>
         <Button disabled={createLoading} className="w-full" type="submit">
           {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           {data ? "Update" : "Add"}

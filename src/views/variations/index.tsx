@@ -75,7 +75,7 @@ const Variations: FC = () => {
       {
         accessorKey: "variation_template",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Templates" />
+          <DataTableColumnHeader column={column} title="Variations" />
         ),
         cell: ({ row }) => (
           <>
@@ -94,9 +94,9 @@ const Variations: FC = () => {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Skeleton className="w-20 h-4 bg-[#F5f5f5]" />
-                <Skeleton className="w-20 h-4 bg-[#F5f5f5]" />
-                <Skeleton className="w-20 h-4 bg-[#998282]" />
+                {Array.from({ length: 3 }, () => null).map((item, index) => (
+                  <Skeleton key={index} className="w-20 h-4 bg-[#F5f5f5]" />
+                ))}
               </div>
             )}
           </>

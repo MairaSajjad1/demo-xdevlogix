@@ -73,7 +73,7 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
         {
           label: "Product List",
           icon: <ListIcon />,
-          slug: "/products/products",
+          slug: "/products/products-list",
         },
         { label: "Brand", icon: <BrandIcon />, slug: "/products/brands" },
         {
