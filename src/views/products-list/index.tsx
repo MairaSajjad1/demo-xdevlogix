@@ -15,7 +15,6 @@ import { useSession } from "next-auth/react";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
-import ProductForm from "./ProductForm";
 import Link from "next/link";
 
 export interface ProductImage {
@@ -285,12 +284,6 @@ const ProductsList: FC = () => {
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={selectedProductList ? "Update Product" : "Add New Product"}
-        open={true}
-        setOpen={toggleModal}
-        body={<ProductForm setOpen={toggleModal} data={selectedProductList} />}
-      /> */}
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
