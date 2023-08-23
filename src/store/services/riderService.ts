@@ -1,5 +1,5 @@
 import { addTokenToRequest } from "@/lib/utils";
-import { Buisness } from "@/views/buisnesses";
+import { Rider } from "@/views/riders";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const riderService = createApi({
@@ -30,7 +30,7 @@ const riderService = createApi({
         url: `/riders?business_id=${buisnessId}&user_type=rider&per_page=${perPage}`,
         method: "GET",
       }),
-      transformResponse: ({ data }: { data: Buisness[] }) =>
+      transformResponse: ({ data }: { data: Rider[] }) =>
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["rider"],
     }),
