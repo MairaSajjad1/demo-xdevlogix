@@ -41,7 +41,8 @@ const formSchema = z.object({
   sku: z.string().min(1, { message: "SKU is required." }),
   type: z.string().min(1, { message: "Type is required." }),
   unit_id: z.string().min(1, { message: "Unit is required." }),
-  product_images: z.array(z.instanceof(File)),
+  product_images:
+    typeof window === "undefined" ? z.any() : z.array(z.instanceof(File)),
   tax_type: z.string().min(1, { message: "Tax Type is required." }),
   location_id: z.string().min(1, { message: "Location is required." }),
   manage_stock_status: z.boolean(),
@@ -53,7 +54,7 @@ const formSchema = z.object({
   business_id: z.coerce.number(),
 });
 
-const Create = () => {
+const CreateProduct = () => {
   const { data: session } = useSession();
 
   const router = useRouter();
@@ -84,7 +85,7 @@ const Create = () => {
     buisnessId: session?.user?.business_id,
   });
 
-  const [createProduct, createResponse] = useCreateProductMutation();
+  const [create, createResponse] = useCreateProductMutation();
 
   const {
     isLoading: createLoading,
@@ -131,7 +132,7 @@ const Create = () => {
       `opening_stock[${values.location_id}][quantity][0]`,
       values.quantity
     );
-    createProduct({ data: formdata });
+    create({ data: formdata });
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -398,4 +399,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default CreateProduct;
