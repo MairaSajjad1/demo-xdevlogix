@@ -30,8 +30,8 @@ const Taxrates: FC = () => {
   // GET
   const {
     data: taxratesList,
-    isLoading: taxrateLoading,
-    isFetching: taxrateFetching,
+    isLoading: taxratesLoading,
+    isFetching: taxratesFetching,
   } = useGetTaxratesQuery({
     buisnessId: session?.user?.business_id,
     perPage: -1,
@@ -141,7 +141,9 @@ const Taxrates: FC = () => {
           // @ts-expect-error
           columns={columns}
           data={
-            taxrateLoading || taxrateFetching ? loadingData : taxratesList || []
+            taxratesLoading || taxratesFetching
+              ? loadingData
+              : taxratesList || []
           }
           filterKey="name"
         />

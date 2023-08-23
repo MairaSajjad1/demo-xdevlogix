@@ -34,7 +34,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
   const navBarItems = [
-    { label: "Home", icon: <HomeIcon />, slug: "/dashboard/home" },
+    { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
       label: "User Management",
       icon: <UserManagementIcon />,

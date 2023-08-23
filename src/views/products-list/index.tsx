@@ -12,10 +12,10 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface ProductImage {
   id: number;
@@ -122,29 +122,24 @@ const ProductsList: FC = () => {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Image" />
         ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>
-                {/* <Image
-                  src={
-                    (row.getValue("product_images") as ProductImage[])?.[0]
-                      .image_url
-                  }
-                  alt={
-                    (row.getValue("product_images") as ProductImage[])?.[0]
-                      ?.id as unknown as string
-                  }
+        cell: ({ row }) => {
+          if (row?.original) {
+            const [image] = row.getValue("product_images") as ProductImage[];
+            if (image) {
+              return (
+                <Image
+                  src={image.image_url}
+                  alt={String(image.product_id)}
                   width={40}
                   height={40}
-                  className="rounded-full"
-                /> */}
-              </div>
-            ) : (
-              <Skeleton className="w-10 h-10 rounded-full bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
+                  className="rounded-full object-contain"
+                />
+              );
+            }
+          } else {
+            return <Skeleton className="w-10 h-10 rounded-full bg-[#F5f5f5]" />;
+          }
+        },
         enableSorting: false,
         enableHiding: true,
       },
@@ -158,7 +153,7 @@ const ProductsList: FC = () => {
             {row?.original ? (
               <div>{row.getValue("name")}</div>
             ) : (
-              <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
+              <Skeleton className="w-10 h-4 bg-[#F5f5f5]" />
             )}
           </>
         ),
@@ -166,33 +161,16 @@ const ProductsList: FC = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "landmark",
+        accessorKey: "description",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Landmark" />
+          <DataTableColumnHeader column={column} title="Description" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("landmark")}</div>
+              <div>{row.getValue("description")}</div>
             ) : (
-              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
-        enableSorting: false,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "city",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="City" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("city")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className={`w-10 h-4 bg-[#F5f5f5]`} />
             )}
           </>
         ),
@@ -200,33 +178,34 @@ const ProductsList: FC = () => {
         enableHiding: true,
       },
       {
-        accessorKey: "state",
+        accessorKey: "product_stock",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="State" />
+          <DataTableColumnHeader column={column} title="Stock" />
         ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("state")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
-            )}
-          </>
-        ),
+        cell: ({ row }) => {
+          if (row?.original) {
+            const [stock] = row.getValue("product_stock") as ProductStock[];
+            if (stock) {
+              return <div>{stock.quantity_available}</div>;
+            }
+          } else {
+            return <Skeleton className="w-10 h-4 rounded-full bg-[#F5f5f5]" />;
+          }
+        },
         enableSorting: true,
         enableHiding: true,
       },
       {
-        accessorKey: "country",
+        accessorKey: "type",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Country" />
+          <DataTableColumnHeader column={column} title="type" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("country")}</div>
+              <div>{row.getValue("type")}</div>
             ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className={`w-10 h-4 bg-[#F5f5f5]`} />
             )}
           </>
         ),
@@ -286,9 +265,11 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Product
+          <Button asChild size={"sm"}>
+            <Link href={"/products/products-list/create"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add Product
+            </Link>
           </Button>
         </div>
         <Separator />
@@ -303,12 +284,6 @@ const ProductsList: FC = () => {
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={selectedProductList ? "Update Order" : "Add New Order"}
-        open={open}
-        setOpen={toggleModal}
-        body={<OrderForm setOpen={toggleModal} data={selectedProductList} />}
-      /> */}
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
