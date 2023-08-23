@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
+import ProductForm from "./ProductForm";
+import Link from "next/link";
 
 export interface ProductImage {
   id: number;
@@ -108,8 +109,6 @@ const ProductsList: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
-
-  console.log(productsList);
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -267,9 +266,11 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Product
+          <Button asChild size={"sm"}>
+            <Link href={"/products/products-list/create"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add Product
+            </Link>
           </Button>
         </div>
         <Separator />
@@ -285,10 +286,10 @@ const ProductsList: FC = () => {
         />
       </div>
       {/* <Modal
-        title={selectedProductList ? "Update Order" : "Add New Order"}
-        open={open}
+        title={selectedProductList ? "Update Product" : "Add New Product"}
+        open={true}
         setOpen={toggleModal}
-        body={<OrderForm setOpen={toggleModal} data={selectedProductList} />}
+        body={<ProductForm setOpen={toggleModal} data={selectedProductList} />}
       /> */}
       <DeleteModal
         open={openDelete}
