@@ -105,7 +105,6 @@ const CreateProduct = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const formdata = new FormData();
-
     formdata.append("name", values.name);
     formdata.append("description", values.description);
     formdata.append("sku", values.sku);
