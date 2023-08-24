@@ -37,6 +37,9 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useGetProductsQuery } from "@/store/services/productService";
+import { Product, ProductVariation } from "@/views/products-list";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   supplier_id: z.string().min(1, { message: "Supplier is required." }),
@@ -61,6 +64,8 @@ const formSchema = z.object({
   purchase_date: z.date({
     required_error: "Purchase date is required.",
   }),
+  product_id: z.string().min(1, { message: "Product is required." }),
+  product_variation_id: z.string().min(1, { message: "Product is required." }),
   business_id: z.coerce.number(),
   created_by: z.coerce.number(),
 });
@@ -95,6 +100,19 @@ const Create = () => {
     perPage: -1,
   });
 
+  const {
+    data: productsList,
+    isLoading: productsLoading,
+    isFetching: productsFetching,
+  } = useGetProductsQuery({
+    buisnessId: session?.user?.business_id,
+    perPage: -1,
+  });
+
+  const [productVariationList, setProductVariationList] = useState<
+    { id: number; tem_name: string }[]
+  >([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -111,17 +129,35 @@ const Create = () => {
       payments: {
         method: "",
       },
+      product_id: "",
       business_id: Number(session?.user?.business_id),
       created_by: Number(session?.user?.customer_id),
     },
   });
+
+  useEffect(() => {
+    if (form.watch("product_id")) {
+      // @ts-ignore
+      const { product_variations }: { product_variations: ProductVariation[] } =
+        productsList?.find(
+          (product) => product.id === Number(form.watch("product_id"))
+        );
+      const varitationTemplates = product_variations.map(
+        ({ variation_template: { id, tem_name } }) => ({
+          id,
+          tem_name,
+        })
+      );
+
+      setProductVariationList(varitationTemplates);
+    }
+  }, [form.watch("product_id")]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
 
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
-
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
       <h1 className="text-[#4741E1] font-semibold">Add New Purchase</h1>
@@ -130,6 +166,87 @@ const Create = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="gap-4 grid grid-cols-3 justify-center items-center"
         >
+          <FormField
+            control={form.control}
+            name="product_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Products</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pizza" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {productsLoading && (
+                      <>
+                        {loadingData?.map((i) => (
+                          <SelectItem key={i} value={String(i)}>
+                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
+                          </SelectItem>
+                        ))}
+                      </>
+                    )}
+                    {productsList &&
+                      productsList?.map((product: Product) => (
+                        <SelectItem key={product.id} value={String(product.id)}>
+                          {product.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="product_variation_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Product Variations</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Large" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {productVariationList.length === 0 && (
+                      <SelectItem value="" disabled={true}>
+                        Please Select Product First
+                      </SelectItem>
+                    )}
+                    {productVariationList &&
+                      productVariationList?.map((productVariation) => (
+                        <SelectItem
+                          key={productVariation.id}
+                          value={String(productVariation.id)}
+                        >
+                          {productVariation.tem_name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="payment_status"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Quantity</FormLabel>
+                <FormControl>
+                  <Input placeholder="2" {...field} type="number" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="supplier_id"
@@ -238,7 +355,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="tax_amount"
@@ -252,7 +368,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="discount_type"
@@ -277,6 +392,26 @@ const Create = () => {
 
           <FormField
             control={form.control}
+            name="discount_amount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  {!form.watch("discount_type")
+                    ? "Discount Amount"
+                    : form.watch("discount_type") === "fixed"
+                    ? "Discount Amount"
+                    : form.watch("discount_type") === "percentage" &&
+                      "Discount Percentage"}
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="30" {...field} type="number" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="type"
             render={({ field }) => (
               <FormItem>
@@ -298,7 +433,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="purchase_status"
@@ -325,7 +459,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="source"
@@ -347,7 +480,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="payments.method"
@@ -369,7 +501,6 @@ const Create = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="purchase_date"
