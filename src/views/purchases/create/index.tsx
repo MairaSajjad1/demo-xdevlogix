@@ -1,7 +1,7 @@
 "use client";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
@@ -40,6 +40,9 @@ import { format } from "date-fns";
 import { useGetProductsQuery } from "@/store/services/productService";
 import { Product, ProductVariation } from "@/views/products-list";
 import { useEffect, useState } from "react";
+import { useCreatePurchaseMutation } from "@/store/services/purchaseService";
+import toast from "react-hot-toast";
+import ProductInputs from "./ProductInputs";
 
 const formSchema = z.object({
   supplier_id: z.string().min(1, { message: "Supplier is required." }),
@@ -58,14 +61,29 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Purchase Status is required." }),
   source: z.string().min(1, { message: "Source is required." }),
-  payments: z.object({
-    method: z.string().min(1, { message: "Method is required." }),
-  }),
+  payments: z
+    .array(
+      z.object({
+        method: z.string().min(1, { message: "Method is required." }),
+        amount: z
+          .string()
+          .min(1, { message: "Amount is required." })
+          .optional(),
+      })
+    )
+    .nonempty(),
   purchase_date: z.date({
     required_error: "Purchase date is required.",
   }),
-  product_id: z.string().min(1, { message: "Product is required." }),
-  product_variation_id: z.string().min(1, { message: "Product is required." }),
+  purchase_lines: z.array(
+    z.object({
+      product_id: z.string().min(1, { message: "Product is required." }),
+      product_variation_id: z
+        .string()
+        .min(1, { message: "Product is required." }),
+      quantity: z.string().min(1, { message: "Quantity is required." }),
+    })
+  ),
   business_id: z.coerce.number(),
   created_by: z.coerce.number(),
 });
@@ -99,20 +117,6 @@ const Create = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
-
-  const {
-    data: productsList,
-    isLoading: productsLoading,
-    isFetching: productsFetching,
-  } = useGetProductsQuery({
-    buisnessId: session?.user?.business_id,
-    perPage: -1,
-  });
-
-  const [productVariationList, setProductVariationList] = useState<
-    { id: number; tem_name: string }[]
-  >([]);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -126,35 +130,58 @@ const Create = () => {
       purchase_status: "",
       payment_status: "",
       source: "",
-      payments: {
-        method: "",
-      },
-      product_id: "",
-      business_id: Number(session?.user?.business_id),
-      created_by: Number(session?.user?.customer_id),
+      payments: [
+        {
+          method: "",
+          amount: "100",
+        },
+      ],
+      purchase_lines: [
+        {
+          product_id: "",
+          product_variation_id: "",
+          quantity: "",
+        },
+      ],
+      business_id: 5,
+      created_by: 4,
     },
   });
 
-  useEffect(() => {
-    if (form.watch("product_id")) {
-      // @ts-ignore
-      const { product_variations }: { product_variations: ProductVariation[] } =
-        productsList?.find(
-          (product) => product.id === Number(form.watch("product_id"))
-        );
-      const varitationTemplates = product_variations.map(
-        ({ variation_template: { id, tem_name } }) => ({
-          id,
-          tem_name,
-        })
-      );
+  const [create, createResponse] = useCreatePurchaseMutation();
 
-      setProductVariationList(varitationTemplates);
+  const {
+    isLoading: createLoading,
+    isError: createError,
+    isSuccess: createSuccess,
+  } = createResponse;
+
+  useEffect(() => {
+    if (createError) {
+      toast.error("Something Wrong.");
     }
-  }, [form.watch("product_id")]);
+    if (createSuccess) {
+      toast.success("Purchase Added Successfully.");
+    }
+  }, [createError, createSuccess]);
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "purchase_lines",
+  });
+
+  const handleAppend = () => {
+    append({
+      product_id: "",
+      product_variation_id: "",
+      quantity: "",
+    });
+  };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    create({
+      data: values,
+    });
   }
 
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
@@ -166,87 +193,22 @@ const Create = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="gap-4 grid grid-cols-3 justify-center items-center"
         >
-          <FormField
-            control={form.control}
-            name="product_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Products</FormLabel>
-                <Select onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pizza" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-60">
-                    {productsLoading && (
-                      <>
-                        {loadingData?.map((i) => (
-                          <SelectItem key={i} value={String(i)}>
-                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
-                          </SelectItem>
-                        ))}
-                      </>
-                    )}
-                    {productsList &&
-                      productsList?.map((product: Product) => (
-                        <SelectItem key={product.id} value={String(product.id)}>
-                          {product.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="product_variation_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product Variations</FormLabel>
-                <Select onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Large" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-60">
-                    {productVariationList.length === 0 && (
-                      <SelectItem value="" disabled={true}>
-                        Please Select Product First
-                      </SelectItem>
-                    )}
-                    {productVariationList &&
-                      productVariationList?.map((productVariation) => (
-                        <SelectItem
-                          key={productVariation.id}
-                          value={String(productVariation.id)}
-                        >
-                          {productVariation.tem_name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="payment_status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Quantity</FormLabel>
-                <FormControl>
-                  <Input placeholder="2" {...field} type="number" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="col-span-3 gap-4 flex flex-col">
+            {fields.map((field, index) => (
+              <ProductInputs
+                key={field.id}
+                form={form}
+                remove={remove}
+                index={index}
+              />
+            ))}
+          </div>
 
+          <div className="col-span-3 flex items-center justify-center">
+            <Button type="button" onClick={handleAppend}>
+              Add More Items
+            </Button>
+          </div>
           <FormField
             control={form.control}
             name="supplier_id"
@@ -482,7 +444,7 @@ const Create = () => {
           />
           <FormField
             control={form.control}
-            name="payments.method"
+            name={`payments.${0}.method`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Payment Method</FormLabel>
@@ -494,7 +456,6 @@ const Create = () => {
                   </FormControl>
                   <SelectContent className="max-h-60">
                     <SelectItem value={"cash"}>Cash</SelectItem>
-                    <SelectItem value={"online"}>Online</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -505,7 +466,7 @@ const Create = () => {
             control={form.control}
             name="purchase_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-between h-full">
+              <FormItem className="flex flex-col justify-between h-[72px]">
                 <FormLabel>Purchase Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
