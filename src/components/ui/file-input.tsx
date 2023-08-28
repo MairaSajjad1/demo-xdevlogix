@@ -45,7 +45,7 @@ const FileInput: FC<FileInputProps> = ({ fileAllowed, onChange }) => {
   }, [files]);
 
   return (
-    <div className="rounded-lg border border-neutral-200 p-8 col-span-3">
+    <div className="rounded-lg  h-full border border-neutral-200 p-8 col-span-3">
       {files.length > 0 ? (
         <ul className="flex items-center gap-4">
           {files?.map((file) => (
