@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import { useGetUnitsQuery } from "@/store/services/unitService";
@@ -34,6 +34,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useGetCategoriesQuery } from "@/store/services/categoryService";
+import { Category } from "@/views/categories";
+import { useGetVariationsQuery } from "@/store/services/variationService";
+import { Variation } from "@/views/variations";
+import VariationsInput from "./VariationsInput";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -51,6 +56,27 @@ const formSchema = z.object({
     .string()
     .min(1, { message: "Selling Price Inc Tax is required." }),
   quantity: z.string().min(1, { message: "Quantity is required." }),
+
+  variation_id: z
+    .string()
+    .min(1, { message: "Variation is required." })
+    .optional(),
+  variations_list: z.array(
+    z.object({
+      sku: z.string().min(1, { message: "SKU is required." }).optional(),
+      value: z.string().min(1, { message: "Value is required." }),
+      purchase_price: z.object({
+        exc_tax: z.string().min(1, { message: "Exc tax is required." }),
+        inc_tax: z.string().min(1, { message: "Inc tax is required." }),
+      }),
+      margin: z.string().min(1, { message: "Margin is required." }),
+      selling_price: z.object({
+        exc_tax: z.string().min(1, { message: "Exc tax is required." }),
+      }),
+      images:
+        typeof window === "undefined" ? z.any() : z.array(z.instanceof(File)),
+    })
+  ),
   business_id: z.coerce.number(),
 });
 
@@ -83,6 +109,15 @@ const CreateProduct = () => {
     isFetching: locationsFetching,
   } = useGetLocationsQuery({
     buisnessId: session?.user?.business_id,
+  });
+
+  const {
+    data: categoriesList,
+    isLoading: categoriesLoading,
+    isFetching: categoriesFetching,
+  } = useGetCategoriesQuery({
+    buisnessId: session?.user?.business_id,
+    perPage: -1,
   });
 
   const [create, createResponse] = useCreateProductMutation();
@@ -149,9 +184,45 @@ const CreateProduct = () => {
       selling_price_inc_tax: "",
       quantity: "",
       product_images: [],
+      variations_list: [
+        {
+          sku: "",
+          value: "",
+          purchase_price: {
+            exc_tax: "",
+            inc_tax: "",
+          },
+          margin: "",
+          selling_price: {
+            exc_tax: "",
+          },
+          images: [],
+        },
+      ],
       business_id: Number(session?.user?.business_id),
     },
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "variations_list",
+  });
+
+  const handleAppend = () => {
+    append({
+      sku: "",
+      value: "",
+      purchase_price: {
+        exc_tax: "",
+        inc_tax: "",
+      },
+      margin: "",
+      selling_price: {
+        exc_tax: "",
+      },
+      images: [],
+    });
+  };
 
   const handleFileSelect = (files: File[]) => {
     form.setValue("product_images", files);
@@ -200,14 +271,18 @@ const CreateProduct = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="single"
-                    {...field}
-                    value={"single"}
-                    disabled
-                  />
-                </FormControl>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Single" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    <SelectItem value={"single"}>Single</SelectItem>
+                    <SelectItem value={"variable"}>Variable</SelectItem>
+                    <SelectItem value={"combo"}>Combo</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -228,7 +303,6 @@ const CreateProduct = () => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="tax_type"
@@ -276,81 +350,114 @@ const CreateProduct = () => {
               </FormItem>
             )}
           />
-
-          <div className="col-span-3 grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="unit_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="kg" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-60">
-                      {unitsLoading && (
-                        <>
-                          {loadingData?.map((i) => (
-                            <SelectItem key={i} value={String(i)}>
-                              <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
-                            </SelectItem>
-                          ))}
-                        </>
-                      )}
-                      {unitsList &&
-                        unitsList?.map((unit: Unit) => (
-                          <SelectItem key={unit.id} value={String(unit.id)}>
-                            {unit.actual_name}
+          <FormField
+            control={form.control}
+            name="unit_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Unit</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="kg" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {unitsLoading && (
+                      <>
+                        {loadingData?.map((i) => (
+                          <SelectItem key={i} value={String(i)}>
+                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
                           </SelectItem>
                         ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <Select onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Lahore" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="max-h-60">
-                      {locationsLoading && (
-                        <>
-                          {loadingData?.map((i) => (
-                            <SelectItem key={i} value={String(i)}>
-                              <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
-                            </SelectItem>
-                          ))}
-                        </>
-                      )}
-                      {locationsList &&
-                        locationsList?.map((location: Location) => (
-                          <SelectItem
-                            key={location.id}
-                            value={String(location.id)}
-                          >
-                            {location.name}
+                      </>
+                    )}
+                    {unitsList &&
+                      unitsList?.map((unit: Unit) => (
+                        <SelectItem key={unit.id} value={String(unit.id)}>
+                          {unit.actual_name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Lahore" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {locationsLoading && (
+                      <>
+                        {loadingData?.map((i) => (
+                          <SelectItem key={i} value={String(i)}>
+                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
                           </SelectItem>
                         ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
+                      </>
+                    )}
+                    {locationsList &&
+                      locationsList?.map((location: Location) => (
+                        <SelectItem
+                          key={location.id}
+                          value={String(location.id)}
+                        >
+                          {location.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Food" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    {categoriesLoading && (
+                      <>
+                        {loadingData?.map((i) => (
+                          <SelectItem key={i} value={String(i)}>
+                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
+                          </SelectItem>
+                        ))}
+                      </>
+                    )}
+                    {categoriesList &&
+                      categoriesList?.map((category: Category) => (
+                        <SelectItem
+                          key={category.id}
+                          value={String(category.id)}
+                        >
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FileInput fileAllowed={1} onChange={handleFileSelect} />
           <FormField
             control={form.control}
@@ -368,7 +475,7 @@ const CreateProduct = () => {
             )}
           />
 
-          {form.getValues().manage_stock_status && (
+          {form.watch("manage_stock_status") && (
             <FormField
               control={form.control}
               name="quantity"
@@ -384,6 +491,63 @@ const CreateProduct = () => {
             />
           )}
 
+          {/* {form.watch("type") === "variable" && */}
+
+          {/* ( */}
+          {/* <> */}
+          {fields?.map((field, index) => (
+            <VariationsInput
+              remove={remove}
+              form={form}
+              key={field.id}
+              index={index}
+            />
+          ))}
+
+          <div className="col-span-3 flex items-center justify-center">
+            <Button type="button" onClick={handleAppend}>
+              Add More Variations
+            </Button>
+          </div>
+          {/* <FormField
+              control={form.control}
+              name="variation_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Variation</FormLabel>
+                  <Select onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="size" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="max-h-60">
+                      {variationsLoading && (
+                        <>
+                          {loadingData?.map((i) => (
+                            <SelectItem key={i} value={String(i)}>
+                              <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
+                            </SelectItem>
+                          ))}
+                        </>
+                      )}
+                      {variationsList &&
+                        variationsList?.map((variation: Variation) => (
+                          <SelectItem
+                            key={variation.id}
+                            value={String(variation.id)}
+                          >
+                            {variation.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </> */}
+          {/* )} */}
           <div className="col-span-3 flex items-center justify-center">
             <Button disabled={createLoading} type="submit" className="w-full">
               {createLoading && (

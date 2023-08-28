@@ -6,9 +6,10 @@ interface NavLinkProps {
   icon: JSX.Element;
   label: string;
   href: string;
+  open?: boolean;
 }
 
-const NavLink: FC<NavLinkProps> = ({ icon, label, href }) => {
+const NavLink: FC<NavLinkProps> = ({ icon, label, href, open }) => {
   const pathname = usePathname();
 
   // Extracting the last word of href
@@ -26,7 +27,14 @@ const NavLink: FC<NavLinkProps> = ({ icon, label, href }) => {
         }`}
       >
         <div className="icon flex items-start justify-center">{icon}</div>
-        <div>{label}</div>
+
+        <div
+          className={`${
+            open ? "opacity-100 block" : "opacity-0 hidden"
+          } duration-300`}
+        >
+          {label}
+        </div>
       </div>
     </Link>
   );

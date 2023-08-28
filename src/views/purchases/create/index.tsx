@@ -504,8 +504,10 @@ const Create = () => {
             )}
           />
           <div className="col-span-3 flex items-center justify-center">
-            <Button type="submit" className="w-full">
-              {false && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+            <Button disabled={createLoading} type="submit" className="w-full">
+              {createLoading && (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Add
             </Button>
           </div>
