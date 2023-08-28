@@ -22,7 +22,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
     setOpenSidebar((openSidebar) => !openSidebar);
   }, []);
 
-  const mainContentClassName = classNames("flex-1 duration-300 ml-0", {
+  const mainContentClassName = classNames("flex-1 duration-500 ml-0", {
     "ml-0": !openSidebar,
     // md: openSidebar,
     "md:ml-14": !open,

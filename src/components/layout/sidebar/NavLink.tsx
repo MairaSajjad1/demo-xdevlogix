@@ -22,7 +22,7 @@ const NavLink: FC<NavLinkProps> = ({ icon, label, href, open }) => {
   return (
     <Link href={href} className="flex w-full">
       <div
-        className={`w-full  flex items-center duration-300 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133] ${
+        className={`w-full  flex items-center duration-500 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133] ${
           isActive && "text-[#4540e1] bg-[#4540e133] text-base font-medium"
         }`}
       >
@@ -31,7 +31,7 @@ const NavLink: FC<NavLinkProps> = ({ icon, label, href, open }) => {
         <div
           className={`${
             open ? "opacity-100 block" : "opacity-0 hidden"
-          } duration-300`}
+          } duration-500`}
         >
           {label}
         </div>
