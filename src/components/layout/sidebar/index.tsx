@@ -1,7 +1,9 @@
 import { FC } from "react";
 import Image from "next/image";
+import classNames from "classnames";
 import { AiOutlineCloseCircle as CloseCircle } from "react-icons/ai";
 import { HiOutlineUserCircle as UserCircle } from "react-icons/hi";
+import { BsArrowRight as Right, BsArrowLeft as Left } from "react-icons/bs";
 import { FiSettings as Settings } from "react-icons/fi";
 
 // Custom Components
@@ -17,7 +19,6 @@ import {
   OrderIcon,
   ServiceIcon,
   UserManagementIcon,
-  PurchaseTimeIcon,
   ServicesIcon,
   ListIcon,
   UnitIcon,
@@ -27,12 +28,20 @@ import {
 } from "@/assets/icons";
 import Logout from "./Logout";
 
+import { MenuIcon } from "@/assets/icons";
 interface SidebarProps {
   openSidebar: boolean;
   toggleSidebar: () => void;
+  toggleOpen: () => void;
+  open: boolean;
 }
 
-const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
+const Sidebar: FC<SidebarProps> = ({
+  openSidebar,
+  toggleSidebar,
+  toggleOpen,
+  open,
+}) => {
   const navBarItems = [
     { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
@@ -87,11 +96,6 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
           icon: <PurchaseIcon />,
           slug: "/products/purchases",
         },
-        {
-          label: "Product Time",
-          icon: <PurchaseTimeIcon />,
-          slug: "/products/product-time",
-        },
         { label: "Units", icon: <UnitIcon />, slug: "/products/units" },
       ],
     },
@@ -129,43 +133,64 @@ const Sidebar: FC<SidebarProps> = ({ openSidebar, toggleSidebar }) => {
     { label: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
   ];
 
+  const sidebarContainerClasses = classNames(
+    "fixed duration-300 top-0 no-scrollbar overflow-y-scroll bg-[#ffffff] md:left-0 pt-5 pb-2 z-40  bottom-0  h-full border-r border-[#F0F0F0] flex flex-col justify-between",
+    {
+      "-left-80": !openSidebar,
+      "left-0": openSidebar,
+      "md:w-14": !open,
+      "md:w-56": open,
+    }
+  );
   return (
     <>
-      <div
-        className={`${
-          openSidebar ? "left-0" : "-left-80"
-        } fixed duration-300 top-0 bg-[#ffffff] md:left-0 py-5 pb-16 bottom-0 z-50 w-64 md:w-56 h-full border-r border-[#F0F0F0] flex flex-col justify-between`}
-      >
-        <div
-          onClick={toggleSidebar}
-          className="absolute md:hidden text-[#4f46e5] top-10 -right-4 cursor-pointer bg-[#ffffff] rounded-full border-r border-[#4f46e5] p-2"
-          aria-label="Close Sidebar"
-        >
-          <CloseCircle />
-        </div>
-        <div className="w-full px-2 flex flex-col justify-center space-y-2">
-          <div className="flex items-center justify-center">
-            <Image
-              src={"/assets/images/logo.png"}
-              alt="logo"
-              width={60}
-              height={60}
-              priority
-            />
+      <div className={sidebarContainerClasses}>
+        <div className="relative">
+          <div
+            onClick={toggleSidebar}
+            className={`fixed  z-40 md:hidden text-[#4f46e5] top-10  cursor-pointer bg-[#ffffff] rounded-full border-r border-[#4f46e5] p-2 duration-300 ${
+              openSidebar ? "left-[200px]" : "-left-80"
+            }`}
+            aria-label="Close Sidebar"
+          >
+            <CloseCircle />
           </div>
-          {navBarItems.map((item, index) => {
-            const { icon, label, slug, childrens } = item;
-            return (
-              <MenuItem
-                key={index}
-                icon={icon}
-                label={label}
-                slug={slug}
-                childrens={childrens}
+          <div
+            onClick={toggleOpen}
+            className={`fixed duration-300  z-40 hidden md:block rounded-full border border-[#F0F0F0] p-1  cursor-pointer bg-[#FFFFFF] ${
+              open ? "left-52" : "left-11"
+            }`}
+          >
+            {open ? <Left /> : <Right />}
+            {/* <MenuIcon /> */}
+          </div>
+          <div className="w-full flex-1 px-2 flex flex-col justify-center space-y-2">
+            <div className="flex items-center justify-center">
+              <Image
+                src={"/assets/images/logo.png"}
+                alt="logo"
+                width={60}
+                height={60}
+                priority
               />
-            );
-          })}
-          <Logout />
+            </div>
+            <div className="flex-1 space-y-1">
+              {navBarItems.map((item, index) => {
+                const { icon, label, slug, childrens } = item;
+                return (
+                  <MenuItem
+                    open={open}
+                    key={index}
+                    icon={icon}
+                    label={label}
+                    slug={slug}
+                    childrens={childrens}
+                  />
+                );
+              })}
+              <Logout open={open} />
+            </div>
+          </div>
         </div>
       </div>
     </>

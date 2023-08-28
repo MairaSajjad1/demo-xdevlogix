@@ -10,7 +10,7 @@ const Header: FC<HeaderProps> = ({ toggleSidebar }) => {
   return (
     <div
       className={`
-       bg-[#ffffff] sticky top-0 right-0 z-30 flex items-center justify-between  md:justify-end px-4  md:px-10 py-4`}
+       bg-[#ffffff] sticky top-0 right-0 z-20 flex items-center justify-between  md:justify-end px-4  md:px-10 py-4`}
     >
       <div
         onClick={toggleSidebar}

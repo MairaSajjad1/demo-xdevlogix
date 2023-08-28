@@ -6,15 +6,23 @@ interface MenuItem {
   icon: JSX.Element;
   label: string;
   slug?: string;
+  open?: boolean;
 }
 interface MenuItemProps extends MenuItem {
   childrens?: MenuItemProps[];
 }
-const MenuItem: FC<MenuItemProps> = ({ icon, label, slug, childrens }) => {
+const MenuItem: FC<MenuItemProps> = ({
+  icon,
+  label,
+  slug,
+  open,
+  childrens,
+}) => {
   const pathname = usePathname();
   const [isParentOpened, setIsParentOpened] = useState<boolean>(
     pathname.includes(label.toLowerCase())
   );
+
   return (
     <>
       {childrens ? (
@@ -32,13 +40,20 @@ const MenuItem: FC<MenuItemProps> = ({ icon, label, slug, childrens }) => {
               }`}
             >
               {icon}
-              <div>{label}</div>
+              <div
+                className={`${
+                  open ? "opacity-100 block" : "opacity-0 hidden"
+                } duration-300`}
+              >
+                {label}
+              </div>
             </div>
           </div>
           {isParentOpened && (
-            <div className={` ml-4 space-y-2`}>
+            <div className={`ml-4 space-y-2`}>
               {childrens?.map((item, index) => (
                 <NavLink
+                  open={open}
                   key={index}
                   icon={item.icon}
                   label={item.label}
@@ -49,7 +64,7 @@ const MenuItem: FC<MenuItemProps> = ({ icon, label, slug, childrens }) => {
           )}
         </div>
       ) : (
-        <NavLink icon={icon} label={label} href={slug!} />
+        <NavLink icon={icon} label={label} href={slug!} open={open} />
       )}
     </>
   );
