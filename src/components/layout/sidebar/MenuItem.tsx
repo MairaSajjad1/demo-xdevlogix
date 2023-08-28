@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { usePathname } from "next/navigation";
 import NavLink from "./NavLink";
+import Link from "next/link";
 
 interface MenuItem {
   icon: JSX.Element;
@@ -34,7 +35,8 @@ const MenuItem: FC<MenuItemProps> = ({
             className="w-full"
           >
             <div
-              className={`cursor-pointer w-full flex items-center duration-300 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133] ${
+              // href={slug || ""}
+              className={`cursor-pointer w-full flex items-center duration-500 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133] ${
                 pathname.includes(label.split(" ").join("-").toLowerCase()) &&
                 "text-[#4540e1] bg-[#4540e133] text-base font-medium"
               }`}
@@ -43,13 +45,13 @@ const MenuItem: FC<MenuItemProps> = ({
               <div
                 className={`${
                   open ? "opacity-100 block" : "opacity-0 hidden"
-                } duration-300`}
+                } duration-500`}
               >
                 {label}
               </div>
             </div>
           </div>
-          {isParentOpened && (
+          {isParentOpened && open && (
             <div className={`ml-4 space-y-2`}>
               {childrens?.map((item, index) => (
                 <NavLink

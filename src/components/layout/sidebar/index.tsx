@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import Image from "next/image";
 import classNames from "classnames";
 import { AiOutlineCloseCircle as CloseCircle } from "react-icons/ai";
@@ -133,8 +133,12 @@ const Sidebar: FC<SidebarProps> = ({
     { label: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
   ];
 
+  const toggleIsHovered = () => {
+    if (!open) toggleOpen();
+  };
+
   const sidebarContainerClasses = classNames(
-    "fixed duration-300 top-0 no-scrollbar overflow-y-scroll bg-[#ffffff] md:left-0 pt-5 pb-2 z-40  bottom-0  h-full border-r border-[#F0F0F0] flex flex-col justify-between",
+    "fixed duration-500 top-0 no-scrollbar overflow-y-scroll bg-[#ffffff] md:left-0 pt-5 pb-2 z-40  bottom-0  h-full border-r border-[#F0F0F0] flex flex-col justify-between",
     {
       "-left-80": !openSidebar,
       "left-0": openSidebar,
@@ -142,14 +146,15 @@ const Sidebar: FC<SidebarProps> = ({
       "md:w-56": open,
     }
   );
+
   return (
     <>
       <div className={sidebarContainerClasses}>
         <div className="relative">
           <div
             onClick={toggleSidebar}
-            className={`fixed  z-40 md:hidden text-[#4f46e5] top-10  cursor-pointer bg-[#ffffff] rounded-full border-r border-[#4f46e5] p-2 duration-300 ${
-              openSidebar ? "left-[200px]" : "-left-80"
+            className={`fixed  z-40 md:hidden text-[#4f46e5] top-10  cursor-pointer bg-[#ffffff] rounded-full border-r border-[#4f46e5] p-2 duration-500 ${
+              openSidebar ? "left-[190px]" : "-left-80"
             }`}
             aria-label="Close Sidebar"
           >
@@ -157,14 +162,18 @@ const Sidebar: FC<SidebarProps> = ({
           </div>
           <div
             onClick={toggleOpen}
-            className={`fixed duration-300  z-40 hidden md:block rounded-full border border-[#F0F0F0] p-1  cursor-pointer bg-[#FFFFFF] ${
+            className={`fixed duration-500  z-40 hidden md:block rounded-full border border-[#F0F0F0] p-1  cursor-pointer bg-[#FFFFFF] ${
               open ? "left-52" : "left-11"
             }`}
           >
             {open ? <Left /> : <Right />}
             {/* <MenuIcon /> */}
           </div>
-          <div className="w-full flex-1 px-2 flex flex-col justify-center space-y-2">
+          <div
+            onMouseEnter={toggleIsHovered}
+            onMouseLeave={toggleIsHovered}
+            className="w-full flex-1 px-2 flex flex-col justify-center space-y-2"
+          >
             <div className="flex items-center justify-center">
               <Image
                 src={"/assets/images/logo.png"}

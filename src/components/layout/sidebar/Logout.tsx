@@ -17,7 +17,7 @@ const Logout: FC<LogoutProps> = ({ open }) => {
     <>
       <button
         onClick={toggleLogoutModal}
-        className="flex items-center duration-300 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133]"
+        className="flex items-center duration-500 space-x-3 hover:text-[#4540e1] p-2 rounded-lg overflow-hidden hover:bg-[#4540e133]"
       >
         <LogoutIcon />
         <h3 className={`${open ? "opacity-100 block" : "opacity-0 hidden"}`}>
