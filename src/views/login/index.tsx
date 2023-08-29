@@ -49,7 +49,7 @@ const Login: FC = () => {
     if (response?.error) {
       toast.error("Invalid Credentials");
     } else {
-      router.replace("/dashboard/home");
+      router.replace("/dashboard");
     }
     setIsLoading(false);
   };
