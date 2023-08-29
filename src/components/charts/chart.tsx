@@ -57,7 +57,7 @@ interface ChartProps {
 const Chart: FC<ChartProps> = ({ heading, data }) => {
   return (
     <div className="bg-[#FFFFFF] rounded-2xl">
-      <h1 className="p-4 border-b text-[#343239] border-[#f5f5f5] font-semibold text-2xl">
+      <h1 className="p-4 border-b text-[#343239] border-[#f5f5f5] font-semibold text-xl">
         {heading}
       </h1>
       <div className="w-full h-96 p-4">

@@ -26,7 +26,6 @@ import {
   BarcodeIcon,
   PurchaseIcon,
 } from "@/assets/icons";
-import Logout from "./Logout";
 
 import { MenuIcon } from "@/assets/icons";
 interface SidebarProps {
@@ -45,18 +44,18 @@ const Sidebar: FC<SidebarProps> = ({
   const navBarItems = [
     { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
-      label: "User Management",
+      label: "Contacts",
       icon: <UserManagementIcon />,
       childrens: [
         {
           label: "Users",
           icon: <UserCircle />,
-          slug: "/user-management/users",
+          slug: "/contacts/users",
         },
         {
           label: "Role",
           icon: <HomeIcon />,
-          slug: "/user-management/roles",
+          slug: "/contacts/roles",
         },
       ],
     },
@@ -197,7 +196,6 @@ const Sidebar: FC<SidebarProps> = ({
                   />
                 );
               })}
-              <Logout open={open} />
             </div>
           </div>
         </div>
