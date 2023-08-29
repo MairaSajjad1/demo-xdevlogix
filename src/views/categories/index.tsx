@@ -27,7 +27,7 @@ export interface Category {
 
 const Categories: FC = () => {
   const { data: session } = useSession();
-  // GET
+
   const {
     data: categoriesList,
     isLoading: categoriesLoading,

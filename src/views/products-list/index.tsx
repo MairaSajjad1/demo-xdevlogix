@@ -287,16 +287,10 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <div className="flex items-center gap-5">
-            <Button>
-            <ChevronDown className="mr-2 w-4 h-4" />
-            Import Product
-          </Button>
           <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="mr-2 w-4 h-4" />
             Add Product
-          </Button> 
-            </div>
+          </Button>
         </div>
         <Separator />
         <Table

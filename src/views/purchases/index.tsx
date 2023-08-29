@@ -9,11 +9,10 @@ import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import PurchaseForm from "./PurchaseForm";
 import { useGetPurchasesQuery } from "@/store/services/purchaseService";
+import Link from "next/link";
 
 export interface Purchase {
   id: number;
@@ -197,9 +196,11 @@ const Purchases: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Purchases</h1>
             <p className="font-medium text-sm">A List of all Purchases</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Purchase
+          <Button asChild size={"sm"}>
+            <Link href={"/products/purchases/create"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add Purchase
+            </Link>
           </Button>
         </div>
         <Separator />
@@ -214,12 +215,7 @@ const Purchases: FC = () => {
           filterKey="name"
         />
       </div>
-      <Modal
-        title={selectedPurchase ? "Update Purchase" : "Add New Purchase"}
-        open={open}
-        setOpen={toggleModal}
-        body={<PurchaseForm setOpen={toggleModal} data={selectedPurchase} />}
-      />
+
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
