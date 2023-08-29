@@ -2,9 +2,8 @@
 import { GoOrganization as Organication } from "react-icons/go";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { useSession } from "next-auth/react";
-import { useGetOrdersQuery } from "@/store/services/reportService";
+import {useGetOrderReportQuery} from "@/store/services/orderReportService";
 
 export interface Order {
   id: number;
@@ -113,20 +112,25 @@ const Home: React.FC = () => {
     data: ordersList,
     isLoading: ordersLoading,
     isFetching: ordersFetching,
-  } = useGetOrdersQuery({
+  } = useGetOrderReportQuery({
     buisnessId: session?.user?.business_id,
-    // customerId: session?.user?.customer_id,
-    customerId: 31,
+    customerId: session?.user?.customer_id,
     perPage: -1,
   });
 
   const reportList = [
     {
-      tag: "Orders",
+      tag: "Total Orders",
       icon: <Organication />,
-      number: true ? "120" : "00",
-      slug: `/reports/order`,
+      number: ordersList?.data ? ordersList?.data?.length : "00",
+      slug: `/reports/orders`
     },
+    // {
+    //   tag: "Orders",
+    //   icon: <Organication />,
+    //   number: true ? "120" : "00",
+    //   slug: `/reports/order`,
+    // },
     {
       tag: "Users",
       icon: <Organication />,

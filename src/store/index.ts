@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
 import authService from "./services/authService";
 import typeOfServiceService from "./services/typeOfServiceService";
-import reportService from "./services/reportService";
+// import reportService from "./services/reportService";
 import userService from "./services/userService";
 import locationService from "./services/locationService";
 import categoryService from "./services/categoryService";
@@ -17,13 +17,15 @@ import brandService from "./services/brandService";
 import purchaseService from "./services/purchaseService";
 import variationService from "./services/variationService";
 import productService from "./services/productService";
+import  orderReportService  from "./services/orderReportService";
+import permissionService from "./services/permissionServices";
 
 export const store = configureStore({
   reducer: {
     // Add the generated reducer as a specific top-level slice
     [authService.reducerPath]: authService.reducer,
     [typeOfServiceService.reducerPath]: typeOfServiceService.reducer,
-    [reportService.reducerPath]: reportService.reducer,
+    // [reportService.reducerPath]: reportService.reducer,
     [userService.reducerPath]: userService.reducer,
     [locationService.reducerPath]: locationService.reducer,
     [categoryService.reducerPath]: categoryService.reducer,
@@ -31,8 +33,10 @@ export const store = configureStore({
     [buisnessService.reducerPath]: buisnessService.reducer,
     [supplierService.reducerPath]: supplierService.reducer,
     [riderService.reducerPath]: riderService.reducer,
+    [orderReportService.reducerPath]: orderReportService.reducer,
     [roleService.reducerPath]: roleService.reducer,
     [unitService.reducerPath]: unitService.reducer,
+    [permissionService.reducerPath]:permissionService.reducer,
     [barCodeService.reducerPath]: barCodeService.reducer,
     [brandService.reducerPath]: brandService.reducer,
     [purchaseService.reducerPath]: purchaseService.reducer,
@@ -46,11 +50,13 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       authService.middleware,
       typeOfServiceService.middleware,
-      reportService.middleware,
+      // reportService.middleware,
       userService.middleware,
       locationService.middleware,
       categoryService.middleware,
       taxrateService.middleware,
+      permissionService.middleware,
+      orderReportService.middleware,
       buisnessService.middleware,
       supplierService.middleware,
       riderService.middleware,

@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { GoPlusCircle as PlusCircle } from "react-icons/go";
+import {GoChevronDown as ChevronDown} from  "react-icons/go";
 import Table from "@/components/table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -286,10 +287,16 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Product
+          <div className="flex items-center gap-5">
+            <Button>
+            <ChevronDown className="mr-2 w-4 h-4" />
+            Import Product
           </Button>
+          <Button onClick={toggleModal} size={"sm"}>
+            <PlusCircle className="w-4 h-4" />
+            Add Product
+          </Button> 
+            </div>
         </div>
         <Separator />
         <Table
