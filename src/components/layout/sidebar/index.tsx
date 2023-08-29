@@ -138,7 +138,7 @@ const Sidebar: FC<SidebarProps> = ({
   };
 
   const sidebarContainerClasses = classNames(
-    "fixed duration-500 top-0 no-scrollbar overflow-y-scroll bg-[#ffffff] md:left-0 pt-5 pb-2 z-40  bottom-0  h-full border-r border-[#F0F0F0] flex flex-col justify-between",
+    "fixed duration-500 top-0 scrollbar overflow-y-scroll bg-[#ffffff] md:left-0 pt-5 pb-2 z-40  bottom-0  h-full border-r border-[#F0F0F0] flex flex-col justify-between",
     {
       "-left-80": !openSidebar,
       "left-0": openSidebar,
