@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "@/store";
 import { addTokenToRequest } from "@/lib/utils";
+import { Order } from "@/views/dashboard";
 
 const reportService = createApi({
   reducerPath: "reportService",
@@ -24,6 +25,9 @@ const reportService = createApi({
           method: "GET",
         };
       },
+
+      transformResponse: ({ data }: { data: Order[] }) =>
+        data?.sort((a, b) => b.id - a.id),
       providesTags: ["report"],
     }),
   }),

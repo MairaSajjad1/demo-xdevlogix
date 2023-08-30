@@ -17,6 +17,7 @@ import brandService from "./services/brandService";
 import purchaseService from "./services/purchaseService";
 import variationService from "./services/variationService";
 import productService from "./services/productService";
+import orderService from "./services/orderListService";
 
 export const store = configureStore({
   reducer: {
@@ -38,6 +39,7 @@ export const store = configureStore({
     [purchaseService.reducerPath]: purchaseService.reducer,
     [variationService.reducerPath]: variationService.reducer,
     [productService.reducerPath]: productService.reducer,
+    [orderService.reducerPath]: orderService.reducer,
     authReducer: authReducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
@@ -60,7 +62,8 @@ export const store = configureStore({
       brandService.middleware,
       purchaseService.middleware,
       variationService.middleware,
-      productService.middleware
+      productService.middleware,
+      orderService.middleware
     ),
 });
 
