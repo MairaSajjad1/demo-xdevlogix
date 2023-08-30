@@ -2,19 +2,30 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import classNames from "classnames";
 import { AiOutlineCloseCircle as CloseCircle } from "react-icons/ai";
-import { HiOutlineUserCircle as UserCircle } from "react-icons/hi";
+import {
+  HiOutlineUserCircle as UserCircle,
+  HiOutlineLocationMarker as Location,
+} from "react-icons/hi";
 import { BsArrowRight as Right, BsArrowLeft as Left } from "react-icons/bs";
 import { FiSettings as Settings } from "react-icons/fi";
-
+import {
+  RiContactsBook2Line as Contacts,
+  RiEBike2Line as Rider,
+} from "react-icons/ri";
+import {
+  BiCategory as Category,
+  BiDollarCircle as Buisness,
+  BiBarcodeReader as Barcode,
+} from "react-icons/bi";
+import { TbReceiptTax as Tax } from "react-icons/tb";
+import { PiCertificateBold as Brand } from "react-icons/pi";
 // Custom Components
 import MenuItem from "./MenuItem";
 
 // Custom Icons
 import {
   HomeIcon,
-  RiderIcon,
   ReportIcon,
-  BrandIcon,
   VariationIcon,
   OrderIcon,
   ServiceIcon,
@@ -23,7 +34,6 @@ import {
   ListIcon,
   UnitIcon,
   ProductsIcons,
-  BarcodeIcon,
   PurchaseIcon,
 } from "@/assets/icons";
 
@@ -44,18 +54,18 @@ const Sidebar: FC<SidebarProps> = ({
   const navBarItems = [
     { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
-      label: "Contacts",
+      label: "User Management",
       icon: <UserManagementIcon />,
       childrens: [
         {
           label: "Users",
           icon: <UserCircle />,
-          slug: "/contacts/users",
+          slug: "/user-management/users",
         },
         {
           label: "Role",
           icon: <HomeIcon />,
-          slug: "/contacts/roles",
+          slug: "/user-management/roles",
         },
       ],
     },
@@ -79,10 +89,10 @@ const Sidebar: FC<SidebarProps> = ({
           icon: <ListIcon />,
           slug: "/products/products-list",
         },
-        { label: "Brand", icon: <BrandIcon />, slug: "/products/brands" },
+        { label: "Brand", icon: <Brand />, slug: "/products/brands" },
         {
           label: "Bar Codes",
-          icon: <BarcodeIcon />,
+          icon: <Barcode />,
           slug: "/products/bar-codes",
         },
         {
@@ -107,26 +117,32 @@ const Sidebar: FC<SidebarProps> = ({
           icon: <ListIcon />,
           slug: "/orders/orders-list",
         },
-        { label: "Rider", icon: <RiderIcon />, slug: "/orders/riders" },
-        { label: "Suppliers", icon: <UnitIcon />, slug: "/orders/suppliers" },
+      ],
+    },
+    {
+      label: "Contacts",
+      icon: <Contacts />,
+      childrens: [
+        { label: "Rider", icon: <Rider />, slug: "/contacts/riders" },
+        { label: "Suppliers", icon: <UnitIcon />, slug: "/contacts/suppliers" },
       ],
     },
     {
       label: "Settings",
       icon: <Settings />,
       childrens: [
-        { label: "Location", icon: <HomeIcon />, slug: "/settings/locations" },
+        { label: "Location", icon: <Location />, slug: "/settings/locations" },
         {
           label: "Categories",
-          icon: <ProductsIcons />,
+          icon: <Category />,
           slug: "/settings/categories",
         },
         {
           label: "Tax Rates",
-          icon: <ProductsIcons />,
+          icon: <Tax />,
           slug: "/settings/taxrates",
         },
-        { label: "Business", icon: <ListIcon />, slug: "/settings/buisnesses" },
+        { label: "Business", icon: <Buisness />, slug: "/settings/buisnesses" },
       ],
     },
     { label: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
