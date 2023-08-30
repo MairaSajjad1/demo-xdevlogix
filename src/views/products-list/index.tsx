@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
+// import ImportProductModal from "@/components/modal/import-modal;
 import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
@@ -111,6 +112,7 @@ const ProductsList: FC = () => {
   });
 
   const [open, setOpen] = useState<boolean>(false);
+  const[openImport,setOpenImport] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
   const [selectedProductList, setSelectedProductList] =
@@ -249,6 +251,14 @@ const ProductsList: FC = () => {
   );
 
   const loadingData = Array.from({ length: 10 }, () => null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const handleImportClick = () => {
+    setShowImportModal(true);
+  };
+
+  const handleImportClose = () => {
+    setShowImportModal(false);
+  };
 
   const toggleModal = useCallback(() => {
     setOpen((open) => !open);
@@ -287,10 +297,16 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Product
+          <div className="flex items-center gap-5">
+            <Button onClick={toggleModal} size={"sm"}>
+            <ChevronDown className="mr-2 w-4 h-4" />
+            Import Product
           </Button>
+          <Button onClick={toggleModal} size={"sm"}>
+            <PlusCircle className="w-4 h-4" />
+            Add Product
+          </Button> 
+            </div>
         </div>
         <Separator />
         <Table
@@ -304,18 +320,13 @@ const ProductsList: FC = () => {
           filterKey="name"
         />
       </div>
-      {/* <Modal
-        title={selectedProductList ? "Update Order" : "Add New Order"}
-        open={open}
-        setOpen={toggleModal}
-        body={<OrderForm setOpen={toggleModal} data={selectedProductList} />}
-      /> */}
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}
         loading={false}
         confirmDelete={confirmDelete}
       />
+      {/* <ImportProductModal isOpen={showImportModal} onClose={handleImportClose} /> */}
     </>
   );
 };
