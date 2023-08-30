@@ -37,12 +37,11 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { useGetProductsQuery } from "@/store/services/productService";
-import { Product, ProductVariation } from "@/views/products-list";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCreatePurchaseMutation } from "@/store/services/purchaseService";
 import toast from "react-hot-toast";
 import ProductInputs from "./ProductInputs";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   supplier_id: z.string().min(1, { message: "Supplier is required." }),
@@ -65,10 +64,6 @@ const formSchema = z.object({
     .array(
       z.object({
         method: z.string().min(1, { message: "Method is required." }),
-        amount: z
-          .string()
-          .min(1, { message: "Amount is required." })
-          .optional(),
       })
     )
     .nonempty(),
@@ -90,6 +85,7 @@ const formSchema = z.object({
 
 const Create = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const {
     data: suppliersList,
@@ -133,7 +129,6 @@ const Create = () => {
       payments: [
         {
           method: "",
-          amount: "100",
         },
       ],
       purchase_lines: [
@@ -162,6 +157,8 @@ const Create = () => {
     }
     if (createSuccess) {
       toast.success("Purchase Added Successfully.");
+
+      router.push("/products/purchases");
     }
   }, [createError, createSuccess]);
 

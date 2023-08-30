@@ -3,8 +3,8 @@ import { RootState } from "@/store";
 import { addTokenToRequest } from "@/lib/utils";
 import { Order } from "@/views/dashboard";
 
-const orderService = createApi({
-  reducerPath: "orderService",
+const reportService = createApi({
+  reducerPath: "reportService",
   tagTypes: ["report"],
   baseQuery: fetchBaseQuery({
     baseUrl:
@@ -33,6 +33,6 @@ const orderService = createApi({
   }),
 });
 
-export const { useGetOrdersQuery } = orderService;
+export const { useGetOrdersQuery } = reportService;
 
-export default orderService;
+export default reportService;
