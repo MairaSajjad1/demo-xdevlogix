@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetProductsQuery } from "@/store/services/productService";
 import { Product, ProductVariation } from "@/views/products-list";
 import { useSession } from "next-auth/react";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { UseFieldArrayRemove } from "react-hook-form";
 
 interface ProductInputsProps {
@@ -38,32 +38,17 @@ const ProductInputs: FC<ProductInputsProps> = ({ remove, index, form }) => {
     perPage: -1,
   });
 
-  const [productVariationList, setProductVariationList] = useState<
-    { id: number; tem_name: string }[]
-  >([]);
-
   const purchaseItem = form.watch(`purchase_lines`)[index];
 
-  useEffect(() => {
-    const purchaseLines = form.watch("purchase_lines");
+  const productVariations = useMemo(() => {
+    const productToFind = productsList?.find(
+      (product) => product.id === Number(purchaseItem.product_id)
+    );
 
-    if (purchaseLines.length > 0) {
-      const productToFind = productsList?.find(
-        (product) => product.id === Number(purchaseItem.product_id)
-      );
+    if (productToFind) {
+      const { product_variations } = productToFind;
 
-      if (productToFind) {
-        const {
-          product_variations,
-        }: { product_variations: ProductVariation[] } = productToFind;
-        const varitationTemplates = product_variations.map(
-          ({ variation_template: { id, tem_name } }) => ({
-            id,
-            tem_name,
-          })
-        );
-        setProductVariationList(varitationTemplates);
-      }
+      return product_variations;
     }
   }, [purchaseItem.product_id]);
 
@@ -123,18 +108,18 @@ const ProductInputs: FC<ProductInputsProps> = ({ remove, index, form }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="max-h-60">
-                  {productVariationList.length === 0 && (
+                  {!productVariations && (
                     <SelectItem value="" disabled={true}>
                       Please Select Product First
                     </SelectItem>
                   )}
-                  {productVariationList &&
-                    productVariationList?.map((productVariation) => (
+                  {productVariations &&
+                    productVariations?.map((productVariation) => (
                       <SelectItem
                         key={productVariation.id}
                         value={String(productVariation.id)}
                       >
-                        {productVariation.tem_name}
+                        {productVariation.variation_template.tem_name}
                       </SelectItem>
                     ))}
                 </SelectContent>
