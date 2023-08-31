@@ -1,13 +1,15 @@
-import { addTokenToRequest } from "@/lib/utils";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "@/store";
+import { addTokenToRequest } from "@/lib/utils";
+import { Order } from "@/views/dashboard";
 
-const ordersService = createApi({
-  reducerPath: "ordersService",
-  tagTypes: ["orders"],
+const orderService = createApi({
+  reducerPath: "orderService",
+  tagTypes: ["report"],
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://demo.onlineorder.dev-logix.com/api",
+      "https://demo.onlineorder.dev-logix.com",
 
     prepareHeaders: async (headers, { getState }) => {
       headers.set("Accept", "application/json");
@@ -15,31 +17,22 @@ const ordersService = createApi({
       return headers;
     },
   }),
-  // refetchOnMountOrArgChange: true,
-
   endpoints: (builder) => ({
-    createOrder: builder.mutation({
-      query: (orderData) => ({
-        url: "/api/test/order",
-        method: "POST",
-        body: orderData,
-      }),
-      invalidatesTags: ["orders"],
-    }),
-
     getOrders: builder.query({
-      query: ({ businessId, customerId }) => ({
-        url: `api/orders/check?business_id=${businessId}&user_type=admin&per_page=-1`,
-        method: "GET",
-      }),
-      providesTags: ["orders"],
+      query: ({ buisnessId, customerId, perPage }) => {
+        return {
+          url: `/order/report?business_id=${buisnessId}&customer_id=${customerId}&per_page=${perPage}`,
+          method: "GET",
+        };
+      },
+
+      transformResponse: ({ data }: { data: Order[] }) =>
+        data?.sort((a, b) => b.id - a.id),
+      providesTags: ["report"],
     }),
   }),
 });
 
-export const {
-  useCreateOrderMutation,
-  useGetOrdersQuery,
-} = ordersService;
+export const { useGetOrdersQuery } = orderService;
 
-export default ordersService;
+export default orderService;
