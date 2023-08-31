@@ -169,7 +169,7 @@ const Sidebar: FC<SidebarProps> = ({
           <div
             onClick={toggleSidebar}
             className={`fixed  z-40 md:hidden text-[#4f46e5] top-10  cursor-pointer bg-[#ffffff] rounded-full border-r border-[#4f46e5] p-2 duration-500 ${
-              openSidebar ? "left-[190px]" : "-left-80"
+              openSidebar ? "left-[199px]" : "-left-80"
             }`}
             aria-label="Close Sidebar"
           >
