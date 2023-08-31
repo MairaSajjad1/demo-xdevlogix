@@ -54,18 +54,18 @@ const Sidebar: FC<SidebarProps> = ({
   const navBarItems = [
     { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard/home" },
     {
-      label: "User Management",
+      label: "Contacts",
       icon: <UserManagementIcon />,
       childrens: [
         {
           label: "Users",
           icon: <UserCircle />,
-          slug: "/user-management/users",
+          slug: "/contacts/users",
         },
         {
           label: "Role",
           icon: <HomeIcon />,
-          slug: "/user-management/roles",
+          slug: "/contacts/roles",
         },
       ],
     },

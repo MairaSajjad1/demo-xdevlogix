@@ -46,8 +46,6 @@ export const store = configureStore({
     [orderService.reducerPath]: orderService.reducer,
     authReducer: authReducer,
   },
-  // Adding the api middleware enables caching, invalidation, polling,
-  // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authService.middleware,
