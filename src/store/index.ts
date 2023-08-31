@@ -19,11 +19,6 @@ import brandService from "./services/brandService";
 import purchaseService from "./services/purchaseService";
 import variationService from "./services/variationService";
 import productService from "./services/productService";
-<<<<<<< HEAD
-import orderReportService  from "./services/orderReportService";
-import permissionService from "./services/permissionServices";
-=======
->>>>>>> main
 import orderService from "./services/orderListService";
 
 export const store = configureStore({
@@ -72,11 +67,7 @@ export const store = configureStore({
       purchaseService.middleware,
       variationService.middleware,
       productService.middleware,
-<<<<<<< HEAD
-      orderService.middleware,
-=======
       orderService.middleware
->>>>>>> main
     ),
 });
 
