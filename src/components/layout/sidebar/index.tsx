@@ -60,12 +60,12 @@ const Sidebar: FC<SidebarProps> = ({
         {
           label: "Users",
           icon: <UserCircle />,
-          slug: "/contacts/users",
+          slug: "/user-management/users",
         },
         {
           label: "Role",
           icon: <HomeIcon />,
-          slug: "/contacts/roles",
+          slug: "/user-management/roles",
         },
       ],
     },
