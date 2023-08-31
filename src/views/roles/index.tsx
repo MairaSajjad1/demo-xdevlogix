@@ -22,12 +22,9 @@ export interface Role {
   created_at: string;
   updated_at: string;
 }
-interface RolesProps {
-  selectedRoleId: number; // Add any other required props here
-}
 
 // const Roles: FC = () => {
-  const Roles: FC<RolesProps> = ({ selectedRoleId}) => {
+  const Roles = () => {
 
   const { data: session } = useSession();
   const {
