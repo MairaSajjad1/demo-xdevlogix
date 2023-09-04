@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { GoPlusCircle as PlusCircle } from "react-icons/go";
+import {GoChevronDown as ChevronDown} from  "react-icons/go";
 import Table from "@/components/table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -11,11 +12,12 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
+// import ImportProductModal from "@/components/modal/import-modal;
 import { useSession } from "next-auth/react";
+import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
-import Link from "next/link";
 
 export interface ProductImage {
   id: number;
@@ -110,6 +112,7 @@ const ProductsList: FC = () => {
   });
 
   const [open, setOpen] = useState<boolean>(false);
+  const[openImport,setOpenImport] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
   const [selectedProductList, setSelectedProductList] =
@@ -122,24 +125,29 @@ const ProductsList: FC = () => {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Image" />
         ),
-        cell: ({ row }) => {
-          if (row?.original) {
-            const [image] = row.getValue("product_images") as ProductImage[];
-            if (image) {
-              return (
-                <Image
-                  src={image.image_url}
-                  alt={String(image.product_id)}
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>
+                {/* <Image
+                  src={
+                    (row.getValue("product_images") as ProductImage[])?.[0]
+                      .image_url
+                  }
+                  alt={
+                    (row.getValue("product_images") as ProductImage[])?.[0]
+                      ?.id as unknown as string
+                  }
                   width={40}
                   height={40}
-                  className="rounded-full object-contain"
-                />
-              );
-            }
-          } else {
-            return <Skeleton className="w-10 h-10 rounded-full bg-[#F5f5f5]" />;
-          }
-        },
+                  className="rounded-full"
+                /> */}
+              </div>
+            ) : (
+              <Skeleton className="w-10 h-10 rounded-full bg-[#F5f5f5]" />
+            )}
+          </>
+        ),
         enableSorting: false,
         enableHiding: true,
       },
@@ -153,7 +161,7 @@ const ProductsList: FC = () => {
             {row?.original ? (
               <div>{row.getValue("name")}</div>
             ) : (
-              <Skeleton className="w-10 h-4 bg-[#F5f5f5]" />
+              <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
           </>
         ),
@@ -161,16 +169,33 @@ const ProductsList: FC = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "description",
+        accessorKey: "landmark",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Description" />
+          <DataTableColumnHeader column={column} title="Landmark" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("description")}</div>
+              <div>{row.getValue("landmark")}</div>
             ) : (
-              <Skeleton className={`w-10 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
+            )}
+          </>
+        ),
+        enableSorting: false,
+        enableHiding: true,
+      },
+      {
+        accessorKey: "city",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="City" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("city")}</div>
+            ) : (
+              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
             )}
           </>
         ),
@@ -178,34 +203,33 @@ const ProductsList: FC = () => {
         enableHiding: true,
       },
       {
-        accessorKey: "product_stock",
+        accessorKey: "state",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Stock" />
-        ),
-        cell: ({ row }) => {
-          if (row?.original) {
-            const [stock] = row.getValue("product_stock") as ProductStock[];
-            if (stock) {
-              return <div>{stock.quantity_available}</div>;
-            }
-          } else {
-            return <Skeleton className="w-10 h-4 rounded-full bg-[#F5f5f5]" />;
-          }
-        },
-        enableSorting: true,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "type",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="type" />
+          <DataTableColumnHeader column={column} title="State" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("type")}</div>
+              <div>{row.getValue("state")}</div>
             ) : (
-              <Skeleton className={`w-10 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+            )}
+          </>
+        ),
+        enableSorting: true,
+        enableHiding: true,
+      },
+      {
+        accessorKey: "country",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Country" />
+        ),
+        cell: ({ row }) => (
+          <>
+            {row?.original ? (
+              <div>{row.getValue("country")}</div>
+            ) : (
+              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
             )}
           </>
         ),
@@ -227,6 +251,14 @@ const ProductsList: FC = () => {
   );
 
   const loadingData = Array.from({ length: 10 }, () => null);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const handleImportClick = () => {
+    setShowImportModal(true);
+  };
+
+  const handleImportClose = () => {
+    setShowImportModal(false);
+  };
 
   const toggleModal = useCallback(() => {
     setOpen((open) => !open);
@@ -265,12 +297,16 @@ const ProductsList: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Products</h1>
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
-          <Button asChild size={"sm"}>
-            <Link href={"/products/products-list/create"}>
-              <PlusCircle className="mr-2 w-4 h-4" />
-              Add Product
-            </Link>
+          <div className="flex items-center gap-5">
+            <Button onClick={toggleModal} size={"sm"}>
+            <ChevronDown className="mr-2 w-4 h-4" />
+            Import Product
           </Button>
+          <Button onClick={toggleModal} size={"sm"}>
+            <PlusCircle className="w-4 h-4" />
+            Add Product
+          </Button> 
+            </div>
         </div>
         <Separator />
         <Table
@@ -290,6 +326,7 @@ const ProductsList: FC = () => {
         loading={false}
         confirmDelete={confirmDelete}
       />
+      {/* <ImportProductModal isOpen={showImportModal} onClose={handleImportClose} /> */}
     </>
   );
 };

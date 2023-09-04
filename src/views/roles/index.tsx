@@ -23,9 +23,10 @@ export interface Role {
   updated_at: string;
 }
 
-const Roles: FC = () => {
+// const Roles: FC = () => {
+  const Roles = () => {
+
   const { data: session } = useSession();
-  // GET
   const {
     data: rolesList,
     isLoading: rolesLoading,
@@ -34,6 +35,7 @@ const Roles: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -57,6 +59,29 @@ const Roles: FC = () => {
           </>
         ),
         enableSorting: true,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "id",
+        header: "Permission",
+        cell: ({ row }) => (
+          <div>
+            {row?.original ?
+            (
+              <a
+              // row.original.id
+                href={`/dashboard/permission/${row.getValue("id")}`}
+                className="text-black-500 hover:underline"
+              >
+                View Permission
+              </a>
+            )
+            : (
+              <Skeleton className="w-20 h-4 bg-[#F5f5f5]" />
+            )}
+          </div>
+        ),
+        enableSorting: false,
         enableHiding: false,
       },
       {
