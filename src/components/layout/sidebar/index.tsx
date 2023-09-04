@@ -6,12 +6,18 @@ import {
   HiOutlineUserCircle as UserCircle,
   HiOutlineLocationMarker as Location,
 } from "react-icons/hi";
-import { BsArrowRight as Right, BsArrowLeft as Left } from "react-icons/bs";
+import {
+  BsArrowRight as Right,
+  BsArrowLeft as Left,
+  BsUnity as Unit,
+} from "react-icons/bs";
 import { FiSettings as Settings } from "react-icons/fi";
 import {
   RiContactsBook2Line as Contacts,
   RiEBike2Line as Rider,
+  RiProductHuntLine as Product,
 } from "react-icons/ri";
+import { MdOutlineAddShoppingCart as Purchase } from "react-icons/md";
 import {
   BiCategory as Category,
   BiDollarCircle as Buisness,
@@ -19,13 +25,15 @@ import {
 } from "react-icons/bi";
 import { TbReceiptTax as Tax } from "react-icons/tb";
 import { PiCertificateBold as Brand } from "react-icons/pi";
+import { GrPieChart as Report } from "react-icons/gr";
+import { FaListOl as Products } from "react-icons/fa";
+import { LuLayoutDashboard as Dashboard } from "react-icons/lu";
 // Custom Components
 import MenuItem from "./MenuItem";
 
 // Custom Icons
 import {
   HomeIcon,
-  ReportIcon,
   VariationIcon,
   OrderIcon,
   ServiceIcon,
@@ -52,14 +60,14 @@ const Sidebar: FC<SidebarProps> = ({
   open,
 }) => {
   const navBarItems = [
-    { label: "Dashboard", icon: <HomeIcon />, slug: "/dashboard" },
+    { label: "Dashboard", icon: <Dashboard size={20} />, slug: "/dashboard" },
     {
       label: "User Management",
       icon: <UserManagementIcon />,
       childrens: [
         {
           label: "Users",
-          icon: <UserCircle />,
+          icon: <UserCircle size={20} />,
           slug: "/user-management/users",
         },
         {
@@ -82,17 +90,17 @@ const Sidebar: FC<SidebarProps> = ({
     },
     {
       label: "Product",
-      icon: <ProductsIcons />,
+      icon: <Product size={20} />,
       childrens: [
         {
           label: "Product List",
-          icon: <ListIcon />,
+          icon: <Products size={20} />,
           slug: "/products/products-list",
         },
-        { label: "Brand", icon: <Brand />, slug: "/products/brands" },
+        { label: "Brand", icon: <Brand size={20} />, slug: "/products/brands" },
         {
           label: "Bar Codes",
-          icon: <Barcode />,
+          icon: <Barcode size={20} />,
           slug: "/products/bar-codes",
         },
         {
@@ -102,10 +110,10 @@ const Sidebar: FC<SidebarProps> = ({
         },
         {
           label: "Purchase",
-          icon: <PurchaseIcon />,
+          icon: <Purchase size={20} />,
           slug: "/products/purchases",
         },
-        { label: "Units", icon: <UnitIcon />, slug: "/products/units" },
+        { label: "Units", icon: <Unit size={20} />, slug: "/products/units" },
       ],
     },
     {
@@ -121,31 +129,43 @@ const Sidebar: FC<SidebarProps> = ({
     },
     {
       label: "Contacts",
-      icon: <Contacts />,
+      icon: <Contacts size={20} />,
       childrens: [
-        { label: "Rider", icon: <Rider />, slug: "/contacts/riders" },
+        { label: "Rider", icon: <Rider size={20} />, slug: "/contacts/riders" },
         { label: "Suppliers", icon: <UnitIcon />, slug: "/contacts/suppliers" },
       ],
     },
     {
       label: "Settings",
-      icon: <Settings />,
+      icon: <Settings size={20} />,
       childrens: [
-        { label: "Location", icon: <Location />, slug: "/settings/locations" },
+        {
+          label: "Location",
+          icon: <Location size={20} />,
+          slug: "/settings/locations",
+        },
         {
           label: "Categories",
-          icon: <Category />,
+          icon: <Category size={20} />,
           slug: "/settings/categories",
         },
         {
           label: "Tax Rates",
-          icon: <Tax />,
+          icon: <Tax size={20} />,
           slug: "/settings/taxrates",
         },
-        { label: "Business", icon: <Buisness />, slug: "/settings/buisnesses" },
+        {
+          label: "Business",
+          icon: <Buisness size={20} />,
+          slug: "/settings/buisnesses",
+        },
       ],
     },
-    { label: "Reports", icon: <ReportIcon />, slug: "/dashboard/reports" },
+    {
+      label: "Reports",
+      icon: <Report size={20} />,
+      slug: "/dashboard/reports",
+    },
   ];
 
   const toggleIsHovered = () => {
