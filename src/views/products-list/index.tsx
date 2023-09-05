@@ -12,12 +12,13 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
-// import ImportProductModal from "@/components/modal/import-modal;
+import ImportProductModal from "@/components/modal/import-modal";
 import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
+import ImportProductForm from "./ImportForm";
 
 export interface ProductImage {
   id: number;
@@ -252,13 +253,6 @@ const ProductsList: FC = () => {
 
   const loadingData = Array.from({ length: 10 }, () => null);
   const [showImportModal, setShowImportModal] = useState(false);
-  const handleImportClick = () => {
-    setShowImportModal(true);
-  };
-
-  const handleImportClose = () => {
-    setShowImportModal(false);
-  };
 
   const toggleModal = useCallback(() => {
     setOpen((open) => !open);
@@ -266,6 +260,9 @@ const ProductsList: FC = () => {
 
   const toggleDeleteModal = useCallback(() => {
     setOpenDelete((open) => !open);
+  }, [open]);
+  const toggleImportModal = useCallback(() => {
+    setShowImportModal((showImportModal) => !showImportModal);
   }, [open]);
 
   const handleEdit = (data: Product | null) => {
@@ -289,6 +286,10 @@ const ProductsList: FC = () => {
     }
   }, [open, openDelete]);
 
+  // const handleImportClick = () => {
+  //   toast.success("Import Product clicked!");
+  // };
+
   return (
     <>
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
@@ -298,7 +299,10 @@ const ProductsList: FC = () => {
             <p className="font-medium text-sm">A List of all the Products.</p>
           </div>
           <div className="flex items-center gap-5">
-            <Button onClick={toggleModal} size={"sm"}>
+            <Button 
+            onClick={toggleImportModal}
+            // onClick={handleImportClick} 
+            size={"sm"}>
             <ChevronDown className="mr-2 w-4 h-4" />
             Import Product
           </Button>
@@ -326,7 +330,11 @@ const ProductsList: FC = () => {
         loading={false}
         confirmDelete={confirmDelete}
       />
-      {/* <ImportProductModal isOpen={showImportModal} onClose={handleImportClose} /> */}
+       <ImportProductModal
+        open={showImportModal}
+        setOpen={toggleImportModal}
+        loading={false}
+      />
     </>
   );
 };

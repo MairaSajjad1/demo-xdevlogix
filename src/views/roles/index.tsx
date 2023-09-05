@@ -23,7 +23,6 @@ export interface Role {
   updated_at: string;
 }
 
-// const Roles: FC = () => {
   const Roles = () => {
 
   const { data: session } = useSession();
@@ -163,7 +162,7 @@ export interface Role {
         confirmDelete={confirmDelete}
       />
     </>
-  );
+  ); 
 };
 
 export default Roles;
