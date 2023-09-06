@@ -46,6 +46,7 @@ export const store = configureStore({
     [productService.reducerPath]: productService.reducer,
     [importService.reducerPath]: importService.reducer,
     [orderService.reducerPath]: orderService.reducer,
+    [importService.reducerPath]: importService.reducer,
     authReducer: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -69,8 +70,8 @@ export const store = configureStore({
       purchaseService.middleware,
       variationService.middleware,
       productService.middleware,
+      orderService.middleware,
       importService.middleware,
-      orderService.middleware
     ),
 });
 

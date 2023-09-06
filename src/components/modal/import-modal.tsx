@@ -18,29 +18,29 @@ const formSchema = z.object({
   file: z.any(),
 });
 
-interface ImportProductModalProps {
+
+interface ImportModalProps {
   open: boolean;
   setOpen: () => void;
   loading: boolean;
-  data: any;
 }
-
-const ImportProductModal: FC<ImportProductModalProps> = ({ open, setOpen, loading }) => {
+const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
   const [showInputField, setShowInputField] = useState(true);
+  const [selectedFile, setSelectedFile] = useState(null); 
 
-  const { handleSubmit, register, } = useForm({
+  const { handleSubmit, register } = useForm({
     resolver: zodResolver(formSchema),
   });
 
-  const [create,importResponse] = useImportDataMutation();
-  const handleFormSubmit = async (data) => {
+  const [create, importResponse] = useImportDataMutation();
+
+  const handleFormSubmit = async (data:any) =>{
     const formdata = new FormData();
     formdata.append("file", data.file);
 
-    
-    
-create({data:formdata})
+    create({ data: formdata });
   };
+
   const {
     isLoading: createLoading,
     isError: createError,
@@ -52,19 +52,21 @@ create({data:formdata})
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Product Import Successfully.");
+      toast.success("Product import Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
+
+  const handleFileChange = (event:any) => {
+    setSelectedFile(event.target.files[0]); 
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import Products</DialogTitle>
-          <DialogDescription>
-            Upload a file to import products.
-          </DialogDescription>
+          <DialogDescription>Upload a file to import products.</DialogDescription>
         </DialogHeader>
 
         {showInputField && (
@@ -74,14 +76,15 @@ create({data:formdata})
                 type="file"
                 id="file"
                 accept=".xls, .xlsx"
-                {...register("file", { required: "File is required" })}
+                onChange={handleFileChange} 
               />
+              {/* {isError && <p>Error uploading file</p>} */}
               <Button
-                disabled={loading}
+                disabled={!selectedFile || createLoading} 
                 className="w-24"
                 type="submit"
               >
-                {loading ? (
+                {createLoading ? (
                   <Loader className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   "Import"
@@ -96,4 +99,4 @@ create({data:formdata})
 };
 
 
-export default ImportProductModal;
+export default ImportModal;
