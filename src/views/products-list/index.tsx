@@ -242,9 +242,6 @@ const ProductsList: FC = () => {
   const toggleDeleteModal = useCallback(() => {
     setOpenDelete((open) => !open);
   }, [open]);
-  const toggleImportModal = useCallback(() => {
-    setShowImportModal((showImportModal) => !showImportModal);
-  }, [open]);
 
   const handleEdit = (data: Product | null) => {
     setSelectedProductList(data);
