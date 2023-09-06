@@ -18,9 +18,9 @@ import barCodeService from "./services/barCodeService";
 import brandService from "./services/brandService";
 import purchaseService from "./services/purchaseService";
 import variationService from "./services/variationService";
+import importService from "./services/importService";
 import productService from "./services/productService";
 import orderService from "./services/orderListService";
-import importService from "./services/importService";
 
 export const store = configureStore({
   reducer: {
@@ -44,6 +44,7 @@ export const store = configureStore({
     [purchaseService.reducerPath]: purchaseService.reducer,
     [variationService.reducerPath]: variationService.reducer,
     [productService.reducerPath]: productService.reducer,
+    [importService.reducerPath]: importService.reducer,
     [orderService.reducerPath]: orderService.reducer,
     [importService.reducerPath]: importService.reducer,
     authReducer: authReducer,

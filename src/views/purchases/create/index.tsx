@@ -398,9 +398,17 @@ const Create = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Purchase Status</FormLabel>
-                <FormControl>
-                  <Input placeholder="Done" {...field} />
-                </FormControl>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pending" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    <SelectItem value={"Pending"}>Pending</SelectItem>
+                    <SelectItem value={"Done"}>Done</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -411,9 +419,17 @@ const Create = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Payment Status</FormLabel>
-                <FormControl>
-                  <Input placeholder="Pending" {...field} />
-                </FormControl>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pending" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent className="max-h-60">
+                    <SelectItem value={"Pending"}>Pending</SelectItem>
+                    <SelectItem value={"Done"}>Done</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

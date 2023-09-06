@@ -20,78 +20,111 @@ import { Variation } from "@/views/variations";
 import { useSession } from "next-auth/react";
 import { FC, useMemo } from "react";
 import { UseFieldArrayRemove } from "react-hook-form";
-import VariationTemplate from "./VariationTemplate";
+// import VariationTemplate from "./VariationTemplate";
 
 interface VariationsInputProps {
   index: number;
-  remove: UseFieldArrayRemove;
   form: any;
 }
 
 const VariationsInput: FC<VariationsInputProps> = ({ index, form }) => {
   const { data: session } = useSession();
-  const {
-    data: variationsList,
-    isLoading: variationsLoading,
-    isFetching: variationsFetching,
-  } = useGetVariationsQuery({
-    buisnessId: session?.user?.business_id,
-    perPage: -1,
-  });
-
-  const variations = useMemo(() => {
-    return variationsList?.find(
-      (list) => String(list.id) === form.watch("variation_id")
-    );
-  }, [variationsList, form.watch("variation_id")]);
-
-  const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
 
   return (
     <div className="col-span-3 grid grid-cols-3 gap-4">
-      <FormField
-        control={form.control}
-        name="variation_id"
-        render={({ field }) => (
-          <FormItem className="col-span-3">
-            <FormLabel>Variation</FormLabel>
-            <Select onValueChange={field.onChange}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="size" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent className="max-h-60">
-                {variationsLoading && (
-                  <>
-                    {loadingData?.map((i) => (
-                      <SelectItem key={i} value={String(i)}>
-                        <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
-                      </SelectItem>
-                    ))}
-                  </>
-                )}
-                {variationsList &&
-                  variationsList?.map((variation: Variation) => (
-                    <SelectItem key={variation.id} value={String(variation.id)}>
-                      {variation.name}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
       {form.watch("variation_id") && (
         <>
-          {variations?.variation_template?.map((variationTemplate) => (
-            <VariationTemplate
-              variationTemplate={variationTemplate}
-              key={variationTemplate.id}
-              form={form}
+          <div className="col-span-3  gap-4 flex items-stretch justify-between">
+            {/* <div className="flex-1"> */}
+            {/* <div className="grid grid-cols-3 gap-4"> */}
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.value`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Value</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={form.getValues("variation_list")[index].value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          ))}
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.price_inclusive_tax`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price Inc Tax</FormLabel>
+                  <FormControl>
+                    <Input placeholder="468" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.price_exclusive_tax`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price Exc Tax</FormLabel>
+                  <FormControl>
+                    <Input placeholder="400" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.profit_margin`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Margin</FormLabel>
+                  <FormControl>
+                    <Input placeholder="329" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.selling_price`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Selling Price</FormLabel>
+                  <FormControl>
+                    <Input placeholder="400" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`variation_list.${index}.selling_price_inc_tax`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Selling Price Inc Tax</FormLabel>
+                  <FormControl>
+                    <Input placeholder="468" {...field} type="number" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* </div> */}
+            {/* </div> */}
+            {/* <div className="flex-1">
+        <FileInput fileAllowed={1} onChange={() => {}} />
+      </div> */}
+          </div>
         </>
       )}
     </div>
@@ -99,3 +132,12 @@ const VariationsInput: FC<VariationsInputProps> = ({ index, form }) => {
 };
 
 export default VariationsInput;
+
+// {variations?.variation_template?.map((variationTemplate) => (
+//   <VariationTemplate
+//     index={index}
+//     variationTemplate={variationTemplate}
+//     key={variationTemplate.id}
+//     form={form}
+//   />
+// ))}
