@@ -7,6 +7,7 @@ import {
   BiLogoProductHunt as ProductIcon,
 } from "react-icons/bi";
 
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Table from "@/components/table";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
@@ -173,6 +174,9 @@ const Dashboard: FC = () => {
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+
+
+
   const columns: ColumnDef<Order | null>[] = useMemo(
     () => [
       {
@@ -285,6 +289,7 @@ const Dashboard: FC = () => {
 
   return (
     <>
+   
       <div className="space-y-6 overflow-hidden">
         <div className="bg-[#FFFFFF] p-6 lg:p-8 rounded-2xl w-full shadow-sm grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           <div className="border-r border-[#ECECEE] flex items-stretch gap-3 ">
@@ -292,7 +297,8 @@ const Dashboard: FC = () => {
               <Box color={"#FF6A00"} size={20} />
             </div>
             <div className="flex flex-col justify-between">
-              <h3 className="text-[#92959E] font-semibold text-sm">Orders</h3>
+            
+              <Link href="/reports/orders" className="text-[#92959E] font-semibold text-sm">Orders</Link>
               <h1 className="text-[#15192C]">3</h1>
             </div>
           </div>

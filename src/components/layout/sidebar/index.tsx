@@ -25,9 +25,10 @@ import {
 } from "react-icons/bi";
 import { TbReceiptTax as Tax } from "react-icons/tb";
 import { PiCertificateBold as Brand } from "react-icons/pi";
-import { GrPieChart as Report } from "react-icons/gr";
+// import { GrNotes as Report } from "react-icons/gr";
 import { FaListOl as Products } from "react-icons/fa";
 import { LuLayoutDashboard as Dashboard } from "react-icons/lu";
+import { LuBarChart2 as Report } from "react-icons/lu";
 // Custom Components
 import MenuItem from "./MenuItem";
 
@@ -41,8 +42,6 @@ import {
   ServicesIcon,
   ListIcon,
   UnitIcon,
-  ProductsIcons,
-  PurchaseIcon,
 } from "@/assets/icons";
 
 import { MenuIcon } from "@/assets/icons";
@@ -164,12 +163,13 @@ const Sidebar: FC<SidebarProps> = ({
     {
       label: "Reports",
       icon: <Report size={20} />,
-      slug: "/dashboard/reports",
+      slug: "/reports",
     },
   ];
 
   const toggleIsHovered = () => {
     if (!open) toggleOpen();
+
   };
 
   const sidebarContainerClasses = classNames(
