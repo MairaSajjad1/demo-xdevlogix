@@ -12,7 +12,6 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
-// import ImportProductModal from "@/components/modal/import-modal;
 import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
@@ -99,7 +98,6 @@ export interface Product {
   product_variations: ProductVariation[];
   product_stock: ProductStock[];
 }
-
 const ProductsList: FC = () => {
   const { data: session } = useSession();
   // GET

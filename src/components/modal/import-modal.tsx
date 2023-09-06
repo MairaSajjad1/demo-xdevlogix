@@ -34,7 +34,7 @@ const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
 
   const [create, importResponse] = useImportDataMutation();
 
-  const handleFormSubmit = async (data) =>{
+  const handleFormSubmit = async (data:any) =>{
     const formdata = new FormData();
     formdata.append("file", data.file);
 
@@ -57,7 +57,7 @@ const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
     }
   }, [createError, createSuccess]);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event:any) => {
     setSelectedFile(event.target.files[0]); 
   };
 
