@@ -16,11 +16,12 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { Buisness } from "./index";
 import { useSession } from "next-auth/react";
-import { useCreateLocationMutation } from "@/store/services/locationService";
+import { useCreateBuisnessMutation } from "@/store/services/buisnessService";
+// import { useCreateLocationMutation } from "@/store/services/locationService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  address: z.string().min(1, { message: "Landmark is required." }),
+  address: z.string().min(1, { message: "Address is required." }),
   city: z.string().min(1, { message: "City is required." }),
   state: z.string().min(1, { message: "State is required." }),
   country: z.string().min(1, { message: "Country is required." }),
@@ -44,27 +45,31 @@ const BuisnessForm: FC<BuisnessFormProps> = ({ setOpen, data }) => {
       country: data?.country || "",
     },
   });
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
       ? toast.error("Update API is not Implemented Yet")
       : create({ data: values });
   }
 
-  const [create, createResponse] = useCreateLocationMutation();
 
+
+  const [create, createResponse] =  useCreateBuisnessMutation();
+  // console.log("ma");
+  
+  // console.log("API Response:", createResponse);
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
-
+  
+  // console.log("ma");
   useEffect(() => {
     if (createError) {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Location Added Successfully.");
+      toast.success("Business Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
@@ -79,7 +84,7 @@ const BuisnessForm: FC<BuisnessFormProps> = ({ setOpen, data }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Resturant" {...field} />
+                <Input placeholder="Restaurant" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -14,42 +14,44 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
-import { Taxrate } from "./index";
-import { useCreateTaxrateMutation } from "@/store/services/taxrateService";
+import { User } from "./index";
 import { useSession } from "next-auth/react";
+import { useCreateUserMutation } from "@/store/services/userService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  amount: z.coerce.number().positive(),
-  business_id: z.coerce.number(),
-  created_by: z.coerce.number(),
+  email: z.string().min(1, { message: "Email is required." }),
+  mobile_no: z.string().min(1, { message: "Mobile number is required." }),
+  password: z.string().min(1,{ message: "Password is required." }),
+  business_id: z.number(),
 });
 
-interface TaxrateFormProps {
+interface UserFormProps {
   setOpen: () => void;
-  data?: Taxrate | null;
+  data?: User | null;
 }
 
-const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
+const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
   const { data: session } = useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
-      amount: Number(data?.amount) || 0,
+      email: data?.email || "",
+      mobile_no: data?.mobile_no || "",
+      password: data?.password || "",
       business_id: data?.business_id || Number(session?.user?.business_id),
-      created_by: data?.created_by || Number(session?.user?.customer_id),
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not implemented yet.")
+      ? toast.error("Update API is not Implemented Yet")
       : create({ data: values });
   }
 
-  const [create, createResponse] = useCreateTaxrateMutation();
+  const [create, createResponse] = useCreateUserMutation();
 
   const {
     isLoading: createLoading,
@@ -59,10 +61,10 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
 
   useEffect(() => {
     if (createError) {
-      toast.error("Something Wrong.");
+      toast.error("Something Went Wrong.");
     }
     if (createSuccess) {
-      toast.success("Tax Rate Added Successfully.");
+      toast.success(data ? "User Updated Successfully." : "User Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
@@ -77,7 +79,7 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="GST" {...field} />
+                <Input placeholder="Maira" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,18 +87,35 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
         />
         <FormField
           control={form.control}
-          name="amount"
+          name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tax Rate %</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="10" {...field} type="number" />
+                <Input placeholder="maira@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button disabled={createLoading} className="w-full" type="submit">
+        <FormField
+          control={form.control}
+          name="mobile_no"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Mobile Number</FormLabel>
+              <FormControl>
+                <Input placeholder="923012456678" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          disabled={createLoading}
+          className="w-full"
+          type="submit"
+        >
           {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           {data ? "Update" : "Add"}
         </Button>
@@ -105,4 +124,4 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
   );
 };
 
-export default TaxrateForm;
+export default UserForm;

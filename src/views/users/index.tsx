@@ -1,6 +1,8 @@
 "use client";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { GoPlusCircle as PlusCircle } from "react-icons/go";
 import { ColumnDef } from "@tanstack/react-table";
 import Table from "@/components/table";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -10,6 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import Modal from "@/components/modal";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import UserForm from "./userForm";
 import { useGetUsersQuery } from "@/store/services/userService";
 
 export interface User {
@@ -18,9 +22,9 @@ export interface User {
   business_id: number;
   mobile_no: string;
   email: string;
+  password: string;
   email_verified_at: any;
   user_type: string;
-  role_id: number;
   created_at: string;
   updated_at: string;
 }
@@ -44,27 +48,6 @@ const Users: FC = () => {
 
   const columns: ColumnDef<User | null>[] = useMemo(
     () => [
-      // {
-      //   id: "select",
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       checked={table.getIsAllPageRowsSelected()}
-      //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-      //       aria-label="Select all"
-      //       className="translate-y-[2px]"
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       checked={row.getIsSelected()}
-      //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-      //       aria-label="Select row"
-      //       className="translate-y-[2px]"
-      //     />
-      //   ),
-      //   enableSorting: false,
-      //   enableHiding: false,
-      // },
       {
         accessorKey: "name",
         header: ({ column }) => (
@@ -184,10 +167,16 @@ const Users: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Users</h1>
             <p className="font-medium text-sm">A List of all Users</p>
           </div>
-          {/* <Button onClick={toggleModal} size={"sm"}>
+          {/* <Button asChild size={"sm"}>
+            <Link href={"/user-management/users"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add User
+            </Link>
+            </Button> */}
+          <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
             Add User
-          </Button> */}
+          </Button>
         </div>
         <Separator />
         <Table
@@ -197,6 +186,12 @@ const Users: FC = () => {
           filterKey="name"
         />
       </div>
+      <Modal
+        title={selectedUser ? "Update User" : "Add New User"}
+        open={open}
+        setOpen={toggleModal}
+        body={<UserForm setOpen={toggleModal} data={selectedUser} />}
+      />
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}

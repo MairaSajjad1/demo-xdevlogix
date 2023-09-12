@@ -202,7 +202,7 @@ const Buisnesses: FC = () => {
         />
       </div>
       <Modal
-        title={selectedBuisness ? "Update Service" : "Add New Service Type"}
+        title={selectedBuisness ? "Update Business" : "Add New Business"}
         open={open}
         setOpen={toggleModal}
         body={<BuisnessForm setOpen={toggleModal} data={selectedBuisness} />}

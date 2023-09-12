@@ -1,6 +1,5 @@
 "use client";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { GoPlusCircle as PlusCircle } from "react-icons/go";
 import Table from "@/components/table";
@@ -9,53 +8,50 @@ import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/modal";
-import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
-import { useGetLocationsQuery } from "@/store/services/locationService";
+import { useGetOrdersQuery } from "@/store/services/orderListService";
+// import { useGetOrderReportQuery } from "@/store/services/orderReportService";
+
 
 export interface Order {
-  id: number;
-  name: string;
-  landmark: string;
-  location_id: string;
-  business_id: number;
-  city: string;
-  state: string;
-  country: string;
-  created_at: string;
-  updated_at: string;
+  id: any;
+  order_no: string;
+  final_total: any;
+  order_type: any;
+  order_status: string;
+  payment_status: string;
 }
 
-const OrdersList: FC = () => {
+const Orders: FC = () => {
   const { data: session } = useSession();
   // GET
   const {
-    data: ordersList,
+    data: orders,
     isLoading: ordersLoading,
     isFetching: ordersFetching,
-  } = useGetLocationsQuery({
+  } = useGetOrdersQuery({
     buisnessId: session?.user?.business_id,
+    customerId: session?.user?.customer_id,
+    perPage: -1,
   });
 
   const [open, setOpen] = useState<boolean>(false);
-  const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
-    null
-  );
 
-  const columns: ColumnDef<Location | null>[] = useMemo(
+  console.log(session);
+
+
+  const columns: ColumnDef<Order | null>[] = useMemo(
     () => [
       {
-        accessorKey: "name",
+        accessorKey: "order_no",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Name" />
+          <DataTableColumnHeader column={column} title="Order #" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("name")}</div>
+              <div>{row.getValue("order_no")}</div>
             ) : (
               <Skeleton className="w-40 h-4 bg-[#F5f5f5]" />
             )}
@@ -65,83 +61,88 @@ const OrdersList: FC = () => {
         enableHiding: false,
       },
       {
-        accessorKey: "landmark",
+        accessorKey: "final_total",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Landmark" />
+          <DataTableColumnHeader column={column} title="Final Amount" />
         ),
         cell: ({ row }) => (
           <>
             {row?.original ? (
-              <div>{row.getValue("landmark")}</div>
+              <div>{row.getValue("final_total")}</div>
             ) : (
-              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
-        enableSorting: false,
-        enableHiding: true,
-      },
-      {
-        accessorKey: "city",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="City" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("city")}</div>
-            ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className="w-20 h-4 bg-[#F5f5f5]" />
             )}
           </>
         ),
         enableSorting: true,
         enableHiding: true,
       },
+     
       {
-        accessorKey: "state",
+        accessorKey: "payment_status",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="State" />
+          <DataTableColumnHeader column={column} title="Payment Status" />
         ),
         cell: ({ row }) => (
-          <>
+          <div className="status-cell">
             {row?.original ? (
-              <div>{row.getValue("state")}</div>
+              <div
+                className={`btn-status ${
+                  row.getValue("payment_status") === "pending"
+                    ? "pending"
+                    : row.getValue("payment_status") === "approved"
+                    ? "approved"
+                    : "rejected"
+                }`}
+              >
+                {row.getValue("payment_status")}
+              </div>
             ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className="w-16 h-4 bg-[#F5f5f5]" />
             )}
-          </>
+          </div>
         ),
         enableSorting: true,
         enableHiding: true,
       },
       {
-        accessorKey: "country",
+        accessorKey: "order_status",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Country" />
+          <DataTableColumnHeader column={column} title="Order Status" />
         ),
         cell: ({ row }) => (
-          <>
+          <div className="status-cell">
             {row?.original ? (
-              <div>{row.getValue("country")}</div>
+              <div
+                className={`btn-status ${
+                  row.getValue("order_status") === "pending"
+                    ? "pending"
+                    : row.getValue("order_status") === "approved"
+                    ? "approved"
+                    : "rejected"
+                }`}
+              >
+                {row.getValue("order_status")}
+              </div>
             ) : (
-              <Skeleton className={`w-10 lg:w-16 h-4 bg-[#F5f5f5]`} />
+              <Skeleton className="w-16 h-4 bg-[#F5f5f5]" />
             )}
-          </>
+          </div>
         ),
         enableSorting: true,
         enableHiding: true,
       },
-      {
-        id: "actions",
-        cell: ({ row }) => (
-          <DataTableRowActions
-            deleteAction={handleDelete}
-            editAction={handleEdit}
-            row={row}
-          />
-        ),
-      },
+      // {
+      //   id: "actions",
+      //   cell: ({ row }) => (
+      //     <DataTableRowActions
+      //       deleteAction={handleDelete}
+      //       editAction={handleEdit}
+      //       row={row}
+      //     />
+      //   ),
+      // },
+      
     ],
     []
   );
@@ -152,68 +153,38 @@ const OrdersList: FC = () => {
     setOpen((open) => !open);
   }, [open]);
 
-  const toggleDeleteModal = useCallback(() => {
-    setOpenDelete((open) => !open);
-  }, [open]);
 
-  const handleEdit = (data: Location | null) => {
-    setSelectedLocation(data);
-    toggleModal();
-  };
 
-  const handleDelete = (data: Location | null) => {
-    setSelectedLocation(data);
-    toggleDeleteModal();
-  };
-
-  const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
-  };
-
-  useEffect(() => {
-    if (!open && !openDelete) {
-      setSelectedLocation(null);
-    }
-  }, [open, openDelete]);
-
-  return (
-    <>
-      <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-semibold text-xl text-[#4741E1]">Orders</h1>
-            <p className="font-medium text-sm">A List of all the Orders</p>
-          </div>
-          <Button onClick={toggleModal} size={"sm"}>
+return (
+  <>
+    <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-semibold text-xl text-[#4741E1]">Orders</h1>
+          <p className="font-medium text-sm">The List of all Orders</p>
+        </div>
+        <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
             Add Order
           </Button>
-        </div>
-        <Separator />
-        <Table
-          // @ts-expect-error
-          columns={columns}
-          data={
-            ordersLoading || ordersFetching ? loadingData : ordersList || []
-          }
-          filterKey="name"
-        />
+      
       </div>
-      {/* <Modal
-        title={selectedLocation ? "Update Order" : "Add New Order"}
-        open={open}
-        setOpen={toggleModal}
-        body={<OrderForm setOpen={toggleModal} data={selectedLocation} />}
-      /> */}
-      <DeleteModal
-        open={openDelete}
-        setOpen={toggleDeleteModal}
-        loading={false}
-        confirmDelete={confirmDelete}
+      <Separator />
+      <Table
+      // @ts-ignore
+        columns={columns}
+        data={
+          ordersLoading || ordersFetching ? loadingData : orders || []
+        }
+        filterKey="name"
       />
-    </>
-  );
+    </div>
+
+    
+
+   
+  </>
+);
 };
 
-export default OrdersList;
+export default Orders;

@@ -19,6 +19,14 @@ const userService = createApi({
   // refetchOnMountOrArgChange: true,
 
   endpoints: (builder) => ({
+    createUser: builder.mutation({
+      query: ({ data }) => ({
+        url: "/customer/register",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["user"],
+    }),
     getUsers: builder.query({
       query: ({ buisnessId, perPage }) => ({
         url: `/customers?business_id=${buisnessId}`,
@@ -31,5 +39,5 @@ const userService = createApi({
   }),
 });
 
-export const { useGetUsersQuery } = userService;
+export const { useCreateUserMutation, useGetUsersQuery,  } = userService;
 export default userService;

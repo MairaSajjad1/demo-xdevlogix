@@ -19,7 +19,7 @@ const buisnessService = createApi({
   endpoints: (builder) => ({
     createBuisness: builder.mutation({
       query: ({ data }) => ({
-        url: "/categories/create",
+        url: "/business/create",
         method: "POST",
         body: data,
       }),

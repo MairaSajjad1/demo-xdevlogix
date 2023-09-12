@@ -42,6 +42,7 @@ import { useCreatePurchaseMutation } from "@/store/services/purchaseService";
 import toast from "react-hot-toast";
 import ProductInputs from "./ProductInputs";
 import { useRouter } from "next/navigation";
+import { log } from "console";
 
 const formSchema = z.object({
   supplier_id: z.string().min(1, { message: "Supplier is required." }),
@@ -144,6 +145,8 @@ const Create = () => {
   });
 
   const [create, createResponse] = useCreatePurchaseMutation();
+  console.log("mmm");
+  
 
   const {
     isLoading: createLoading,

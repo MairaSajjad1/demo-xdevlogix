@@ -17,6 +17,8 @@ import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
+import Link from "next/link";
+
 import ImportModal from "@/components/modal/import-modal";
 
 export interface ProductImage {
@@ -281,10 +283,16 @@ const ProductsList: FC = () => {
             <ChevronDown className="mr-2 w-4 h-4" />
             Import Product
           </Button>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="w-4 h-4" />
+          <Button asChild size={"sm"}>
+            <Link href={"/products/products-list/create"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add Product
+            </Link>
+          </Button>
+          {/* <Button onClick={toggleModal} size={"sm"}>
+            <PlusCircle className="w-4 mr-2 h-4" />
             Add Product
-          </Button> 
+          </Button>  */}
             </div>
         </div>
         <Separator />
