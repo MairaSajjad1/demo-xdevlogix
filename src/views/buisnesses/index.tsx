@@ -9,10 +9,10 @@ import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import Modal from "@/components/modal";
-import BuisnessForm from "./BuisnessForm";
 import { useGetBuisnessesQuery } from "@/store/services/buisnessService";
 import DeleteModal from "@/components/modal/delete-modal";
+import Link from "next/link";
+// import CreateBusiness from "./CreateBusiness";
 import { useSession } from "next-auth/react";
 
 export interface Buisness {
@@ -21,15 +21,25 @@ export interface Buisness {
   address: string;
   city: string;
   state: string;
+  landmark: string;
   tax_id: any;
   country: string;
   created_at: string;
   updated_at: string;
   last_updated_by: any;
+  owner_details: OwnerDetails;
 }
 
+interface OwnerDetails {
+  name: string;
+  username: string;
+  password: string;
+  user_type: string;
+  mobile_no: string;
+}
+
+
 const Buisnesses: FC = () => {
-  // GET
   const {
     data: buisnessesList,
     isLoading: buisnessesLoading,
@@ -184,10 +194,12 @@ const Buisnesses: FC = () => {
             <h1 className="font-semibold text-xl text-[#4741E1]">Buisnesses</h1>
             <p className="font-medium text-sm">A List of all the buisnesses</p>
           </div>
-          <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="mr-2 w-4 h-4" />
-            Add Buisness
-          </Button>
+          <Button asChild size={"sm"}>
+          <Link href={"/settings/buisnesses/create"}>
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add Business
+            </Link>
+          </Button>  
         </div>
         <Separator />
         <Table
@@ -201,12 +213,6 @@ const Buisnesses: FC = () => {
           filterKey="name"
         />
       </div>
-      <Modal
-        title={selectedBuisness ? "Update Business" : "Add New Business"}
-        open={open}
-        setOpen={toggleModal}
-        body={<BuisnessForm setOpen={toggleModal} data={selectedBuisness} />}
-      />
       <DeleteModal
         open={openDelete}
         setOpen={toggleDeleteModal}

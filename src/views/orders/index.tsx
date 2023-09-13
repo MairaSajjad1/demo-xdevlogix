@@ -32,8 +32,6 @@ const Orders: FC = () => {
     customerId: session?.user?.customer_id,
     perPage: -1,
   });
-
-
   const columns: ColumnDef<Order | null>[] = useMemo(
     () => [
       {

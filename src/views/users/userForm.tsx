@@ -45,14 +45,15 @@ const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
     },
   });
 
+  // console.log(form.watch())
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // console.log("suv")
     data
       ? toast.error("Update API is not Implemented Yet")
       : create({ data: values });
   }
 
   const [create, createResponse] = useCreateUserMutation();
-
   const {
     isLoading: createLoading,
     isError: createError,
@@ -111,11 +112,21 @@ const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button
-          disabled={createLoading}
-          className="w-full"
-          type="submit"
-        >
+         <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input placeholder="password" type="password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+     <Button disabled={createLoading} className="w-full" type="submit">
           {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           {data ? "Update" : "Add"}
         </Button>

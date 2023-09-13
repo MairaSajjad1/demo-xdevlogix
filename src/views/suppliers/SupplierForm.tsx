@@ -62,7 +62,7 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Tax Rate Added Successfully.");
+      toast.success("Supplier Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);

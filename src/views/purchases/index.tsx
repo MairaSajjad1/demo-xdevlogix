@@ -51,7 +51,6 @@ const Purchases: FC = () => {
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(
     null
   );

@@ -145,7 +145,7 @@ const Create = () => {
   });
 
   const [create, createResponse] = useCreatePurchaseMutation();
-  console.log("mmm");
+  // console.log("mmm");
   
 
   const {
