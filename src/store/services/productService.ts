@@ -49,6 +49,14 @@ const productService = createApi({
       }),
       invalidatesTags: ["product"],
     }),
+    importData: builder.mutation({
+      query: ({data}) => ({
+        url: '/import',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['product'],
+    }),
   }),
 });
 
@@ -57,5 +65,6 @@ export const {
   useGetProductsQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useImportDataMutation
 } = productService;
 export default productService;

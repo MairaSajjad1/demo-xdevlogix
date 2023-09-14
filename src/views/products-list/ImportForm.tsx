@@ -4,9 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
-import { useImportDataMutation } from "@/store/services/importService";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
+import { useImportDataMutation } from "@/store/services/productService";
 
 const formSchema = z.object({
   file: z.any(),
@@ -24,7 +24,7 @@ const ImportProductForm: FC<ImportProductFormProps> = ({ setOpen , data}) => {
     resolver: zodResolver(formSchema),
   });
   
-  const [importData, importResponse] = useImportDataMutation();
+  const [create, importResponse] = useImportDataMutation();
 
   const { isLoading, isError, isSuccess } = importResponse;
 
@@ -49,6 +49,7 @@ const ImportProductForm: FC<ImportProductFormProps> = ({ setOpen , data}) => {
       const formDataToSend = new FormData();
       formDataToSend.append("file", file[0]);
 
+      create({data:formDataToSend})
     } catch (error) {
       console.error("Error importing products:", error);
       toast.error("Import failed. Please try again.");

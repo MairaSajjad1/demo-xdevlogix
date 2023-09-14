@@ -262,6 +262,10 @@ const Dashboard: FC = () => {
     ],
     []
   );
+  const numberOfOrders = ordersList ? ordersList.length : 0;
+  // const numberOfUsers = userList ? userList.length : 0;
+  // const numberOfProducts = productList ? productList.length : 0;
+  // const numberOfCategories = categoryList ? categoryList.length : 0;
 
   const loadingData = Array.from({ length: 10 }, () => null);
 
@@ -299,7 +303,7 @@ const Dashboard: FC = () => {
             <div className="flex flex-col justify-between">
             
               <Link href="/reports/orders" className="text-[#92959E] font-semibold text-sm">Orders</Link>
-              <h1 className="text-[#15192C]">3</h1>
+              <h1 className="text-[#15192C]">{numberOfOrders}</h1>
             </div>
           </div>
           <div className="lg:border-r border-[#ECECEE] flex items-stretch gap-3 ">
@@ -308,7 +312,7 @@ const Dashboard: FC = () => {
             </div>
             <div className="flex flex-col justify-between">
               <h3 className="text-[#92959E] font-semibold text-sm">Users</h3>
-              <h1 className="text-[#15192C]">3</h1>
+              <h1 className="text-[#15192C]">10</h1>
             </div>
           </div>
 

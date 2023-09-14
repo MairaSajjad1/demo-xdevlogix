@@ -139,7 +139,7 @@ const Login: FC = () => {
             </Button>
           </form>
         </Form>
-        <p className="mt-10 text-center text-sm text-gray-500">
+        {/* <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
           <a
             href="#"
@@ -147,7 +147,7 @@ const Login: FC = () => {
           >
             Register
           </a>
-        </p>
+        </p> */}
       </div>
     </div>
   );
