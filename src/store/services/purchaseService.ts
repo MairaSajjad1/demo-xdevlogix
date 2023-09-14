@@ -9,7 +9,7 @@ const purchaseService = createApi({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://demo.onlineorder.dev-logix.com/api",
-    prepareHeaders: async (headers, { getState }) => {
+       prepareHeaders: async (headers, { getState }) => {
       headers.set("Accept", "application/json");
       await addTokenToRequest(headers, { getState });
       return headers;

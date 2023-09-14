@@ -7,7 +7,7 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useCreateBuisnessMutation } from "@/store/services/buisnessService";
@@ -84,7 +84,8 @@ const Create = () => {
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
       <h1 className="text-[#4741E1] font-semibold">Add New Business</h1>
       <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} 
+      className="gap-4 grid grid-cols-3 justify-center items-center">
         <FormField
           control={form.control}
           name="name"
@@ -224,7 +225,7 @@ const Create = () => {
             <FormItem>
               <FormLabel>Mobile No</FormLabel>
               <FormControl>
-                <Input placeholder="mobile_no" {...field} />
+                <Input placeholder="923411415567" {...field} type="number" />
               </FormControl>
               <FormMessage />
             </FormItem>

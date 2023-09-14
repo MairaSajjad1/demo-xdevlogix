@@ -304,6 +304,8 @@ const CreateProduct = () => {
     form.setValue("product_images", files);
   };
 
+  console.log( form.watch())
+
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
