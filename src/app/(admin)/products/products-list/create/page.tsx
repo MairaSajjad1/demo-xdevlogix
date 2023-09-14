@@ -1,7 +1,9 @@
-import Create from "@/views/products-list/create";
+// import Create from "@/views/products-list/create";
 
 const page = () => {
-  return <Create />;
+  return <div>
+    Create Product
+  </div>;
 };
 
 export default page;

@@ -83,6 +83,7 @@ const Create = () => {
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
       <h1 className="text-[hsl(242,73%,57%)] font-semibold">Add New Business</h1>
+      <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} 
       className="gap-4 grid grid-cols-3 justify-center items-center">
         <FormField
@@ -197,7 +198,7 @@ const Create = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="password" {...field} />
+                <Input placeholder="password" {...field} type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -239,6 +240,7 @@ const Create = () => {
             </Button>
           </div>
       </form>
+      </Form>
     </div>
   );
 };
