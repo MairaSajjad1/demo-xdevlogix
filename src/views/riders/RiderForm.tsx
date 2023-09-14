@@ -63,7 +63,7 @@ const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Tax Rate Added Successfully.");
+      toast.success("Rider Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
