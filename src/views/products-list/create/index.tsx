@@ -310,7 +310,6 @@ const CreateProduct = () => {
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
       <h1 className="text-[#4741E1] font-semibold">Add New Product</h1>
-      <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="gap-4 grid grid-cols-3 justify-center items-center"
@@ -821,7 +820,6 @@ const CreateProduct = () => {
             </Button>
           </div>
         </form>
-      </Form>
     </div>
   );
 };
