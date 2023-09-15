@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
+import { useUpdateProductMutation } from "@/store/services/productService";
 import Image from "next/image";
 import Link from "next/link";
 import ImportProductForm from "./ImportForm";
@@ -265,10 +266,6 @@ const ProductsList: FC = () => {
     }
   }, [open, openDelete]);
 
-  // const handleImportClick = () => {
-  //   toast.success("Import Product clicked!");
-  // };
-
   return (
     <>
       <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
@@ -288,10 +285,7 @@ const ProductsList: FC = () => {
               Add Product
             </Link>
           </Button>
-          {/* <Button onClick={toggleModal} size={"sm"}>
-            <PlusCircle className="w-4 mr-2 h-4" />
-            Add Product
-          </Button>  */}
+        
             </div>
         </div>
         <Separator />

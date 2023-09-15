@@ -1,8 +1,6 @@
-"use client";
-import { FC, ReactNode, useCallback, useState } from "react";
+"use client"
+import React, { FC, ReactNode, useCallback } from "react";
 import classNames from "classnames";
-
-// Custom Components
 import Sidebar from "@/components/layout/sidebar";
 import Header from "@/components/layout/header";
 
@@ -11,33 +9,32 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
-  const [openSidebar, setOpenSidebar] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
+  const [isMainContentOpen, setMainContentOpen] = React.useState(true);
 
-  const toggleOpen = useCallback(() => {
-    setOpen((open) => !open);
+  const toggleMainContent = useCallback(() => {
+    setMainContentOpen((isOpen) => !isOpen);
   }, []);
 
   const toggleSidebar = useCallback(() => {
-    setOpenSidebar((openSidebar) => !openSidebar);
+    setSidebarOpen((isOpen) => !isOpen);
   }, []);
 
-  const mainContentClassName = classNames("flex-1 duration-500 ml-0", {
-    "ml-0": !openSidebar,
-    // md: openSidebar,
-    "md:ml-14": !open,
-    "md:ml-56": open,
+  const mainContentClasses = classNames("flex-1 duration-500 ml-0", {
+    "ml-0": !isSidebarOpen,
+    "md:ml-14": !isMainContentOpen,
+    "md:ml-56": isMainContentOpen,
   });
 
   return (
     <div className="relative min-h-screen flex w-full">
       <Sidebar
-        open={open}
-        openSidebar={openSidebar}
+        open={isMainContentOpen}
+        openSidebar={isSidebarOpen}
         toggleSidebar={toggleSidebar}
-        toggleOpen={toggleOpen}
+        toggleOpen={toggleMainContent}
       />
-      <div className={mainContentClassName}>
+      <div className={mainContentClasses}>
         <Header toggleSidebar={toggleSidebar} />
         <div className="p-3 sm:p-5 md:p-8 lg:p-10 ">{children}</div>
       </div>

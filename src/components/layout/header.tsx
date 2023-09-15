@@ -1,3 +1,4 @@
+"use client"
 import { FC, useState } from "react";
 import { MenuIcon } from "@/assets/icons";
 import Image from "next/image";
@@ -14,6 +15,7 @@ import LogoutModal from "../modal/logout-modal";
 
 interface HeaderProps {
   toggleSidebar: () => void;
+  // Name: string;
 }
 
 const Header: FC<HeaderProps> = ({ toggleSidebar }) => {
@@ -46,6 +48,7 @@ const Header: FC<HeaderProps> = ({ toggleSidebar }) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-max">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              {/* <DropdownMenuLabel>{Name}</DropdownMenuLabel> */}
               <DropdownMenuSeparator />
               <Button
                 onClick={toggleLogoutModal}

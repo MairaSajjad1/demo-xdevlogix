@@ -20,7 +20,7 @@ import { useCreateCategoryMutation } from "@/store/services/categoryService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  parent_id: z.coerce.number(),
+  customer_id: z.coerce.number(),
   business_id: z.coerce.number(),
 });
 
@@ -36,7 +36,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
-      parent_id: data?.parent_id || Number(session?.user?.customer_id),
+      customer_id: data?.customer_id || Number(session?.user?.customer_id),
       business_id: data?.business_id || Number(session?.user?.business_id),
     },
   });

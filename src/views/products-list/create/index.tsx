@@ -454,43 +454,6 @@ const CreateProduct = () => {
             )}
           />
 
-          {/* <FormField
-            control={form.control}
-            name="vendor_id"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Vendor</FormLabel>
-                <Select onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Food" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent className="max-h-60">
-                    {categoriesLoading && (
-                      <>
-                        {loadingData?.map((i) => (
-                          <SelectItem key={i} value={String(i)}>
-                            <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
-                          </SelectItem>
-                        ))}
-                      </>
-                    )}
-                    {categoriesList &&
-                      categoriesList?.map((category: Category) => (
-                        <SelectItem
-                          key={category.id}
-                          value={String(category.id)}
-                        >
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
 
           <FormField
             control={form.control}

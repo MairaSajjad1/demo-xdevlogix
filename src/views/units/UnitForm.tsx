@@ -62,7 +62,7 @@ const UnitForm: FC<UnitFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Location Added Successfully.");
+      toast.success("Unit Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);

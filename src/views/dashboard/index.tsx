@@ -312,7 +312,7 @@ const Dashboard: FC = () => {
             </div>
             <div className="flex flex-col justify-between">
               <h3 className="text-[#92959E] font-semibold text-sm">Users</h3>
-              <h1 className="text-[#15192C]">10</h1>
+              <h1 className="text-[#15192C]">00</h1>
             </div>
           </div>
 
@@ -324,7 +324,7 @@ const Dashboard: FC = () => {
               <h3 className="text-[#92959E] font-semibold text-sm">
                 Categories
               </h3>
-              <h1 className="text-[#15192C]">10</h1>
+              <h1 className="text-[#15192C]">00</h1>
             </div>
           </div>
 
@@ -334,7 +334,7 @@ const Dashboard: FC = () => {
             </div>
             <div className="flex flex-col justify-between">
               <h3 className="text-[#92959E] font-semibold text-sm">Products</h3>
-              <h1 className="text-[#15192C]">10</h1>
+              <h1 className="text-[#15192C]">00</h1>
             </div>
           </div>
         </div>

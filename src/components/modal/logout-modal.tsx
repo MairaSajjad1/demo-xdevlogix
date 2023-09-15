@@ -15,8 +15,8 @@ interface LogoutModalProps {
 }
 
 const LogoutModal: FC<LogoutModalProps> = ({ open, setOpen }) => {
-  const handleLogOut = () => {
-    signOut();
+  const handleLogOut =  () => {
+     signOut({ callbackUrl: 'http://localhost:3000/' });
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
