@@ -18,8 +18,7 @@ import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
 import Image from "next/image";
 import Link from "next/link";
-
-import ImportModal from "@/components/modal/import-modal";
+import ImportProductForm from "./ImportForm";
 
 export interface ProductImage {
   id: number;
@@ -313,7 +312,12 @@ const ProductsList: FC = () => {
         loading={false}
         confirmDelete={confirmDelete}
       />
-      <ImportModal loading={false} open={openImportModal} setOpen={toggleImportModal} />
+       <Modal
+        title={"Import Product"}
+        open={openImportModal}
+        setOpen={toggleImportModal}
+        body={<ImportProductForm setOpen={toggleImportModal} />}
+      />
     </>
   );
 };

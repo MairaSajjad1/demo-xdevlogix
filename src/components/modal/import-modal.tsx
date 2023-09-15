@@ -62,7 +62,8 @@ const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <>
+    {/* <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Import Products</DialogTitle>
@@ -78,7 +79,7 @@ const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
                 accept=".xls, .xlsx"
                 onChange={handleFileChange} 
               />
-              {/* {isError && <p>Error uploading file</p>} */}
+              // {/* {isError && <p>Error uploading file</p>} 
               <Button
                 disabled={!selectedFile || createLoading} 
                 className="w-24"
@@ -94,7 +95,9 @@ const ImportModal: FC<ImportModalProps> = ({ open, setOpen }) => {
           </form>
         )}
       </DialogContent>
-    </Dialog>
+    </Dialog> */}
+    </>
+    
   );
 };
 
