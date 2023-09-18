@@ -1,5 +1,6 @@
 "use client";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from 'next/navigation';
 import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { GoPlusCircle as PlusCircle } from "react-icons/go";
@@ -230,6 +231,8 @@ const ProductsList: FC = () => {
     []
   );
 
+  const router = useRouter(); 
+
   const loadingData = Array.from({ length: 10 }, () => null);
   const [openImportModal, setOpenImportModal] = useState(false);
   
@@ -237,9 +240,9 @@ const ProductsList: FC = () => {
     setOpenImportModal(openImportModal=>!openImportModal);
   };
 
-  const toggleModal = useCallback(() => {
-    setOpen((open) => !open);
-  }, [open]);
+  // const toggleModal = useCallback(() => {
+  //   setOpen((open) => !open);
+  // }, [open]);
 
   const toggleDeleteModal = useCallback(() => {
     setOpenDelete((open) => !open);
@@ -247,7 +250,7 @@ const ProductsList: FC = () => {
 
   const handleEdit = (data: Product | null) => {
     setSelectedProductList(data);
-    toggleModal();
+    router.push('/products/products-list/create');
   };
 
   const handleDelete = (data: Product | null) => {

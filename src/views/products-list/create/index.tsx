@@ -30,6 +30,7 @@ import { Location } from "@/views/locations";
 import FileInput from "@/components/ui/file-input";
 import { Button } from "@/components/ui/button";
 import { useCreateProductMutation } from "@/store/services/productService";
+import { useUpdateProductMutation } from "@/store/services/productService";
 import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
 import { useEffect, useMemo } from "react";
@@ -60,7 +61,6 @@ const formSchema = z.object({
   selling_price_inc_tax: z.string().optional(),
   quantity: z.string().optional(),
   category_id: z.string().min(1, { message: "Category is required." }),
-  // vendor_id: z.string().min(1, { message: "Vendor is required." }),
   brand_id: z.string().min(1, { message: "Brand is required." }),
   barcode_id: z.string().min(1, { message: "Barcode is required." }),
   tax_id: z.string().min(1, { message: "Tax is required." }),
@@ -114,7 +114,6 @@ const CreateProduct = () => {
       quantity: "",
       product_images: [],
       category_id: "",
-      // vendor_id: "",
       price_exclusive_tax: "",
       price_inclusive_tax: "",
       profit_margin: "",
@@ -197,12 +196,19 @@ const CreateProduct = () => {
   }, [variations]);
 
   const [create, createResponse] = useCreateProductMutation();
+  const [update, updateResponse] = useUpdateProductMutation();
 
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
+
 
   useEffect(() => {
     if (createError) {
@@ -210,9 +216,18 @@ const CreateProduct = () => {
     }
     if (createSuccess) {
       toast.success("Product Added Successfully.");
-      // router.push("/products/products-list");
+      router.push("/products/products-list");
     }
   }, [createError, createSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Product Update Successfully.");
+    }
+  }, [updateError, updateSuccess]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const formdata = new FormData();
@@ -283,13 +298,11 @@ const CreateProduct = () => {
     formdata.append(`product_price[business_id]`, String(values.business_id));
     formdata.append(`product_locations[]`, values.location_id);
     formdata.append(`product_images[]`, values.product_images[0]);
-
     formdata.append("brand_id", values.brand_id);
     formdata.append("barcode_id", values.barcode_id);
     formdata.append("tax_id", values.tax_id);
     formdata.append("weight", values.weight);
 
-    // vendor_id: "",
     if (values.quantity) {
       formdata.append(
         `opening_stock[${values.location_id}][quantity][0]`,
@@ -453,8 +466,6 @@ const CreateProduct = () => {
               </FormItem>
             )}
           />
-
-
           <FormField
             control={form.control}
             name="brand_id"
@@ -776,12 +787,23 @@ const CreateProduct = () => {
           )}
 
           <div className="col-span-3 flex items-center justify-center">
-            <Button disabled={createLoading} type="submit" className="w-full">
+            {/* <Button disabled={createLoading} type="submit" className="w-full">
               {createLoading && (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
               )}
               Add
-            </Button>
+            </Button> */}
+            <Button
+                disabled={createLoading || updateLoading}
+                className="w-full"
+                type="submit"
+              >
+                {(createLoading || updateLoading) && (
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Add
+                </Button>
+
           </div>
         </form>
         </Form>
