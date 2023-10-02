@@ -2,9 +2,9 @@
 import { FC, useEffect, useState } from "react";
 import * as z from "zod";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Modal from "@/components/modal";
+// import Modal from "@/components/modal";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -20,7 +20,7 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import ForgotPasswordForm from "./PasswordForm";
+// import ForgotPasswordForm from "./PasswordForm";
 
 const loginFormSchema = z.object({
   mobile_no: z.string().min(1, { message: "Phone No is required." }),
@@ -109,12 +109,12 @@ const Login: FC = () => {
                     <div className="w-full flex items-center justify-between">
                       <FormLabel>Password</FormLabel>
 
-                      <div
+                      {/* <div
                         onClick={handleLinkClick}
                         className={buttonVariants({ variant: "link" })}
                       >
                         Forget Password?
-                      </div>
+                      </div> */}
                     </div>
                     <FormControl>
                       <Input
@@ -135,12 +135,12 @@ const Login: FC = () => {
           </Form>
         </div>
       </div>
-      <Modal
+      {/* <Modal
         title={"Forget Password"}
         open={openpassword}
         setOpen={togglePasswordModal}
         body={<ForgotPasswordForm setOpen={togglePasswordModal} />}
-      />
+      /> */}
     </>
   );
 };
