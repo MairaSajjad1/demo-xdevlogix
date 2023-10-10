@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
           }
           const { mobile_no, password } = credentials;
           const response = await fetch(
-            `https://demo.onlineorder.dev-logix.com/api/customer/loginwithoutOtp`,
+            `https://demo.onlineorder.crossdevlogix.com/api/customer/loginwithoutOtp`,
             {
               method: "POST",
               headers: {
