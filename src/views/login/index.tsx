@@ -106,12 +106,12 @@ const Login: FC = () => {
                 <FormItem>
                   <div className="w-full flex items-center justify-between">
                     <FormLabel>Password</FormLabel>
-                    <Link
+                    {/* <Link
                       className={buttonVariants({ variant: "link" })}
                       href="#"
                     >
                       Forget Password?
-                    </Link>
+                    </Link> */}
                   </div>
                   <FormControl>
                     <Input
