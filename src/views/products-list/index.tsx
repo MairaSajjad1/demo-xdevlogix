@@ -17,7 +17,8 @@ import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
-import { useUpdateProductMutation } from "@/store/services/productService";
+// import { useUpdateProductMutation } from "@/store/services/productService";
+import { useDeleteProductMutation } from "@/store/services/productService";
 import Image from "next/image";
 import Link from "next/link";
 import ImportProductForm from "./ImportForm";
@@ -222,16 +223,34 @@ const ProductsList: FC = () => {
         cell: ({ row }) => (
           <DataTableRowActions
             deleteAction={handleDelete}
-            editAction={handleEdit}
+            editAction={handleEdit} 
             row={row}
           />
         ),
       },
+      // {
+      //   id: "actions",
+      //   cell: ({ row }) => (
+      //     <DataTableRowActions
+      //       deleteAction={handleDelete}
+      //       editAction={handleEdit}
+      //       row={row}
+      //     />
+      //   ),
+      // },
     ],
     []
   );
 
   const router = useRouter(); 
+
+  const [deleteProduct, response] = useDeleteProductMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
+
 
   const loadingData = Array.from({ length: 10 }, () => null);
   const [openImportModal, setOpenImportModal] = useState(false);
@@ -240,17 +259,22 @@ const ProductsList: FC = () => {
     setOpenImportModal(openImportModal=>!openImportModal);
   };
 
-  // const toggleModal = useCallback(() => {
-  //   setOpen((open) => !open);
-  // }, [open]);
-
   const toggleDeleteModal = useCallback(() => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Product | null) => {
-    setSelectedProductList(data);
-    router.push('/products/products-list/create');
+
+  // const handleEdit = (data: Product | null) => {
+  //   if (data) {
+  //     const productId = data.id;
+  //     router.push(`/products/products-list/create`);
+  //   }
+  // };
+
+  const handleEdit = (product: Product|null) => {
+    if(product){
+      router.push(`/products/products-list/create?id=${product.id}`)
+    }
   };
 
   const handleDelete = (data: Product | null) => {
@@ -259,9 +283,18 @@ const ProductsList: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteProduct({ id: selectedProductList?.id });
   };
+
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Product Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

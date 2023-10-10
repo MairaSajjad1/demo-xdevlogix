@@ -12,10 +12,12 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from 'next/navigation';
 import { Input } from "@/components/ui/input";
 import { useGetUnitsQuery } from "@/store/services/unitService";
 import { useGetTaxratesQuery } from "@/store/services/taxrateService";
 import { useGetLocationsQuery } from "@/store/services/locationService";
+import { useGetSpecificProductsQuery } from "@/store/services/productService";
 import {
   Select,
   SelectContent,
@@ -23,6 +25,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 import { Unit } from "@/views/units";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,11 +33,9 @@ import { Location } from "@/views/locations";
 import FileInput from "@/components/ui/file-input";
 import { Button } from "@/components/ui/button";
 import { useCreateProductMutation } from "@/store/services/productService";
-import { useUpdateProductMutation } from "@/store/services/productService";
 import { Checkbox } from "@/components/ui/checkbox";
 import toast from "react-hot-toast";
 import { useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { useGetCategoriesQuery } from "@/store/services/categoryService";
 import { Category } from "@/views/categories";
 import { useGetVariationsQuery } from "@/store/services/variationService";
@@ -44,7 +45,9 @@ import { Taxrate } from "@/views/taxrates";
 import { useGetBrandsQuery } from "@/store/services/brandService";
 import { Brand } from "@/views/brands";
 import { useGetBarcodesQuery } from "@/store/services/barCodeService";
+import { useUpdateProductMutation } from "@/store/services/productService";
 import { Barcode } from "@/views/bar-codes";
+
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -96,7 +99,24 @@ const formSchema = z.object({
 const CreateProduct = () => {
   const { data: session } = useSession();
 
+  const {get} = useSearchParams();
+  const productId=get("id");
+  console.log({productId})
+  
   const router = useRouter();
+  const { data: specificProductData } = useGetSpecificProductsQuery(
+    { productId}
+  );
+  useEffect(() => {
+    if (specificProductData) {
+      // const product = specificProductData; 
+        const product = specificProductData[0];
+      form.setValue("name", product.name);
+      form.setValue("sku", product.sku);
+      form.setValue("type", product.type);
+      // ... set other form values based on the product data
+    }
+  }, [specificProductData]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -229,7 +249,9 @@ const CreateProduct = () => {
     }
   }, [updateError, updateSuccess]);
 
+
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const isEditing = true !== undefined;
     const formdata = new FormData();
     formdata.append("name", values.name);
     formdata.append("description", values.description);
@@ -310,19 +332,28 @@ const CreateProduct = () => {
       );
     }
     formdata.append("category_id", values.category_id);
-    create({ data: formdata });
+    // create({ data: formdata });
+
+    if (isEditing) {
+      update({ id: true, data: formdata });
+    } else {
+      create({ data: formdata });
+    }
   }
 
   const handleFileSelect = (files: File[]) => {
     form.setValue("product_images", files);
   };
 
-  console.log( form.watch())
+  // console.log( form.watch())
 
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
+    <>
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
-      <h1 className="text-[#4741E1] font-semibold">Add New Product</h1>
+      <h1 className="text-[#4741E1] font-semibold">
+        {true ? "Edit Product" : "Add New Product"}
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -335,7 +366,7 @@ const CreateProduct = () => {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Pizza" {...field} />
+                  <Input  {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -348,7 +379,7 @@ const CreateProduct = () => {
               <FormItem>
                 <FormLabel>SKU</FormLabel>
                 <FormControl>
-                  <Input placeholder="P324" {...field} />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -363,7 +394,9 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Single" />
+                      <SelectValue
+                      //  placeholder="Single"
+                        />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -384,7 +417,6 @@ const CreateProduct = () => {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="This is the description of the product."
                     {...field}
                   />
                 </FormControl>
@@ -401,7 +433,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Lahore" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -438,7 +470,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Food" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -475,7 +507,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Food" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -509,7 +541,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Food" />
+                      <SelectValue />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -544,7 +576,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="GST" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -579,7 +611,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="kg" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -611,7 +643,7 @@ const CreateProduct = () => {
               <FormItem>
                 <FormLabel>Weight</FormLabel>
                 <FormControl>
-                  <Input placeholder="4" {...field} type="number" />
+                  <Input {...field} type="number" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -627,7 +659,7 @@ const CreateProduct = () => {
                 <Select onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Inclusive" />
+                      <SelectValue  />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className="max-h-60">
@@ -648,7 +680,7 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Price Inclusive Tax</FormLabel>
                     <FormControl>
-                      <Input placeholder="468" {...field} type="number" />
+                      <Input {...field} type="number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -661,7 +693,7 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Price Exclusive Tax</FormLabel>
                     <FormControl>
-                      <Input placeholder="400" {...field} type="number" />
+                      <Input  {...field} type="number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -674,7 +706,7 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Profit Margin</FormLabel>
                     <FormControl>
-                      <Input placeholder="199" {...field} type="number" />
+                      <Input {...field} type="number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -687,7 +719,7 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Selling Price</FormLabel>
                     <FormControl>
-                      <Input placeholder="400" {...field} type="number" />
+                      <Input  {...field} type="number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -700,7 +732,7 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Selling Price Inc Tax</FormLabel>
                     <FormControl>
-                      <Input placeholder="468" {...field} type="number" />
+                      <Input  {...field} type="number" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -719,7 +751,7 @@ const CreateProduct = () => {
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="size" />
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="max-h-60">
@@ -778,7 +810,7 @@ const CreateProduct = () => {
                 <FormItem>
                   <FormLabel>Quantity</FormLabel>
                   <FormControl>
-                    <Input placeholder="320" {...field} type="number" />
+                    <Input  {...field} type="number" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -787,27 +819,23 @@ const CreateProduct = () => {
           )}
 
           <div className="col-span-3 flex items-center justify-center">
-            {/* <Button disabled={createLoading} type="submit" className="w-full">
-              {createLoading && (
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Add
-            </Button> */}
-            <Button
-                disabled={createLoading || updateLoading}
-                className="w-full"
-                type="submit"
-              >
-                {(createLoading || updateLoading) && (
-                  <Loader className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Add
-                </Button>
+          <Button
+            disabled={createLoading || updateLoading}
+            className="w-full"
+            type="submit"
+          >
+            {(createLoading || updateLoading) && (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            {true ? "Update" : "Add"}
+          </Button>
 
           </div>
         </form>
         </Form>
     </div>
+  
+    </>
   );
 };
 

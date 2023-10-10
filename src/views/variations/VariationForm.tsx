@@ -16,7 +16,10 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { Variation } from "./index";
 import { useSession } from "next-auth/react";
-import { useCreateVariationMutation } from "@/store/services/variationService";
+import {
+  useCreateVariationMutation,
+  useUpdateVariationMutation,
+} from "@/store/services/variationService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -62,12 +65,15 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    data
-      ? toast.error("Update API is not implemented yet.")
-      : create({ data: values });
+    if (data) {
+      update({ data: { ...values, id: data.id } });
+    } else {
+      create({ data: values });
+    }
   }
 
   const [create, createResponse] = useCreateVariationMutation();
+  const [update, updateResponse] = useUpdateVariationMutation();
 
   const {
     isLoading: createLoading,
@@ -75,15 +81,31 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
     isSuccess: createSuccess,
   } = createResponse;
 
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
+
   useEffect(() => {
     if (createError) {
-      toast.error("Something Wrong.");
+      toast.error("Something went wrong.");
     }
     if (createSuccess) {
       toast.success("Variation Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something went wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Variation Updated Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
 
   return (
     <Form {...form}>
@@ -95,7 +117,7 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Pizza Variation" {...field} />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +136,7 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
                     <FormItem>
                       <FormLabel></FormLabel>
                       <FormControl>
-                        <Input placeholder="Large" {...field} />
+                        <Input {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -138,8 +160,8 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
             Append{" "}
           </Button>
         </div>
-        <Button disabled={createLoading} className="w-full" type="submit">
-          {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+        <Button disabled={createLoading || updateLoading} className="w-full" type="submit">
+          {(createLoading || updateLoading) && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           {data ? "Update" : "Add"}
         </Button>
       </form>

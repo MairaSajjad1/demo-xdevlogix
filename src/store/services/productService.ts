@@ -34,6 +34,16 @@ const productService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["product"],
     }),
+    getSpecificProducts: builder.query({
+      query: ({ buisnessId,product_id }) => ({
+       
+        url: `/products/without-token/product-id=${product_id}business_id=${buisnessId}`,
+        method: "GET",
+      }),
+      transformResponse: ({ data }: { data: Product[] }) =>
+        data?.sort((a, b) => b.id - a.id),
+      providesTags: ["product"],
+    }),
     updateProduct: builder.mutation({
       query: ({ data }) => ({
         url: `/products/edit/${data?.id}`,
@@ -63,6 +73,7 @@ const productService = createApi({
 export const {
   useCreateProductMutation,
   useGetProductsQuery,
+  useGetSpecificProductsQuery,
   useUpdateProductMutation,
   useDeleteProductMutation,
   useImportDataMutation

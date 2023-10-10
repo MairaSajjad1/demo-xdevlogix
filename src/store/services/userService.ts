@@ -36,8 +36,16 @@ const userService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["user"],
     }),
+    updateUsers: builder.mutation({
+      query: ({ data }) => ({
+        url: `/customer/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["user"],
+    }),
   }),
 });
 
-export const { useCreateUserMutation, useGetUsersQuery,  } = userService;
+export const { useCreateUserMutation, useGetUsersQuery, useUpdateUsersMutation, } = userService;
 export default userService;

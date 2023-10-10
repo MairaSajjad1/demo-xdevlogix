@@ -16,6 +16,9 @@ import { DataTableColumnHeader } from "@/components/table/data-table-column-head
 import { ColumnDef } from "@tanstack/react-table";
 import Chart from "@/components/charts/chart";
 import DeleteModal from "@/components/modal/delete-modal";
+import { useGetUsersQuery } from "@/store/services/userService";
+import { useGetProductsQuery } from "@/store/services/productService";
+import { useGetCategoriesQuery } from "@/store/services/categoryService";
 import { useGetOrdersQuery } from "@/store/services/orderListService";
 
 export interface Order {
@@ -169,6 +172,37 @@ const Dashboard: FC = () => {
     perPage: -1,
   });
 
+  const {
+    data: userList,
+    isLoading: userLoading,
+    isFetching: userFetching,
+  } = useGetUsersQuery({
+    buisnessId: session?.user?.business_id,
+    customerId: session?.user?.customer_id,
+    // customerId: 31,
+    perPage: -1,
+  });
+  const {
+    data: productList,
+    isLoading: productLoading,
+    isFetching: productFetching,
+  } = useGetProductsQuery({
+    buisnessId: session?.user?.business_id,
+    customerId: session?.user?.customer_id,
+    perPage: -1,
+  });
+
+  const {
+    data: categoryList,
+    isLoading: categoryLoading,
+    isFetching: categoryFetching,
+  } = useGetCategoriesQuery({
+    buisnessId: session?.user?.business_id,
+    customerId: session?.user?.customer_id,
+    perPage: -1,
+  });
+
+
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
@@ -263,9 +297,9 @@ const Dashboard: FC = () => {
     []
   );
   const numberOfOrders = ordersList ? ordersList.length : 0;
-  // const numberOfUsers = userList ? userList.length : 0;
-  // const numberOfProducts = productList ? productList.length : 0;
-  // const numberOfCategories = categoryList ? categoryList.length : 0;
+  const numberOfUsers = userList ? userList.length : 0;
+  const numberOfProducts = productList ? productList.length : 0;
+  const numberOfCategories = categoryList ? categoryList.length : 0;
 
   const loadingData = Array.from({ length: 10 }, () => null);
 
@@ -294,7 +328,8 @@ const Dashboard: FC = () => {
   return (
     <>
    
-      <div className="space-y-6 overflow-hidden">
+    
+   <div className="space-y-6 overflow-hidden">
         <div className="bg-[#FFFFFF] p-6 lg:p-8 rounded-2xl w-full shadow-sm grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           <div className="border-r border-[#ECECEE] flex items-stretch gap-3 ">
             <div className="bg-[#FFF2E9] p-4 rounded-2xl">
@@ -312,7 +347,7 @@ const Dashboard: FC = () => {
             </div>
             <div className="flex flex-col justify-between">
               <h3 className="text-[#92959E] font-semibold text-sm">Users</h3>
-              <h1 className="text-[#15192C]">00</h1>
+              <h1 className="text-[#15192C]">{numberOfUsers}</h1>
             </div>
           </div>
 
@@ -324,7 +359,7 @@ const Dashboard: FC = () => {
               <h3 className="text-[#92959E] font-semibold text-sm">
                 Categories
               </h3>
-              <h1 className="text-[#15192C]">00</h1>
+              <h1 className="text-[#15192C]">{numberOfCategories}</h1>
             </div>
           </div>
 
@@ -334,7 +369,7 @@ const Dashboard: FC = () => {
             </div>
             <div className="flex flex-col justify-between">
               <h3 className="text-[#92959E] font-semibold text-sm">Products</h3>
-              <h1 className="text-[#15192C]">00</h1>
+              <h1 className="text-[#15192C]">{numberOfProducts}</h1>
             </div>
           </div>
         </div>

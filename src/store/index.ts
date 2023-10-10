@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/auth";
 import authService from "./services/authService";
 import typeOfServiceService from "./services/typeOfServiceService";
-// import reportService from "./services/reportService";
 import userService from "./services/userService";
 import orderReportService from "./services/orderReportService";
 import permissionService from "./services/permissionServices";
@@ -21,6 +20,7 @@ import variationService from "./services/variationService";
 import importService from "./services/importService";
 import productService from "./services/productService";
 import orderService from "./services/orderListService";
+import passwordService from "./services/passwordService";
 
 export const store = configureStore({
   reducer: {
@@ -29,6 +29,7 @@ export const store = configureStore({
     [typeOfServiceService.reducerPath]: typeOfServiceService.reducer,
     // [reportService.reducerPath]: reportService.reducer,
     [userService.reducerPath]: userService.reducer,
+    [passwordService.reducerPath]: passwordService.reducer,
     [locationService.reducerPath]: locationService.reducer,
     [categoryService.reducerPath]: categoryService.reducer,
     [taxrateService.reducerPath]: taxrateService.reducer,
@@ -38,15 +39,14 @@ export const store = configureStore({
     [orderReportService.reducerPath]: orderReportService.reducer,
     [roleService.reducerPath]: roleService.reducer,
     [unitService.reducerPath]: unitService.reducer,
-    [permissionService.reducerPath]:permissionService.reducer,
+    [permissionService.reducerPath]: permissionService.reducer,
     [barCodeService.reducerPath]: barCodeService.reducer,
     [brandService.reducerPath]: brandService.reducer,
     [purchaseService.reducerPath]: purchaseService.reducer,
     [variationService.reducerPath]: variationService.reducer,
     [productService.reducerPath]: productService.reducer,
-    [importService.reducerPath]: importService.reducer,
     [orderService.reducerPath]: orderService.reducer,
-    [importService.reducerPath]: importService.reducer,
+    [importService.reducerPath]: importService.reducer, 
     authReducer: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -55,6 +55,7 @@ export const store = configureStore({
       typeOfServiceService.middleware,
       // reportService.middleware,
       userService.middleware,
+      passwordService.middleware,
       locationService.middleware,
       categoryService.middleware,
       taxrateService.middleware,

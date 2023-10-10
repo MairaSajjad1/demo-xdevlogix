@@ -34,9 +34,18 @@ const categoryService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["category"],
     }),
+    updateCategories: builder.mutation({
+      query: ({ data }) => ({
+        url: `/categories/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["category"],
+    }),
+
   }),
 });
 
-export const { useCreateCategoryMutation, useGetCategoriesQuery } =
+export const { useCreateCategoryMutation, useGetCategoriesQuery ,useUpdateCategoriesMutation } =
   categoryService;
 export default categoryService;

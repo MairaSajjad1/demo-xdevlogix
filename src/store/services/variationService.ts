@@ -34,9 +34,17 @@ const variationService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["variation"],
     }),
+    updateVariation: builder.mutation({
+      query: ({ data }) => ({
+        url: `/variation/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["variation"],
+    }),
   }),
 });
 
-export const { useCreateVariationMutation, useGetVariationsQuery } =
+export const { useCreateVariationMutation, useGetVariationsQuery ,useUpdateVariationMutation } =
   variationService;
 export default variationService;
