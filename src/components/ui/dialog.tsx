@@ -11,6 +11,7 @@ const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = ({
+  //@ts-ignore
   className,
   ...props
 }: DialogPrimitive.DialogPortalProps) => (
