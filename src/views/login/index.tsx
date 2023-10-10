@@ -2,7 +2,7 @@
 import { FC, useEffect, useState } from "react";
 import * as z from "zod";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Modal from "@/components/modal";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,6 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import ForgotPasswordForm from "./PasswordForm";
 
 const loginFormSchema = z.object({
   mobile_no: z.string().min(1, { message: "Phone No is required." }),
@@ -68,7 +67,6 @@ const Login: FC = () => {
   };
 
   return (
-    <>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <div className="flex items-center justify-center">
@@ -85,63 +83,64 @@ const Login: FC = () => {
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-              <FormField
-                control={form.control}
-                name="mobile_no"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input placeholder="+923128234521" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="w-full flex items-center justify-between">
-                      <FormLabel>Password</FormLabel>
-
-                      <div
-                        onClick={handleLinkClick}
-                        className={buttonVariants({ variant: "link" })}
-                      >
-                        Forget Password?
-                      </div>
-                    </div>
-                    <FormControl>
-                      <Input
-                        placeholder="........... "
-                        type="password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button disabled={isLoading} className="w-full" type="submit">
-                {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
-                Login
-              </Button>
-            </form>
-          </Form>
-        </div>
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+            <FormField
+              control={form.control}
+              name="mobile_no"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+923128234521" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="w-full flex items-center justify-between">
+                    <FormLabel>Password</FormLabel>
+                    <Link
+                      className={buttonVariants({ variant: "link" })}
+                      href="#"
+                    >
+                      Forget Password?
+                    </Link>
+                  </div>
+                  <FormControl>
+                    <Input
+                      placeholder="........... "
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button disabled={isLoading} className="w-full" type="submit">
+              {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+              Login
+            </Button>
+          </form>
+        </Form>
+        {/* <p className="mt-10 text-center text-sm text-gray-500">
+          Not a member?{" "}
+          <a
+            href="#"
+            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          >
+            Register
+          </a>
+        </p> */}
       </div>
-      <Modal
-        title={"Forget Password"}
-        open={openpassword}
-        setOpen={togglePasswordModal}
-        body={<ForgotPasswordForm setOpen={togglePasswordModal} />}
-      />
-    </>
+    </div>
   );
 };
 

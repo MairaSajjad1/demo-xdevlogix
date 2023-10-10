@@ -24,7 +24,7 @@ const formSchema = z.object({
       name: z.string().min(1, { message: "Owner's name is required." }), 
       username: z.string().min(1, { message: "Username is required." }),
       password: z.string().min(1, { message: "Password is required." }),
-      user_type: z.string().min(1, { message: "User type is required." }),
+      // user_type: z.string().min(1, { message: "User type is required." }),
       mobile_no: z.string().min(1, { message: "Mobile number is required." }),
     }),
   });
@@ -51,7 +51,7 @@ const Create = () => {
         name:"",
         username: "",
         password: "",
-        user_type:"",
+        // user_type:"",
         mobile_no:"",
       },
     },
@@ -204,7 +204,7 @@ const Create = () => {
             </FormItem>
           )}
         />
-         <FormField
+         {/* <FormField
           control={form.control}
           name="owner_details.user_type"
           render={({ field }) => (
@@ -216,7 +216,7 @@ const Create = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <FormField
           control={form.control}
