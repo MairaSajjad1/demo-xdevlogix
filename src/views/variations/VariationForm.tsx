@@ -103,9 +103,9 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
     }
     if (updateSuccess) {
       toast.success("Variation Updated Successfully.");
-      setOpen();
+      setOpen(); 
     }
-  }, [updateError, updateSuccess]);
+  }, [updateError, updateSuccess, setOpen]);
 
   return (
     <Form {...form}>

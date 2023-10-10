@@ -68,7 +68,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (createSuccess) {
-      toast.success("Service Added Successfully.");
+      toast.success("Category Added Successfully.");
       setOpen();
     }
   }, [createError, createSuccess]);
@@ -78,7 +78,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (updateSuccess) {
-      toast.success("Service Update Successfully.");
+      toast.success("Category Update Successfully.");
       setOpen();
     }
   }, [updateError, updateSuccess]);
@@ -100,7 +100,7 @@ const CategoryForm: FC<CategoryFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-       <Button
+         <Button
           disabled={createLoading || updateLoading}
           className="w-full"
           type="submit"

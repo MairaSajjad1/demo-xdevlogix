@@ -107,16 +107,16 @@ const CreateProduct = () => {
   const { data: specificProductData } = useGetSpecificProductsQuery(
     { productId}
   );
-  useEffect(() => {
-    if (specificProductData) {
-      // const product = specificProductData; 
-        const product = specificProductData[0];
-      form.setValue("name", product.name);
-      form.setValue("sku", product.sku);
-      form.setValue("type", product.type);
-      // ... set other form values based on the product data
-    }
-  }, [specificProductData]);
+  // useEffect(() => {
+  //   if (specificProductData) {
+  //     // const product = specificProductData; 
+  //       const product = specificProductData[0];
+  //     form.setValue("name", product.name);
+  //     form.setValue("sku", product.sku);
+  //     form.setValue("type", product.type);
+  //     // ... set other form values based on the product data
+  //   }
+  // }, [specificProductData]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -65,23 +65,23 @@ const Users: FC = () => {
         enableSorting: true,
         enableHiding: false,
       },
-      {
-        accessorKey: "email",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Email" />
-        ),
-        cell: ({ row }) => (
-          <>
-            {row?.original ? (
-              <div>{row.getValue("email")}</div>
-            ) : (
-              <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
-            )}
-          </>
-        ),
-        enableSorting: false,
-        enableHiding: true,
-      },
+      // {
+      //   accessorKey: "email",
+      //   header: ({ column }) => (
+      //     <DataTableColumnHeader column={column} title="Email" />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <>
+      //       {row?.original ? (
+      //         <div>{row.getValue("email")}</div>
+      //       ) : (
+      //         <Skeleton className="w-40 lg:w-56 h-4 bg-[#F5f5f5]" />
+      //       )}
+      //     </>
+      //   ),
+      //   enableSorting: false,
+      //   enableHiding: true,
+      // },
       {
         accessorKey: "mobile_no",
         header: ({ column }) => (

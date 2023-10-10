@@ -16,6 +16,7 @@ import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { Supplier } from "./index";
 import { useCreateSupplierMutation } from "@/store/services/supplierService";
+import { useUpdateSupplierMutation } from "@/store/services/supplierService";
 import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
@@ -45,10 +46,10 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not implemented yet.")
-      : create({ data: values });
+    ? update({ data: { ...values, id: data.id } })
+    : create({ data: values });
   }
-
+  const [update, updateResponse] = useUpdateSupplierMutation();
   const [create, createResponse] = useCreateSupplierMutation();
 
   const {
@@ -56,6 +57,11 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
 
   useEffect(() => {
     if (createError) {
@@ -66,6 +72,15 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [createError, createSuccess]);
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Service Update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
 
   return (
     <Form {...form}>

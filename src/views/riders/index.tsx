@@ -14,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import RiderForm from "./RiderForm";
 import { useGetRidersQuery } from "@/store/services/riderService";
+import { useDeleteRiderMutation } from "@/store/services/riderService";
 
 export interface Rider {
   id: number;
@@ -35,10 +36,17 @@ const Riders: FC = () => {
     perPage: -1,
   });
 
+  const [deleteRider, response] = useDeleteRiderMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
+
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedSupplier, setSelectedSupplier] = useState<Rider | null>(null);
+  const [selectedRider, setSelectedRider] = useState<Rider | null>(null);
 
   const columns: ColumnDef<Rider | null>[] = useMemo(
     () => [
@@ -101,23 +109,32 @@ const Riders: FC = () => {
   }, [open]);
 
   const handleEdit = (data: Rider | null) => {
-    setSelectedSupplier(data);
+    setSelectedRider(data);
     toggleModal();
   };
 
   const handleDelete = (data: Rider | null) => {
-    setSelectedSupplier(data);
+    setSelectedRider(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteRider({ id: selectedRider?.id });
   };
 
   useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Rider Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
+
+  useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedSupplier(null);
+      setSelectedRider(null);
     }
   }, [open, openDelete]);
 
@@ -145,10 +162,10 @@ const Riders: FC = () => {
         />
       </div>
       <Modal
-        title={selectedSupplier ? "Update Rider" : "Add New Rider"}
+        title={selectedRider ? "Update Rider" : "Add New Rider"}
         open={open}
         setOpen={toggleModal}
-        body={<RiderForm setOpen={toggleModal} data={selectedSupplier} />}
+        body={<RiderForm setOpen={toggleModal} data={selectedRider} />}
       />
       <DeleteModal
         open={openDelete}

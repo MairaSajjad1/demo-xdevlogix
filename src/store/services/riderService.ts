@@ -34,8 +34,23 @@ const riderService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["rider"],
     }),
+    updateRider: builder.mutation({
+      query: ({ data }) => ({
+        url: `/types-of-service/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["rider"],
+    }),
+    deleteRider: builder.mutation({
+      query: ({ id }) => ({
+        url: `/rider/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["rider"],
+    }),
   }),
 });
 
-export const { useCreateRiderMutation, useGetRidersQuery } = riderService;
+export const { useCreateRiderMutation, useGetRidersQuery , useUpdateRiderMutation ,  useDeleteRiderMutation } = riderService;
 export default riderService;

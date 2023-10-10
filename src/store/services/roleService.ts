@@ -34,8 +34,16 @@ const roleService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["role"],
     }),
+    updateRole: builder.mutation({
+      query: ({ data }) => ({
+        url: `/role/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["role"],
+    }),
   }),
 });
 
-export const { useCreateRoleMutation, useGetRolesQuery } = roleService;
+export const { useCreateRoleMutation, useGetRolesQuery , useUpdateRoleMutation } = roleService;
 export default roleService;

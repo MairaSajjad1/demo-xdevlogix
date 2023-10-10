@@ -34,9 +34,17 @@ const supplierService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["supplier"],
     }),
+    updateSupplier: builder.mutation({
+      query: ({ data }) => ({
+        url: `/supplier/edit/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["supplier"],
+    }),
   }),
 });
 
-export const { useCreateSupplierMutation, useGetSuppliersQuery } =
+export const { useCreateSupplierMutation, useGetSuppliersQuery ,  useUpdateSupplierMutation } =
   supplierService;
 export default supplierService;

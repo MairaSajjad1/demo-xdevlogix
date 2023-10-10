@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "demo.onlineorder.dev-logix.com",
+        hostname: "demo.onlineorder.crossdevlogix.com",
         port: "",
       },
     ],

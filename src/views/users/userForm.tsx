@@ -23,7 +23,7 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
-  email: z.string().min(1, { message: "Email is required." }),
+  // email: z.string().min(1, { message: "Email is required." }),
   mobile_no: z.string().min(1, { message: "Mobile number is required." }),
   password: z.string().min(1, { message: "Password is required." }),
   business_id: z.number(),
@@ -41,7 +41,7 @@ const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: data?.name || "",
-      email: data?.email || "",
+      // email: data?.email || "",
       mobile_no: data?.mobile_no || "",
       password: data?.password || "",
       business_id: data?.business_id || Number(session?.user?.business_id),
@@ -105,7 +105,7 @@ const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
@@ -117,7 +117,7 @@ const UserForm: FC<UserFormProps> = ({ setOpen, data }) => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="mobile_no"

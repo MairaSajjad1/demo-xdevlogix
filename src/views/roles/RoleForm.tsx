@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Role } from "./index";
 import { useCreateRoleMutation } from "@/store/services/roleService";
+import { useUpdateRoleMutation } from "@/store/services/roleService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -41,17 +42,24 @@ const RoleForm: FC<RoleFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not implemented Yet")
-      : create({ data: values });
+    ? update({ data: { ...values, id: data.id } })
+    : create({ data: values });
   }
 
   const [create, createResponse] = useCreateRoleMutation();
+  const [update, updateResponse] = useUpdateRoleMutation();
 
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
+
 
   useEffect(() => {
     if (createError) {
@@ -62,6 +70,17 @@ const RoleForm: FC<RoleFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [createError, createSuccess]);
+
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Role Update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
 
   return (
     <Form {...form}>
