@@ -9,7 +9,7 @@ const reportService = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://demo.onlineorder.dev-logix.com",
+      "https://demo.onlineorder.crossdevlogix.com/api",
 
     prepareHeaders: async (headers, { getState }) => {
       headers.set("Accept", "application/json");

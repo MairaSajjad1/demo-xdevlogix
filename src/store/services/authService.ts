@@ -5,7 +5,7 @@ const authService = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NEXT_PUBLIC_API_BASE_URL ||
-      "https://demo.onlineorder.dev-logix.com/api",
+      "https://demo.onlineorder.crossdevlogix.com/api",
   }),
   endpoints: (builder) => ({
     login: builder.mutation({
