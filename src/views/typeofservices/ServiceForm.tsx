@@ -89,6 +89,8 @@ const ServiceForm: FC<ServiceFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [updateError, updateSuccess]);
+
+    console.log( form.watch())
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">

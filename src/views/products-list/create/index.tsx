@@ -47,6 +47,7 @@ import { Brand } from "@/views/brands";
 import { useGetBarcodesQuery } from "@/store/services/barCodeService";
 import { useUpdateProductMutation } from "@/store/services/productService";
 import { Barcode } from "@/views/bar-codes";
+import { Console } from "console";
 
 
 const formSchema = z.object({
@@ -101,7 +102,6 @@ const CreateProduct = () => {
 
   const {get} = useSearchParams();
   const productId=get("id");
-  console.log({productId})
   
   const router = useRouter();
   const { data: specificProductData } = useGetSpecificProductsQuery(
@@ -145,7 +145,7 @@ const CreateProduct = () => {
       business_id: Number(session?.user?.business_id),
     },
   });
-
+    
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variation_list",
@@ -217,7 +217,7 @@ const CreateProduct = () => {
 
   const [create, createResponse] = useCreateProductMutation();
   const [update, updateResponse] = useUpdateProductMutation();
-
+ 
   const {
     isLoading: createLoading,
     isError: createError,
@@ -228,7 +228,6 @@ const CreateProduct = () => {
     isError: updateError,
     isSuccess: updateSuccess,
   } = updateResponse;
-
 
   useEffect(() => {
     if (createError) {
@@ -251,7 +250,7 @@ const CreateProduct = () => {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const isEditing = true !== undefined;
+    const isEditing = productId !== undefined;
     const formdata = new FormData();
     formdata.append("name", values.name);
     formdata.append("description", values.description);
@@ -332,7 +331,7 @@ const CreateProduct = () => {
       );
     }
     formdata.append("category_id", values.category_id);
-    // create({ data: formdata });
+    create({ data: formdata });
 
     if (isEditing) {
       update({ id: true, data: formdata });
@@ -345,14 +344,14 @@ const CreateProduct = () => {
     form.setValue("product_images", files);
   };
 
-  // console.log( form.watch())
+  console.log( form.watch())
 
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <>
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
       <h1 className="text-[#4741E1] font-semibold">
-        {true ? "Edit Product" : "Add New Product"}
+        {productId ? "Edit Product" : "Add New Product"}
       </h1>
       <Form {...form}>
         <form
@@ -819,16 +818,17 @@ const CreateProduct = () => {
           )}
 
           <div className="col-span-3 flex items-center justify-center">
-          <Button
-            disabled={createLoading || updateLoading}
-            className="w-full"
-            type="submit"
-          >
-            {(createLoading || updateLoading) && (
-              <Loader className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {true ? "Update" : "Add"}
-          </Button>
+
+    <Button
+        disabled={createLoading || updateLoading}
+        className="w-full"
+        type="submit"
+      >
+        {(createLoading || updateLoading) && (
+          <Loader className="mr-2 h-4 w-4 animate-spin" />
+        )}
+        {productId ? "Update" : "Create"}
+      </Button>
 
           </div>
         </form>

@@ -99,13 +99,13 @@ const VariationForm: FC<VariationFormProps> = ({ setOpen, data }) => {
 
   useEffect(() => {
     if (updateError) {
-      toast.error("Something went wrong.");
+      toast.error("Something Wrong.");
     }
     if (updateSuccess) {
-      toast.success("Variation Updated Successfully.");
-      setOpen(); 
+      toast.success("Variation Update Successfully.");
+      setOpen();
     }
-  }, [updateError, updateSuccess, setOpen]);
+  }, [updateError, updateSuccess]);
 
   return (
     <Form {...form}>

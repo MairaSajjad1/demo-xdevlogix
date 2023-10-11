@@ -17,7 +17,6 @@ import { useSession } from "next-auth/react";
 import { useGetLocationsQuery } from "@/store/services/locationService";
 import { Variation, VariationTemplate } from "../variations";
 import { useGetProductsQuery } from "@/store/services/productService";
-// import { useUpdateProductMutation } from "@/store/services/productService";
 import { useDeleteProductMutation } from "@/store/services/productService";
 import Image from "next/image";
 import Link from "next/link";

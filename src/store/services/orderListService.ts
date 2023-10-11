@@ -29,7 +29,7 @@ const orderService = createApi({
     getOrders: builder.query({
       query: ({ buisnessId, customerId, perPage }) => {
         return {
-          url: `/orders?business_id=5&customer_id=31&per_page=-1`,
+          url: `/orders?business_id=${buisnessId}&customer_id=${customerId}&per_page=${perPage}`,
           method: "GET",
         };
       },
