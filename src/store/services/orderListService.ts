@@ -27,9 +27,9 @@ const orderService = createApi({
       invalidatesTags: ["Order"],
     }),
     getOrders: builder.query({
-      query: ({ buisnessId, customerId, perPage }) => {
+      query: ({ buisnessId , perPage }) => {
         return {
-          url: `/orders?business_id=${buisnessId}&customer_id=${customerId}&per_page=${perPage}`,
+          url: `/orders/check?business_id=${buisnessId}&user_type=admin&per_page=${perPage}&order_status=Complete`,
           method: "GET",
         };
       },
