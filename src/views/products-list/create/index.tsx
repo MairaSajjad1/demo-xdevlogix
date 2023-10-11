@@ -104,19 +104,25 @@ const CreateProduct = () => {
   const productId=get("id");
   
   const router = useRouter();
-  const { data: specificProductData } = useGetSpecificProductsQuery(
-    { productId}
-  );
+
+
+  const { data: specificProductData } = useGetSpecificProductsQuery({
+    productId,
+  });
   // useEffect(() => {
   //   if (specificProductData) {
-  //     // const product = specificProductData; 
-  //       const product = specificProductData[0];
-  //     form.setValue("name", product.name);
-  //     form.setValue("sku", product.sku);
-  //     form.setValue("type", product.type);
-  //     // ... set other form values based on the product data
+  //     if (!form.formState.isDirty) {
+  //       const product = specificProductData[0]; 
+  //       form.reset({
+  //         name: product.name,
+  //         sku: product.sku,
+  //         type: product.type,
+  //         description: product.description,
+  //         // ... Populate other fields
+  //       });
+  //     }
   //   }
-  // }, [specificProductData]);
+  // }, [specificProductData, form]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -142,7 +148,7 @@ const CreateProduct = () => {
       tax_id: "",
       weight: "",
       variation_list: [],
-      business_id: Number(session?.user?.business_id),
+      business_id: Number (session?.user?.business_id)
     },
   });
     
