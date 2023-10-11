@@ -245,14 +245,14 @@ const CreateProduct = () => {
     }
   }, [createError, createSuccess]);
 
-  useEffect(() => {
-    if (updateError) {
-      toast.error("Something Wrong.");
-    }
-    if (updateSuccess) {
-      toast.success("Product Update Successfully.");
-    }
-  }, [updateError, updateSuccess]);
+  // useEffect(() => {
+  //   if (updateError) {
+  //     toast.error("Something Wrong.");
+  //   }
+  //   if (updateSuccess) {
+  //     toast.success("Product Update Successfully.");
+  //   }
+  // }, [updateError, updateSuccess]);
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
