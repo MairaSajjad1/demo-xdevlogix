@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { BiLoaderAlt as Loader } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { Taxrate } from "./index";
-import { useCreateTaxrateMutation } from "@/store/services/taxrateService";
+import { useCreateTaxrateMutation } from "@/store/services/taxrateService"; 
+import { useUpdateTaxratesMutation } from "@/store/services/taxrateService";
 import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
@@ -45,17 +46,24 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not implemented yet.")
-      : create({ data: values });
+    ? update({ data: { ...values, id: data.id } })
+    : create({ data: values });
   }
 
   const [create, createResponse] = useCreateTaxrateMutation();
+  const [update, updateResponse] = useUpdateTaxratesMutation();
 
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
 
   useEffect(() => {
     if (createError) {
@@ -66,6 +74,18 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [createError, createSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Taxrate Update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
+
+    console.log( form.watch())
 
   return (
     <Form {...form}>
@@ -96,8 +116,14 @@ const TaxrateForm: FC<TaxrateFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button disabled={createLoading} className="w-full" type="submit">
-          {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+       <Button
+          disabled={createLoading || updateLoading}
+          className="w-full"
+          type="submit"
+        >
+          {(createLoading || updateLoading) && (
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {data ? "Update" : "Add"}
         </Button>
       </form>

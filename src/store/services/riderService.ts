@@ -36,7 +36,7 @@ const riderService = createApi({
     }),
     updateRider: builder.mutation({
       query: ({ data }) => ({
-        url: `/types-of-service/update/${data?.id}`,
+        url: `/rider/edit/${data?.id}`,
         method: "POST",
         body: data,
       }),

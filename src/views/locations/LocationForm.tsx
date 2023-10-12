@@ -49,7 +49,7 @@ const LocationForm: FC<LocationFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not Implemented Yet")
+      ? toast.error("Update not required")
       : create({ data: values });
   }
 

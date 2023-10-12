@@ -77,7 +77,7 @@ const SupplierForm: FC<SupplierFormProps> = ({ setOpen, data }) => {
       toast.error("Something Wrong.");
     }
     if (updateSuccess) {
-      toast.success("Service Update Successfully.");
+      toast.success("Supplier Update Successfully.");
       setOpen();
     }
   }, [updateError, updateSuccess]);

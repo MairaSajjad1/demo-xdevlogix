@@ -34,8 +34,16 @@ const taxrateService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["taxrate"],
     }),
+    updateTaxrates: builder.mutation({
+      query: ({ data }) => ({
+        url: `/tax/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["taxrate"],
+    }),
   }),
 });
 
-export const { useCreateTaxrateMutation, useGetTaxratesQuery } = taxrateService;
+export const { useCreateTaxrateMutation, useGetTaxratesQuery , useUpdateTaxratesMutation } = taxrateService;
 export default taxrateService;
