@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Brand } from "./index";
 import { useCreateBrandMutation } from "@/store/services/brandService";
+import { useUpdateBrandsMutation } from "@/store/services/brandService";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
@@ -43,17 +44,24 @@ const BrandForm: FC<BrandFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not implemented Yet")
-      : create({ data: values });
+    ? update({ data: { ...values, id: data.id } })
+    : create({ data: values });
   }
 
   const [create, createResponse] = useCreateBrandMutation();
+  const [update, updateResponse] = useUpdateBrandsMutation();
 
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+
+  const {
+    isLoading: updateLoading,
+    isError: updateError,
+    isSuccess: updateSuccess,
+  } = updateResponse;
 
   useEffect(() => {
     if (createError) {
@@ -64,6 +72,17 @@ const BrandForm: FC<BrandFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [createError, createSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Brand update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
+
 
   return (
     <Form {...form}>

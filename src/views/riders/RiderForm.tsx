@@ -131,7 +131,7 @@ const RiderForm: FC<RiderFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-          <Button
+        <Button
           disabled={createLoading || updateLoading}
           className="w-full"
           type="submit"

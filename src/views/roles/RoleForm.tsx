@@ -98,8 +98,14 @@ const RoleForm: FC<RoleFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button disabled={createLoading} className="w-full" type="submit">
-          {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+           <Button
+          disabled={createLoading || updateLoading}
+          className="w-full"
+          type="submit"
+        >
+          {(createLoading || updateLoading) && (
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {data ? "Update" : "Add"}
         </Button>
       </form>

@@ -34,8 +34,24 @@ const barCodeService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["barcode"],
     }),
+
+    updateBarcodes: builder.mutation({
+      query: ({ data }) => ({
+        url: `/barcode/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["barcode"],
+    }),
+    deleteBarcodes: builder.mutation({
+      query: ({ id }) => ({
+        url: `/barcode/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["barcode"],
+    }),
   }),
 });
 
-export const { useCreateBarcodeMutation, useGetBarcodesQuery } = barCodeService;
+export const { useCreateBarcodeMutation, useGetBarcodesQuery ,useUpdateBarcodesMutation ,useDeleteBarcodesMutation } = barCodeService;
 export default barCodeService;

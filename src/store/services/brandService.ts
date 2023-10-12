@@ -34,8 +34,24 @@ const brandService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["brand"],
     }),
+
+    updateBrands: builder.mutation({
+      query: ({ data }) => ({
+        url: `/brands/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["brand"],
+    }),
+    deleteBrands: builder.mutation({
+      query: ({ id }) => ({
+        url: `/brands/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["brand"],
+    }),
   }),
 });
 
-export const { useCreateBrandMutation, useGetBrandsQuery } = brandService;
+export const { useCreateBrandMutation, useGetBrandsQuery , useUpdateBrandsMutation , useDeleteBrandsMutation } = brandService;
 export default brandService;

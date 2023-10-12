@@ -34,8 +34,24 @@ const unitService = createApi({
         data?.sort((a, b) => b.id - a.id),
       providesTags: ["unit"],
     }),
+
+    updateUnits: builder.mutation({
+      query: ({ data }) => ({
+        url: `/units/update/${data?.id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["unit"],
+    }),
+    deleteUnits: builder.mutation({
+      query: ({ id }) => ({
+        url: `/units/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["unit"],
+    }),
   }),
 });
 
-export const { useCreateUnitMutation, useGetUnitsQuery } = unitService;
+export const { useCreateUnitMutation, useGetUnitsQuery , useUpdateUnitsMutation, useDeleteUnitsMutation} = unitService;
 export default unitService;

@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { Unit } from "./index";
 import { useSession } from "next-auth/react";
 import { useCreateUnitMutation } from "@/store/services/unitService";
+import { useUpdateUnitsMutation } from "@/store/services/unitService";
 
 const formSchema = z.object({
   actual_name: z.string().min(1, { message: "Name is required." }),
@@ -45,17 +46,24 @@ const UnitForm: FC<UnitFormProps> = ({ setOpen, data }) => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     data
-      ? toast.error("Update API is not Implemented Yet")
-      : create({ data: values });
+    ? update({ data: { ...values, id: data.id } })
+    : create({ data: values });
   }
 
   const [create, createResponse] = useCreateUnitMutation();
+  const [update , updateResponse] = useUpdateUnitsMutation();
 
   const {
     isLoading: createLoading,
     isError: createError,
     isSuccess: createSuccess,
   } = createResponse;
+
+  const {
+    isLoading : updateLoading,
+    isError : updateError,
+    isSuccess : updateSuccess,
+  } = updateResponse;
 
   useEffect(() => {
     if (createError) {
@@ -66,6 +74,16 @@ const UnitForm: FC<UnitFormProps> = ({ setOpen, data }) => {
       setOpen();
     }
   }, [createError, createSuccess]);
+
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Unit update Successfully.");
+      setOpen();
+    }
+  }, [updateError, updateSuccess]);
 
   return (
     <Form {...form}>
@@ -109,8 +127,14 @@ const UnitForm: FC<UnitFormProps> = ({ setOpen, data }) => {
             </FormItem>
           )}
         />
-        <Button disabled={createLoading} className="w-full" type="submit">
-          {createLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
+         <Button
+          disabled={createLoading || updateLoading}
+          className="w-full"
+          type="submit"
+        >
+          {(createLoading || updateLoading) && (
+            <Loader className="mr-2 h-4 w-4 animate-spin" />
+          )}
           {data ? "Update" : "Add"}
         </Button>
       </form>
