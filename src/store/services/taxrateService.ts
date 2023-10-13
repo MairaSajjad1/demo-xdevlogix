@@ -42,8 +42,15 @@ const taxrateService = createApi({
       }),
       invalidatesTags: ["taxrate"],
     }),
+    deleteTaxrate: builder.mutation({
+      query: ({ id }) => ({
+        url: `/tax/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["taxrate"],
+    }),
   }),
 });
 
-export const { useCreateTaxrateMutation, useGetTaxratesQuery , useUpdateTaxratesMutation } = taxrateService;
+export const { useCreateTaxrateMutation, useGetTaxratesQuery , useUpdateTaxratesMutation ,useDeleteTaxrateMutation  } = taxrateService;
 export default taxrateService;

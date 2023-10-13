@@ -14,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import TaxrateForm from "./TaxrateForm";
 import { useGetTaxratesQuery } from "@/store/services/taxrateService";
+import { useDeleteTaxrateMutation } from "@/store/services/taxrateService";
 
 export interface Taxrate {
   id: number;
@@ -36,6 +37,14 @@ const Taxrates: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+
+   // DELETE
+   const [deleteTaxrate, response] = useDeleteTaxrateMutation();
+   const {
+     isLoading: deleteLoading,
+     isError: deleteError,
+     isSuccess: deleteSuccess,
+   } = response;
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -113,9 +122,18 @@ const Taxrates: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteTaxrate({ id: selectedTaxrate?.id });
   };
+
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Taxrate Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

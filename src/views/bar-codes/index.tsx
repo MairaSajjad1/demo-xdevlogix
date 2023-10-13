@@ -14,6 +14,7 @@ import BrandForm from "./BarcodeForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetBarcodesQuery } from "@/store/services/barCodeService";
+import { useDeleteBarcodesMutation } from "@/store/services/barCodeService";
 
 export interface Barcode {
   id: number;
@@ -35,6 +36,12 @@ const Barcodes: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+  const [deleteBarcode, response] = useDeleteBarcodesMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -95,10 +102,20 @@ const Barcodes: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteBarcode({ id: selectedBarcode?.id });
   };
 
+
+  
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Barcode Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
   useEffect(() => {
     if (!open && !openDelete) {
       setSelectedBarcode(null);

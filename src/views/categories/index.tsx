@@ -14,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import CategoryForm from "./CategoryForm";
 import { useGetCategoriesQuery } from "@/store/services/categoryService";
+import { useDeleteCategoryMutation } from "@/store/services/categoryService";
 
 export interface Category {
   id: number;
@@ -36,6 +37,14 @@ const Categories: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+
+   // DELETE
+   const [deleteCategory, response] = useDeleteCategoryMutation();
+   const {
+     isLoading: deleteLoading,
+     isError: deleteError,
+     isSuccess: deleteSuccess,
+   } = response;
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -98,9 +107,18 @@ const Categories: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete APi is not implemented Yet");
-    toggleDeleteModal();
+    deleteCategory({ id: selectedCategory?.id });
   };
+
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Category Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

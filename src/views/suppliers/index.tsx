@@ -14,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import SupplierForm from "./SupplierForm";
 import { useGetSuppliersQuery } from "@/store/services/supplierService";
+import {useDeleteSupplierMutation } from "@/store/services/supplierService";
 
 
 export interface Supplier {
@@ -35,7 +36,14 @@ const Suppliers: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
-
+  
+   // DELETE
+   const [deleteSupplier, response] = useDeleteSupplierMutation();
+   const {
+     isLoading: deleteLoading,
+     isError: deleteError,
+     isSuccess: deleteSuccess,
+   } = response;
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
@@ -114,9 +122,18 @@ const Suppliers: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteSupplier({id : selectedSupplier?.id})
   };
+
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Supplier Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

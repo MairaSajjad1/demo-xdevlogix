@@ -42,10 +42,16 @@ const categoryService = createApi({
       }),
       invalidatesTags: ["category"],
     }),
-
+    deleteCategory: builder.mutation({
+      query: ({ id }) => ({
+        url: `/categories/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["category"],
+    }),
   }),
 });
 
-export const { useCreateCategoryMutation, useGetCategoriesQuery ,useUpdateCategoriesMutation } =
+export const { useCreateCategoryMutation, useGetCategoriesQuery ,useUpdateCategoriesMutation ,useDeleteCategoryMutation } =
   categoryService;
 export default categoryService;

@@ -42,9 +42,17 @@ const supplierService = createApi({
       }),
       invalidatesTags: ["supplier"],
     }),
+
+    deleteSupplier: builder.mutation({
+      query: ({ id }) => ({
+        url: `/supplier/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["supplier"],
+    }),
   }),
 });
 
-export const { useCreateSupplierMutation, useGetSuppliersQuery ,  useUpdateSupplierMutation } =
+export const { useCreateSupplierMutation, useGetSuppliersQuery ,  useUpdateSupplierMutation ,useDeleteSupplierMutation } =
   supplierService;
 export default supplierService;

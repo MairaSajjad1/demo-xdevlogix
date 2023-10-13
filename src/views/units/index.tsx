@@ -14,6 +14,7 @@ import UnitForm from "./UnitForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetUnitsQuery } from "@/store/services/unitService";
+import { useDeleteUnitsMutation } from "@/store/services/unitService";
 
 export interface Unit {
   id: number;
@@ -37,6 +38,14 @@ const Units: FC = () => {
     buisnessId: session?.user?.business_id,
     perPage: -1,
   });
+
+  const [deleteUnit, response] = useDeleteUnitsMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
+
 
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -131,9 +140,18 @@ const Units: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteUnit({ id: selectedUnit?.id });
   };
+
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Unit Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

@@ -14,6 +14,7 @@ import BrandForm from "./BrandForm";
 import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetBrandsQuery } from "@/store/services/brandService";
+import { useDeleteBrandsMutation } from "@/store/services/brandService";
 
 export interface Brand {
   id: number;
@@ -74,6 +75,13 @@ const Brands: FC = () => {
     []
   );
 
+  const [deleteBrand, response] = useDeleteBrandsMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
+
   const loadingData = Array.from({ length: 10 }, () => null);
 
   const toggleModal = useCallback(() => {
@@ -95,9 +103,19 @@ const Brands: FC = () => {
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteBrand({ id: selectedBrand?.id });
   };
+
+  
+  useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Brand Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {

@@ -14,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import VariationForm from "./VariationForm";
 import { useGetVariationsQuery } from "@/store/services/variationService";
+import { useDeleteVariationMutation } from "@/store/services/variationService";
 
 export interface VariationTemplate {
   id: number;
@@ -46,12 +47,19 @@ const Variations: FC = () => {
     perPage: -1,
   });
 
+  const [deleteVariation, response] = useDeleteVariationMutation();
+  const {
+    isLoading: deleteLoading,
+    isError: deleteError,
+    isSuccess: deleteSuccess,
+  } = response;
+
+
   const [open, setOpen] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
 
-  const [selectedPurchase, setSelectedPurchase] = useState<Variation | null>(
-    null
-  );
+  const [selectedVariation, setSelectedVariation] =
+    useState<Variation | null>(null);
 
   const columns: ColumnDef<Variation | null>[] = useMemo(
     () => [
@@ -129,23 +137,32 @@ const Variations: FC = () => {
   }, [open]);
 
   const handleEdit = (data: Variation | null) => {
-    setSelectedPurchase(data);
+    setSelectedVariation(data);
     toggleModal();
   };
 
   const handleDelete = (data: Variation | null) => {
-    setSelectedPurchase(data);
+    setSelectedVariation(data);
     toggleDeleteModal();
   };
 
   const confirmDelete = () => {
-    toast.error("Delete API is not implemented yet.");
-    toggleDeleteModal();
+    deleteVariation({ id: selectedVariation?.id });
   };
+
+    useEffect(() => {
+    if (deleteError) {
+      toast.error("Something Wrong.");
+    }
+    if (deleteSuccess) {
+      toast.success("Variation Deleted Successfully.");
+      toggleDeleteModal();
+    }
+  }, [deleteError, deleteSuccess]);
 
   useEffect(() => {
     if (!open && !openDelete) {
-      setSelectedPurchase(null);
+      setSelectedVariation(null);
     }
   }, [open, openDelete]);
 
@@ -175,10 +192,10 @@ const Variations: FC = () => {
         />
       </div>
       <Modal
-        title={selectedPurchase ? "Update Variation" : "Add New Variation"}
+        title={selectedVariation ? "Update Variation" : "Add New Variation"}
         open={open}
         setOpen={toggleModal}
-        body={<VariationForm setOpen={toggleModal} data={selectedPurchase} />}
+        body={<VariationForm setOpen={toggleModal} data={selectedVariation} />}
       />
       <DeleteModal
         open={openDelete}

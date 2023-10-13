@@ -42,9 +42,17 @@ const variationService = createApi({
       }),
       invalidatesTags: ["variation"],
     }),
+
+    deleteVariation : builder.mutation({
+      query: ({ id }) => ({
+        url: `/variation/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["variation"],
+    }),
   }),
 });
 
-export const { useCreateVariationMutation, useGetVariationsQuery ,useUpdateVariationMutation } =
+export const { useCreateVariationMutation, useGetVariationsQuery ,useUpdateVariationMutation , useDeleteVariationMutation} =
   variationService;
 export default variationService;
