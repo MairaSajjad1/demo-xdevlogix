@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { useGetUnitsQuery } from "@/store/services/unitService";
 import { useGetTaxratesQuery } from "@/store/services/taxrateService";
 import { useGetLocationsQuery } from "@/store/services/locationService";
-import { useGetSpecificProductsQuery } from "@/store/services/productService";
 import {
   Select,
   SelectContent,
@@ -46,6 +45,7 @@ import { useGetBrandsQuery } from "@/store/services/brandService";
 import { Brand } from "@/views/brands";
 import { useGetBarcodesQuery } from "@/store/services/barCodeService";
 import { useUpdateProductMutation } from "@/store/services/productService";
+import { useGetSpecificProductsQuery } from "@/store/services/productService";
 import { Barcode } from "@/views/bar-codes";
 import { Console } from "console";
 
@@ -102,53 +102,43 @@ const CreateProduct = () => {
 
   const {get} = useSearchParams();
   const productId=get("id");
+  console.log(productId);
+  
   
   const router = useRouter();
 
+  console.log("mm");
+  
+  const specificProductData = useGetSpecificProductsQuery({
+    id: productId,
+  })
 
-  const { data: specificProductData } = useGetSpecificProductsQuery({
-    productId,
-  });
-  // useEffect(() => {
-  //   if (specificProductData) {
-  //     if (!form.formState.isDirty) {
-  //       const product = specificProductData[0]; 
-  //       form.reset({
-  //         name: product.name,
-  //         sku: product.sku,
-  //         type: product.type,
-  //         description: product.description,
-  //         // ... Populate other fields
-  //       });
-  //     }
-  //   }
-  // }, [specificProductData, form]);
-
+ 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      sku: "",
-      type: "",
-      description: "",
-      tax_type: "",
-      location_id: "",
-      unit_id: "",
+      name:  specificProductData?.name || "",
+      sku: specificProductData?.sku || "",
+      type:  specificProductData?.type||"",
+      description: specificProductData?.description ||"",
+      tax_type: specificProductData?.tax_type || "",
+      location_id: specificProductData?.location_id || "",
+      unit_id: specificProductData?.unit_id ||"",
       manage_stock_status: false,
-      selling_price: "",
-      selling_price_inc_tax: "",
-      quantity: "",
+      selling_price: specificProductData?.selling_price || "",
+      selling_price_inc_tax: specificProductData?.selling_price_inc_tax|| "",
+      quantity: specificProductData?.quantity || "",
       product_images: [],
-      category_id: "",
-      price_exclusive_tax: "",
-      price_inclusive_tax: "",
-      profit_margin: "",
-      brand_id: "",
-      barcode_id: "",
-      tax_id: "",
-      weight: "",
+      category_id:specificProductData?.category_id  || "",
+      price_exclusive_tax:  specificProductData?.price_exclusive_tax ||"",
+      price_inclusive_tax: specificProductData?.price_inclusive_tax || "",
+      profit_margin: specificProductData?.profit_margin || "",
+      brand_id: specificProductData?.brand_id || "",
+      barcode_id: specificProductData?.barcode_id ||"",
+      tax_id: specificProductData?.tax_id ||"",
+      weight: specificProductData?.weight ||"",
       variation_list: [],
-      business_id: Number (session?.user?.business_id)
+      business_id: Number (session?.user?.business_id),
     },
   });
     
@@ -207,6 +197,8 @@ const CreateProduct = () => {
       perPage: -1,
     });
 
+  
+
   const variations = useMemo(() => {
     return variationsList?.find(
       (list) => String(list.id) === form.watch("variation_id")
@@ -245,14 +237,15 @@ const CreateProduct = () => {
     }
   }, [createError, createSuccess]);
 
-  // useEffect(() => {
-  //   if (updateError) {
-  //     toast.error("Something Wrong.");
-  //   }
-  //   if (updateSuccess) {
-  //     toast.success("Product Update Successfully.");
-  //   }
-  // }, [updateError, updateSuccess]);
+  useEffect(() => {
+    if (updateError) {
+      toast.error("Something Wrong.");
+    }
+    if (updateSuccess) {
+      toast.success("Product Update Successfully.");
+      router.push("/products/products-list");
+    }
+  }, [updateError, updateSuccess]);
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -297,7 +290,7 @@ const CreateProduct = () => {
         String(values.selling_price_inc_tax)
       );
     }
-
+  
     if (values.type === "variable") {
       values?.variation_list?.forEach((variation, index) => {
         formdata.append(
@@ -329,7 +322,7 @@ const CreateProduct = () => {
     formdata.append("barcode_id", values.barcode_id);
     formdata.append("tax_id", values.tax_id);
     formdata.append("weight", values.weight);
-
+  
     if (values.quantity) {
       formdata.append(
         `opening_stock[${values.location_id}][quantity][0]`,
@@ -337,8 +330,7 @@ const CreateProduct = () => {
       );
     }
     formdata.append("category_id", values.category_id);
-    create({ data: formdata });
-
+  
     if (isEditing) {
       update({ id: true, data: formdata });
     } else {

@@ -35,13 +35,11 @@ const productService = createApi({
       providesTags: ["product"],
     }),
     getSpecificProducts: builder.query({
-      query: ({ buisnessId,product_id }) => ({
+      query: ({ id }) => ({
        
-        url: `/products/without-token/product-id=${product_id}business_id=${buisnessId}`,
+        url: `/products/without-token/${id}`,
         method: "GET",
       }),
-      transformResponse: ({ data }: { data: Product[] }) =>
-        data?.sort((a, b) => b.id - a.id),
       providesTags: ["product"],
     }),
     updateProduct: builder.mutation({
