@@ -111,7 +111,7 @@ const CreateProduct = () => {
   
   const specificProductData = useGetSpecificProductsQuery({
     id: productId,
-  })
+  }).data;
 
  
   const form = useForm<z.infer<typeof formSchema>>({
