@@ -163,10 +163,10 @@ return (
           <h1 className="font-semibold text-xl text-[#4741E1]">Orders</h1>
           <p className="font-medium text-sm">The List of all Orders</p>
         </div>
-        <Button onClick={toggleModal} size={"sm"}>
+        {/* <Button onClick={toggleModal} size={"sm"}>
             <PlusCircle className="mr-2 w-4 h-4" />
             Add Order
-          </Button>
+          </Button> */}
       
       </div>
       <Separator />

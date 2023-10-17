@@ -47,7 +47,6 @@ import { useGetBarcodesQuery } from "@/store/services/barCodeService";
 import { useUpdateProductMutation } from "@/store/services/productService";
 import { useGetSpecificProductsQuery } from "@/store/services/productService";
 import { Barcode } from "@/views/bar-codes";
-import { Console } from "console";
 
 
 const formSchema = z.object({
@@ -102,18 +101,40 @@ const CreateProduct = () => {
 
   const {get} = useSearchParams();
   const productId=get("id");
-  console.log(productId);
   
   
   const router = useRouter();
 
-  console.log("mm");
   
   const specificProductData = useGetSpecificProductsQuery({
     id: productId,
   }).data;
 
- 
+ useEffect(() => {
+  if (specificProductData) {
+    const productData = specificProductData.data[0];
+    console.log(specificProductData);
+    form.setValue("barcode_id", productData.barcode_id || "");
+    form.setValue("sku", productData.sku ||""), 
+    form.setValue("type", productData.type || "Single"),
+    form.setValue("location_id", productData.location_id || ""),
+    form.setValue("brand_id", productData.brand_id || "");
+    form.setValue("business_id", productData.business_id || "");
+    form.setValue("category_id", productData.category_id || "");
+    form.setValue("description", productData.description || "");
+    form.setValue("tax_id", productData.tax_id || "");
+    form.setValue("weight", productData.weight || "");
+    form.setValue("quantity", productData.quantity || "");
+    form.setValue("profit_margin", productData.profit_margin || "");
+    form.setValue("price_inclusive_tax", productData.price_inclusive_tax || "");
+    form.setValue("price_exclusive_tax", productData.price_exclusive_tax || "");
+    form.setValue("selling_price", productData.selling_price || "");
+    form.setValue("tax_type", productData.tax_type || "");
+    form.setValue("selling_price_inc_tax", productData.selling_price_inc_tax || "");
+    form.setValue("manage_stock_status", Boolean(productData.manage_stock_status));
+    form.setValue("name", productData.name || "");
+  }
+}, [specificProductData]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -142,6 +163,7 @@ const CreateProduct = () => {
     },
   });
     
+ console.log(form.watch())
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variation_list",
@@ -330,6 +352,7 @@ const CreateProduct = () => {
       );
     }
     formdata.append("category_id", values.category_id);
+      // create({ data: formdata });
   
     if (isEditing) {
       update({ id: true, data: formdata });
@@ -341,9 +364,6 @@ const CreateProduct = () => {
   const handleFileSelect = (files: File[]) => {
     form.setValue("product_images", files);
   };
-
-  console.log( form.watch())
-
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <>
@@ -388,11 +408,12 @@ const CreateProduct = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Type</FormLabel>
-                <Select onValueChange={field.onChange}>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue
                       //  placeholder="Single"
+                      defaultValue={field.value}
                         />
                     </SelectTrigger>
                   </FormControl>
