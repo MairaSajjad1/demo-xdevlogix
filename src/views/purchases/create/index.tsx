@@ -139,13 +139,13 @@ const Create = () => {
           quantity: "",
         },
       ],
-      business_id: 5,
-      created_by: 4,
+      business_id: session?.user?.business_id, 
+      created_by: session?.user?.customer_id,  
     },
   });
 
   const [create, createResponse] = useCreatePurchaseMutation();
-  // console.log("mmm");
+  
   
 
   const {
@@ -179,11 +179,11 @@ const Create = () => {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+     console.log("Form Data:", values); 
     create({
       data: values,
     });
   }
-
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">

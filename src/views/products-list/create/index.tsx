@@ -135,6 +135,8 @@ const CreateProduct = () => {
     form.setValue("name", productData.name || "");
   }
 }, [specificProductData]);
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -442,7 +444,7 @@ const CreateProduct = () => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="location_id"
             render={({ field }) => (
@@ -478,7 +480,45 @@ const CreateProduct = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
+          <FormField
+  control={form.control}
+  name="location_id"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Location</FormLabel>
+      <FormControl>
+        <Select onValueChange={field.onChange}>
+          <SelectTrigger>
+            <SelectValue defaultValue={specificProductData?.location_id || ""} />
+          </SelectTrigger>
+          <SelectContent className="max-h-60">
+            {locationsLoading && (
+              <>
+                {loadingData?.map((i) => (
+                  <SelectItem key={i} value={String(i)}>
+                    <Skeleton className="w-20 h-4 bg-[#F5F5F5]" />
+                  </SelectItem>
+                ))}
+              </>
+            )}
+            {locationsList &&
+              locationsList?.map((location: Location) => (
+                <SelectItem
+                  key={location.id}
+                  value={String(location.id)}
+                >
+                  {location.name}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
           <FormField
             control={form.control}
             name="category_id"
