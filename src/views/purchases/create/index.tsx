@@ -43,6 +43,7 @@ import toast from "react-hot-toast";
 import ProductInputs from "./ProductInputs";
 import { useRouter } from "next/navigation";
 import { log } from "console";
+import usePurchase from "@/hooks/usePurchase";
 
 const formSchema = z.object({
   supplier_id: z.string().min(1, { message: "Supplier is required." }),
@@ -86,6 +87,8 @@ const formSchema = z.object({
 
 const Create = () => {
   const { data: session } = useSession();
+
+  const {purchase} = usePurchase();
   const router = useRouter();
 
   const {
@@ -180,14 +183,25 @@ const Create = () => {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
      console.log("Form Data:", values); 
-    create({
-      data: values,
-    });
+     if (purchase === null){
+      create({
+          data: values,
+        });
+       }
+     else{
+      toast.success("Update");
+     }
+    // create({
+    //   data: values,
+    // });
   }
   const loadingData = Array.from({ length: 10 }, (_, index) => index + 1);
   return (
     <div className="bg-[#FFFFFF] p-2 rounded-md overflow-hidden space-y-4">
-      <h1 className="text-[#4741E1] font-semibold">Add New Purchase</h1>
+      <h1 className="text-[#4741E1] font-semibold">
+        
+      {purchase ? "Edit Purchase" : "Add New Purchase"}
+      </h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -524,7 +538,7 @@ const Create = () => {
               {createLoading && (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Add
+              {purchase ? "Update" : "Create"}
             </Button>
           </div>
         </form>

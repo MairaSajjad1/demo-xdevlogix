@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { ColumnDef } from "@tanstack/react-table";
 import { GoPlusCircle as PlusCircle } from "react-icons/go";
 import Table from "@/components/table";
+import { useRouter } from "next/navigation";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { DataTableRowActions } from "@/components/table/data-table-row-actions";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +14,7 @@ import DeleteModal from "@/components/modal/delete-modal";
 import { useSession } from "next-auth/react";
 import { useGetPurchasesQuery } from "@/store/services/purchaseService";
 import Link from "next/link";
+import usePurchase from "@/hooks/usePurchase";
 
 export interface Purchase {
   id: number;
@@ -156,6 +158,9 @@ const Purchases: FC = () => {
     []
   );
 
+  const { setPurchase } = usePurchase();
+  const router = useRouter();
+
   const loadingData = Array.from({ length: 10 }, () => null);
 
   const toggleModal = useCallback(() => {
@@ -166,8 +171,9 @@ const Purchases: FC = () => {
     setOpenDelete((open) => !open);
   }, [open]);
 
-  const handleEdit = (data: Purchase | null) => {
-    toast.error("pending")
+  const handleEdit = (purchase: Purchase | null) => {
+    setPurchase(purchase!);
+    router.push("/products/purchases/create");
   };
 
   const handleDelete = (data: Purchase | null) => {
